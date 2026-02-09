@@ -68,25 +68,35 @@ cd short-gravity-web && npm run build
 cd scripts/data-fetchers && export $(grep -v '^#' .env | xargs) && python3 filing_worker.py
 ```
 
-## Deployment
+## Git & Deployment
 
-**GitHub → Vercel auto-deploy pipeline:**
-- Repo: `github.com/felixdigit/short-gravity-web` (private)
-- Push to `main` → auto-deploys to production
-- Push to feature branch → creates preview URL
+**CRITICAL: Never auto-commit or auto-push.** Only commit/push when Gabriel explicitly asks.
+
+**Branches:**
+- `development` — default working branch. All work happens here.
+- `main` — production. Push to main auto-deploys to Vercel.
+
+**Workflow:**
+1. Work on `development` branch (always)
+2. Gabriel says "commit" → commit to `development`
+3. Gabriel says "push" or "deploy" → merge `development` → `main` and push
+4. Never push to `main` without explicit instruction
 
 ```bash
-# Standard workflow
+# Dev workflow
+git checkout development       # Always work here
 npm run dev                    # Test locally
-git add -A && git commit -m "description"
-git push                       # Auto-deploys to prod
 
-# Preview deploy (optional)
-git checkout -b feature-name
-git push -u origin feature-name  # Creates preview URL
+# When Gabriel says "commit"
+git add <files> && git commit -m "description"
+
+# When Gabriel says "deploy" or "push to prod"
+git checkout main && git merge development && git push
+git checkout development       # Back to dev
 ```
 
 **DO NOT** use `vercel --prod` directly. Let GitHub handle deployments.
+**DO NOT** commit or push unless explicitly told to.
 
 ## UI Design
 
@@ -196,12 +206,41 @@ Use `/research-filings` skill for comprehensive queries with citations.
 
 ## Behavior Rules
 
-1. **Never rely on conversation history** — Context compaction loses data
-2. **Historical completeness** — Fetch ALL data, never stop early
-3. **When Gabriel provides credentials** → Write to `.env` immediately
-4. **Error resilience** — Retry 3x with exponential backoff
-5. **Before complex tasks** — Use `claude-code-guide` agent to check docs
-6. **Batch changes before deploying** — Make edits, test locally, then commit and push once ready (auto-deploys via GitHub)
+1. **Just do it** — If a follow-up action is obvious (run a worker, start a server, execute a migration), do it. Don't tell Gabriel to do it himself.
+2. **Git: suggest, never act** — Never auto-commit or auto-push. But proactively suggest commits and deploys at the right moments:
+   - **Suggest commit** when: a feature works end-to-end, a bug is fixed, before switching to a different task, after a batch of related changes, before risky refactors (save point)
+   - **Suggest deploy** when: multiple commits are stacked on `development` and stable, a user-facing feature is complete and tested, a critical fix is ready
+   - Keep it brief: "Good checkpoint — commit?" or "That's stable, deploy to prod?"
+   - Gabriel says yes → do it. Gabriel says no or ignores → move on.
+3. **Never rely on conversation history** — Context compaction loses data
+4. **Historical completeness** — Fetch ALL data, never stop early
+5. **When Gabriel provides credentials** → Write to `.env` immediately
+6. **Error resilience** — Retry 3x with exponential backoff
+7. **Before complex tasks** — Use `claude-code-guide` agent to check docs
+8. **Follow official patterns** — When unsure how to implement something (skills, hooks, agents, workflows), check Claude Code docs via `claude-code-guide` agent BEFORE guessing. Use documented patterns, not improvisation.
+9. **Always start the dev server** — When testing UI changes, start `npm run dev` in background automatically. Never ask Gabriel to do it.
+
+## Content Workflows
+
+Gabriel's typical patterns for content production:
+
+### Research → Article → Visual
+1. `/research-filings [topic]` — gather citations from RAG
+2. `/write-article` — draft using research context
+3. `/nano-banana` or `/gemini-generate` — create visual
+
+### Quick X Post
+1. Provide thesis or context
+2. `/write-x-post single` or `/write-x-post thread`
+3. `/nano-banana` for accompanying image if needed
+
+### Research Only
+- `/research-filings [question]` — returns citations, no content generation
+
+### Skills Architecture
+- Skills are atomic capabilities, not pipelines
+- Chain skills conversationally: invoke one, use output, invoke next
+- Skills cannot call other skills — orchestration happens in conversation
 
 ## Debugging Rules
 

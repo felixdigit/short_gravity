@@ -249,6 +249,74 @@ JSON only:"""
     return None
 
 
+def describe_image(image_url: str) -> Optional[str]:
+    """Use Haiku vision to describe an image (screenshot, chart, document)."""
+    if not ANTHROPIC_API_KEY or not image_url:
+        return None
+
+    # Fetch image
+    try:
+        req = urllib.request.Request(image_url, headers={
+            "User-Agent": "ShortGravityBot/1.0",
+        })
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            content_type = resp.headers.get("Content-Type", "image/jpeg")
+            if not content_type.startswith("image/"):
+                return None
+            image_data = resp.read()
+            if len(image_data) > 5_000_000:  # Skip >5MB
+                return None
+            import base64
+            b64 = base64.b64encode(image_data).decode()
+    except Exception as e:
+        log(f"    Image fetch failed: {e}")
+        return None
+
+    # Vision call
+    body = {
+        "model": "claude-haiku-4-5-20251001",
+        "max_tokens": 300,
+        "messages": [{
+            "role": "user",
+            "content": [
+                {
+                    "type": "image",
+                    "source": {"type": "base64", "media_type": content_type, "data": b64},
+                },
+                {
+                    "type": "text",
+                    "text": "Describe this image concisely for a research database. If it's a document, filing, chart, or screenshot, extract the key text/data. If it's a photo, describe what's shown. Focus on factual content. 2-3 sentences max.",
+                },
+            ],
+        }],
+    }
+
+    req = urllib.request.Request(
+        "https://api.anthropic.com/v1/messages",
+        data=json.dumps(body).encode(),
+        headers={
+            "x-api-key": ANTHROPIC_API_KEY,
+            "anthropic-version": "2023-06-01",
+            "Content-Type": "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            result = json.loads(resp.read())
+            return result["content"][0]["text"].strip()
+    except Exception as e:
+        log(f"    Vision describe failed: {e}")
+        return None
+
+
+def is_thin_content(text: str) -> bool:
+    """Check if tweet text is too thin to be useful (mostly links/short)."""
+    stripped = re.sub(r'https?://\S+', '', text).strip()
+    # Remove media tags we added
+    stripped = re.sub(r'\[(photo|video|gif)[^\]]*\]', '', stripped).strip()
+    return len(stripped) < 30
+
+
 def _rule_classify(text: str, author: str) -> Dict[str, Any]:
     """Rule-based fallback classification."""
     t = text.lower()
@@ -459,6 +527,19 @@ def store_tweet(record: Dict, existing_ids: set, dry_run: bool = False,
             return "skipped"
     except Exception:
         pass
+
+    # Enrich image-only tweets with vision descriptions
+    content_text = record["content_text"]
+    media = record.get("media") or []
+    photos = [m for m in media if m.get("type") == "photo"]
+    if photos and is_thin_content(content_text) and classify:
+        photo_url = photos[0].get("url") or photos[0].get("preview_url")
+        if photo_url:
+            desc = describe_image(photo_url)
+            if desc:
+                content_text = content_text.rstrip() + f"\n[image content: {desc}]"
+                record["content_text"] = content_text
+                log(f"    Image described: {desc[:60]}...")
 
     # Classify only if requested (skip during fast scrape)
     if classify:
