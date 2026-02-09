@@ -152,6 +152,47 @@ SPACE_TRACK_PASSWORD=
 SUPABASE_URL=
 SUPABASE_SERVICE_KEY=
 ANTHROPIC_API_KEY=
+EPO_CONSUMER_KEY=
+EPO_CONSUMER_SECRET=
+PATENTSVIEW_API_KEY=
+FCC_API_KEY=
+FCC_FRN=
+FCC_ICFS_USERNAME=
+FCC_ICFS_PASSWORD=
+```
+
+## Compounding Data Schedule
+
+**Philosophy: Every data source must have a radar, not just a backfill.** Workers auto-detect and ingest new data — the brain grows autonomously.
+
+### Schedule (`run_all.py` + launchd plists)
+
+| Cadence | Interval | Workers | What it catches |
+|---------|----------|---------|-----------------|
+| **Frequent** | 15 min | SEC Filing Worker, TLE Worker | New SEC filings (8-K, 10-Q, etc.), satellite orbital data |
+| **Hourly** | 4 hours | News Worker, Press Release Worker | Finnhub news, AST press releases |
+| **Daily** | 6:00 AM | SEC Exhibits, FCC ICFS Metadata + Attachments, Cash Position, Patent Discovery, Transcript Worker | New exhibits from filings, new FCC applications + technical docs, quarterly cash extraction, new patent publications, new earnings transcripts |
+| **Weekly** | Monday 5AM | Short Interest, FCC ELS Scanner, Patent Enricher | Short interest refresh, ELS document range scan, patent title/claims gap fill |
+
+### Activating/Managing Schedule
+```bash
+# Load all schedules
+cp scripts/data-fetchers/com.shortgravity.data-*.plist ~/Library/LaunchAgents/
+launchctl load ~/Library/LaunchAgents/com.shortgravity.data-frequent.plist
+launchctl load ~/Library/LaunchAgents/com.shortgravity.data-hourly.plist
+launchctl load ~/Library/LaunchAgents/com.shortgravity.data-daily.plist
+launchctl load ~/Library/LaunchAgents/com.shortgravity.data-weekly.plist
+
+# Check status
+launchctl list | grep shortgravity
+
+# Manual run
+cd scripts/data-fetchers && export $(grep -v '^#' .env | xargs)
+python3 run_all.py --cadence daily --dry-run   # Preview
+python3 run_all.py --cadence daily              # Execute
+
+# Logs
+tail -f /tmp/sg-data-daily.log
 ```
 
 ## Key Integrations
@@ -159,21 +200,33 @@ ANTHROPIC_API_KEY=
 | Source | Purpose | Rate Limits |
 |--------|---------|-------------|
 | Space-Track.org | Satellite TLE data | 30/min, 300/hr |
-| Finnhub | Stock prices | 60/min |
-| SEC EDGAR | Filings | None (public) |
+| Finnhub | Stock prices, news | 60/min |
+| SEC EDGAR | Filings, exhibits | None (public) |
+| FCC ICFS | Satellite applications, technical docs | Okta SSO login required |
+| FCC ELS | Public technical attachments | Playwright same-origin fetch |
 | EPO OPS | Patents (global) | 20/min |
-| Supabase | Database | PostgreSQL |
+| PatentsView | US patent discovery | 45/min |
+| roic.ai | Earnings call transcripts | Playwright (JS rendering) |
+| Supabase | Database + storage | PostgreSQL |
 
 ## Research Archive (RAG)
 
-**4,000+ searchable records** for research and citations.
+**7,000+ searchable records** for research and citations.
 
 | Table | Count | Content |
 |-------|-------|---------|
 | `filings` (SEC) | 530 | Full document text (10-K, 8-K, S-1, etc.) |
-| `fcc_filings` | 666 | Structured metadata + context |
-| `patents` | 307 | Global patent portfolio (29 families, 7 jurisdictions) |
-| `patent_claims` | 2,482 | Individual claim text with type (target: 3,800) |
+| `sec_filing_exhibits` | 282 | Exhibit documents (certs, contracts, subsidiaries) |
+| `fcc_filings` | 3,919 | Structured metadata + context |
+| `fcc_filing_attachments` | growing | Technical docs, interference analyses, Schedule S |
+| `patents` | 270 | Global patent portfolio (44 families, 7 jurisdictions) |
+| `patent_claims` | 4,619 | Individual claim text with type |
+| `patent_families` | 270 | Family groupings (junction table) |
+| `earnings_calls` | 18 | Quarterly earnings metadata |
+| `inbox` (transcripts) | 18 | Full earnings call transcripts |
+| `inbox` (news) | 879+ | Finnhub news articles |
+| `short_interest` | live | Current short interest data |
+| `cash_position` | 24 | Quarterly cash history (Mar 2020 → present) |
 
 ### Quick Query (from scripts/data-fetchers)
 ```bash
@@ -219,6 +272,12 @@ Use `/research-filings` skill for comprehensive queries with citations.
 7. **Before complex tasks** — Use `claude-code-guide` agent to check docs
 8. **Follow official patterns** — When unsure how to implement something (skills, hooks, agents, workflows), check Claude Code docs via `claude-code-guide` agent BEFORE guessing. Use documented patterns, not improvisation.
 9. **Always start the dev server** — When testing UI changes, start `npm run dev` in background automatically. Never ask Gabriel to do it.
+10. **Compounding data by default** — Every data source must have BOTH a backfill AND a radar. When building a new worker:
+    - First: backfill all historical data
+    - Then: add incremental monitoring to catch new data automatically
+    - Finally: wire it into `run_all.py` at the right cadence
+    - A worker without a schedule is incomplete. A schedule without a worker is useless.
+11. **Radar coverage check** — When adding a new data source, verify the full chain: source API → worker script → Supabase table → schedule cadence → launchd plist. Every link must exist.
 
 ## Content Workflows
 
