@@ -365,6 +365,21 @@ def parse_tweets(response_data: Dict, query: str) -> List[Dict]:
         note = tweet.get("note_tweet", {})
         content_text = note.get("text") or tweet.get("text", "")
 
+        # Expand t.co URLs to real URLs using entities
+        entities = tweet.get("entities", {})
+        if not entities and note:
+            entities = note.get("entities", {})
+        for url_entity in entities.get("urls", []):
+            short = url_entity.get("url", "")
+            expanded = url_entity.get("expanded_url", "")
+            if short and expanded and short in content_text:
+                # Don't expand twitter/x.com media URLs (they're just the tweet itself)
+                if not expanded.startswith(("https://twitter.com/", "https://x.com/")):
+                    content_text = content_text.replace(short, expanded)
+                elif "/photo/" in expanded or "/video/" in expanded:
+                    # Media self-links: remove the t.co link (media is captured separately)
+                    content_text = content_text.replace(short, "").strip()
+
         # Public metrics
         metrics = tweet.get("public_metrics", {})
 
@@ -384,6 +399,21 @@ def parse_tweets(response_data: Dict, query: str) -> List[Dict]:
         for mk in media_keys:
             if mk in media_map:
                 media_urls.append(media_map[mk])
+
+        # Append media context to content_text so it's searchable
+        media_descriptions = []
+        for m in media_urls:
+            mtype = m.get("type", "photo")
+            alt = m.get("alt_text", "")
+            if alt:
+                media_descriptions.append(f"[{mtype}: {alt}]")
+            elif mtype == "video":
+                media_descriptions.append("[video attached]")
+            elif mtype == "animated_gif":
+                media_descriptions.append("[gif attached]")
+            # photos without alt text: don't add noise
+        if media_descriptions:
+            content_text = content_text.rstrip() + "\n" + " ".join(media_descriptions)
 
         # Published time
         created_at = tweet.get("created_at", "")
