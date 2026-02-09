@@ -1,33 +1,12 @@
-name: Signal Scanner — Cross-Source Anomaly Detection
+# DEPRECATED — Moved to short-gravity-web repo
+# This workflow is disabled. The active version runs from the web app repo.
+name: "[DISABLED] Signal Scanner"
 
 on:
-  schedule:
-    # Run twice daily: 9am and 5pm ET (13:00 and 21:00 UTC)
-    - cron: '0 13 * * *'
-    - cron: '0 21 * * *'
   workflow_dispatch:
 
 jobs:
-  scan-signals:
+  disabled:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Run signal scanner
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          cd scripts/data-fetchers
-          python3 signal_scanner.py
-
-      - name: Log run
-        if: always()
-        run: echo "Signal Scanner completed at $(date -u)"
+      - run: echo "This workflow has moved to the short-gravity-web repo."
