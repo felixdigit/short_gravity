@@ -17,8 +17,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - uses: actions/setup-python@v5
         with:
@@ -33,15 +31,6 @@ jobs:
         run: |
           cd scripts/data-fetchers
           python3 x_worker.py
-
-      - name: Embed new tweets into brain
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          cd short-gravity-web/scripts/data-fetchers
-          python3 embedding_worker.py --table x_posts
 
       - name: Log run
         if: always()
