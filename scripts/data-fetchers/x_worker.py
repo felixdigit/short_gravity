@@ -37,7 +37,6 @@ TRACKED_ACCOUNTS = [
     {"username": "AST_SpaceMobile", "filter": None},
     {"username": "thekookreport", "filter": None},
     {"username": "CatSE___ApeX___", "filter": None},
-    {"username": "spacanpanman", "filter": "$ASTS"},
     {"username": "Defiantclient2", "filter": "$ASTS OR ASTS OR AST"},
     {"username": "jusbar23", "filter": "$ASTS OR ASTS OR AST"},
 ]
