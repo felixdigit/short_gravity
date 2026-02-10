@@ -1,0 +1,349 @@
+#!/usr/bin/env python3
+"""
+BigQuery Patent Claims Fetcher (API Version)
+
+Fetches full claim text from Google BigQuery patents-public-data
+using the google-cloud-bigquery Python library.
+
+Prerequisites:
+1. pip install google-cloud-bigquery
+2. gcloud auth application-default login
+   OR set GOOGLE_APPLICATION_CREDENTIALS to service account key
+
+Run: python3 bigquery_claims_fetcher_api.py
+"""
+
+import json
+import os
+import re
+import urllib.request
+from datetime import datetime
+
+# Supabase config
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
+
+
+def log(msg):
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
+
+
+def supabase_request(method, endpoint, data=None):
+    """Make Supabase REST API request."""
+    url = f"{SUPABASE_URL}/rest/v1/{endpoint}"
+    headers = {
+        "apikey": SUPABASE_SERVICE_KEY,
+        "Authorization": f"Bearer {SUPABASE_SERVICE_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": "return=representation",
+    }
+
+    body = json.dumps(data).encode() if data else None
+    req = urllib.request.Request(url, data=body, headers=headers, method=method)
+
+    with urllib.request.urlopen(req, timeout=60) as response:
+        content = response.read().decode("utf-8")
+        return json.loads(content) if content else {}
+
+
+def normalize_patent_number(pn):
+    """
+    Convert patent number to BigQuery format.
+    US10892818B1 -> US-10892818-B1
+    US20210044349A1 -> US-20210044349-A1
+    """
+    # Already in correct format
+    if "-" in pn:
+        return pn
+
+    # Match pattern: COUNTRY + NUMBER + KIND (handles B1, B2, etc)
+    match = re.match(r'^([A-Z]{2,3})(\d+)([A-Z]\d?)$', pn)
+    if match:
+        country, num, kind = match.groups()
+        return f"{country}-{num}-{kind}"
+
+    # No kind code
+    match = re.match(r'^([A-Z]{2,3})(\d+)$', pn)
+    if match:
+        country, num = match.groups()
+        return f"{country}-{num}"
+
+    return pn
+
+
+def get_us_patents():
+    """Get all US patent numbers from database."""
+    patents = supabase_request(
+        "GET",
+        "patents?select=patent_number&patent_number=like.US*&limit=500"
+    )
+    return [p["patent_number"] for p in patents]
+
+
+def get_existing_claims():
+    """Get patent numbers that already have claims."""
+    try:
+        claims = supabase_request(
+            "GET",
+            "patent_claims?select=patent_number"
+        )
+        return set(c["patent_number"] for c in claims)
+    except Exception:
+        return set()
+
+
+def run_bigquery(query):
+    """Execute BigQuery query using google-cloud-bigquery."""
+    try:
+        from google.cloud import bigquery
+    except ImportError:
+        log("ERROR: google-cloud-bigquery not installed")
+        log("Run: pip install google-cloud-bigquery")
+        return []
+
+    client = bigquery.Client(project='short-gravity-data')
+    query_job = client.query(query)
+
+    results = []
+    for row in query_job:
+        results.append({
+            "publication_number": row.publication_number,
+            "claim_text": row.claim_text,
+        })
+
+    return results
+
+
+def fetch_claims_batch(patent_numbers):
+    """Fetch claims for a batch of patents from BigQuery."""
+    # Convert to BigQuery format
+    bq_numbers = [normalize_patent_number(pn) for pn in patent_numbers]
+
+    # Build IN clause
+    in_clause = ", ".join(f"'{pn}'" for pn in bq_numbers)
+
+    # BigQuery stores all claims as one text blob per patent (no claim_number field)
+    query = f"""
+    SELECT
+      publication_number,
+      claims.text AS claim_text
+    FROM `patents-public-data.patents.publications`,
+    UNNEST(claims_localized) AS claims
+    WHERE publication_number IN ({in_clause})
+    AND claims.language = 'en'
+    """
+
+    return run_bigquery(query)
+
+
+def parse_claim_type(claim_text):
+    """Determine if claim is independent or dependent."""
+    if not claim_text:
+        return None
+
+    text_lower = claim_text.lower().strip()
+
+    # Dependent claims typically reference other claims
+    dependent_patterns = [
+        r'^the .* of claim \d+',
+        r'^a .* according to claim \d+',
+        r'^claim \d+',
+        r'as claimed in claim \d+',
+        r'as recited in claim \d+',
+    ]
+
+    for pattern in dependent_patterns:
+        if re.search(pattern, text_lower):
+            return "dependent"
+
+    return "independent"
+
+
+def parse_depends_on(claim_text):
+    """Extract claim numbers this claim depends on."""
+    if not claim_text:
+        return None
+
+    # Find references like "claim 1", "claims 1-5", "claim 1 or 2"
+    matches = re.findall(r'claim[s]?\s+(\d+(?:\s*[-,]\s*\d+)*)', claim_text.lower())
+
+    if not matches:
+        return None
+
+    depends = set()
+    for match in matches:
+        # Handle ranges like "1-5"
+        if '-' in match:
+            parts = match.split('-')
+            try:
+                start = int(parts[0].strip())
+                end = int(parts[1].strip())
+                depends.update(range(start, end + 1))
+            except ValueError:
+                pass
+        else:
+            # Handle individual numbers
+            for num in re.findall(r'\d+', match):
+                depends.add(int(num))
+
+    return list(sorted(depends)) if depends else None
+
+
+def denormalize_patent_number(bq_number, original_numbers):
+    """Convert BigQuery format back to our format."""
+    # bq_number: US-10892818-B1
+    # We need to find the matching original: US10892818B1
+
+    bq_clean = bq_number.replace("-", "")
+
+    for orig in original_numbers:
+        if orig.replace("-", "") == bq_clean:
+            return orig
+
+    # If no exact match, return the cleaned version
+    return bq_clean
+
+
+def split_claims(text):
+    """Split claim text blob into individual claims."""
+    # Pattern: Number followed by period at start of line or after newline
+    pattern = r'(?:^|\n)\s*(\d+)\.\s*'
+
+    matches = list(re.finditer(pattern, text))
+
+    if not matches:
+        return [{"number": 1, "text": text.strip()}]
+
+    claims = []
+    for i, match in enumerate(matches):
+        claim_num = int(match.group(1))
+        start = match.end()
+
+        if i + 1 < len(matches):
+            end = matches[i + 1].start()
+        else:
+            end = len(text)
+
+        claim_text = text[start:end].strip()
+
+        if claim_text:
+            claims.append({
+                "number": claim_num,
+                "text": claim_text
+            })
+
+    return claims
+
+
+def insert_claims(claims_data, original_numbers):
+    """Insert claims into database, splitting combined blobs."""
+    inserted = 0
+    errors = 0
+
+    for record in claims_data:
+        bq_pn = record.get("publication_number", "")
+        combined_text = record.get("claim_text", "")
+
+        if not bq_pn or not combined_text:
+            continue
+
+        # Convert back to our format
+        patent_number = denormalize_patent_number(bq_pn, original_numbers)
+
+        # Split into individual claims
+        individual_claims = split_claims(combined_text)
+
+        for claim in individual_claims:
+            claim_type = parse_claim_type(claim["text"])
+            depends_on = parse_depends_on(claim["text"])
+
+            try:
+                data = {
+                    "patent_number": patent_number,
+                    "claim_number": claim["number"],
+                    "claim_text": claim["text"],
+                    "claim_type": claim_type,
+                }
+                if depends_on:
+                    data["depends_on"] = depends_on
+
+                supabase_request(
+                    "POST",
+                    "patent_claims",
+                    data
+                )
+                inserted += 1
+            except Exception as e:
+                errors += 1
+                if errors <= 5:
+                    log(f"  Error inserting claim {patent_number}#{claim['number']}: {e}")
+
+    return inserted, errors
+
+
+def main():
+    log("=" * 60)
+    log("BIGQUERY PATENT CLAIMS FETCHER (API)")
+    log("=" * 60)
+
+    # Get US patents from database
+    us_patents = get_us_patents()
+    log(f"Found {len(us_patents)} US patents in database")
+
+    # Filter to granted patents only (B1, B2 - not applications)
+    granted = [p for p in us_patents if re.search(r'B\d$', p)]
+    applications = [p for p in us_patents if re.search(r'A\d$', p)]
+    design = [p for p in us_patents if p.startswith("USD")]
+
+    log(f"  Granted patents: {len(granted)}")
+    log(f"  Applications: {len(applications)}")
+    log(f"  Design patents: {len(design)}")
+
+    # Check existing claims
+    existing = get_existing_claims()
+    log(f"Already have claims for {len(existing)} patents")
+
+    # Filter out patents we already have
+    to_fetch = [p for p in granted if p not in existing]
+    log(f"Need to fetch claims for {len(to_fetch)} patents")
+
+    if not to_fetch:
+        log("No patents to fetch!")
+        return
+
+    # Process in batches of 50 (BigQuery query size limit)
+    batch_size = 50
+    total_claims = 0
+    total_errors = 0
+
+    for i in range(0, len(to_fetch), batch_size):
+        batch = to_fetch[i:i + batch_size]
+        log(f"\nBatch {i // batch_size + 1}: {len(batch)} patents")
+
+        # Fetch from BigQuery
+        claims_data = fetch_claims_batch(batch)
+        log(f"  BigQuery returned {len(claims_data)} claims")
+
+        if claims_data:
+            inserted, errors = insert_claims(claims_data, to_fetch)
+            total_claims += inserted
+            total_errors += errors
+            log(f"  Inserted: {inserted}, Errors: {errors}")
+
+    # Summary
+    log("\n" + "=" * 60)
+    log("SUMMARY")
+    log("=" * 60)
+    log(f"Total claims inserted: {total_claims}")
+    log(f"Total errors: {total_errors}")
+
+    # Verify
+    try:
+        final_count = supabase_request("GET", "patent_claims?select=id")
+        log(f"Total claims in database: {len(final_count)}")
+    except Exception:
+        log("Could not verify final count")
+
+
+if __name__ == "__main__":
+    main()
