@@ -2,11 +2,14 @@
 .vercel
 
 # Environment Variables (NEVER commit these!)
+.env
+.env.*
 .env.local
 .env.development.local
 .env.production.local
-.env*.local
 *.env.local
+scripts/data-fetchers/.env
+scripts/discord/webhook_urls.txt
 
 # Dependencies
 node_modules/
