@@ -72,6 +72,13 @@ PATENTSVIEW_DELAY = 1.5  # 45 req/min
 EPO_DELAY = 3.0  # 20 req/min
 GOOGLE_PATENTS_DELAY = 2.5
 
+try:
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+    from discord.notify import notify_patent
+    DISCORD_AVAILABLE = True
+except ImportError:
+    DISCORD_AVAILABLE = False
+
 
 def log(msg: str):
     print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
@@ -601,6 +608,14 @@ class PatentWorker:
                 try:
                     supabase_request("POST", "patents", patent)
                     self.stats["new_patents"] += 1
+                    # Discord notification
+                    if DISCORD_AVAILABLE:
+                        notify_patent(
+                            patent_number=patent["patent_number"],
+                            title=patent.get("title", ""),
+                            status=patent.get("status", "granted"),
+                            source=patent.get("source", ""),
+                        )
                 except Exception as e:
                     if "duplicate" not in str(e).lower():
                         log(f"  Error inserting {patent['patent_number']}: {e}")

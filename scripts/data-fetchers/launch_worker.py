@@ -26,6 +26,13 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 
 LAUNCH_KEYWORDS = ["launch", "bluebird", "bluewalker", "orbit", "liftoff", "mission"]
 
+try:
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+    from discord.notify import notify_launch
+    DISCORD_AVAILABLE = True
+except ImportError:
+    DISCORD_AVAILABLE = False
+
 
 def log(msg: str):
     print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
@@ -223,6 +230,11 @@ def upsert_launch(launch: dict, pr: dict) -> bool:
         record["status"] = "SCHEDULED"
         supabase_request("next_launches", method="POST", data=record)
         log(f"    {mission}: INSERTED")
+
+        # Discord notification for new launches
+        if DISCORD_AVAILABLE:
+            notify_launch(mission=mission, date=target_date or "TBD",
+                          status="SCHEDULED")
 
     return True
 

@@ -39,6 +39,13 @@ SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://dviagnysjftidxudeuyo.supa
 SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
+try:
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+    from discord.notify import notify_signal
+    DISCORD_AVAILABLE = True
+except ImportError:
+    DISCORD_AVAILABLE = False
+
 
 def log(msg: str):
     print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
@@ -688,6 +695,15 @@ def run_scanner():
             all_signals.extend(signals)
         except Exception as e:
             log(f"  ERROR in {name} detector: {e}")
+
+    # Discord notifications for all detected signals
+    if DISCORD_AVAILABLE and not args.dry_run:
+        for sig in all_signals:
+            notify_signal(
+                signal_type=sig.get("signal_type", "unknown"),
+                description=sig.get("title", ""),
+                severity=sig.get("severity", "medium"),
+            )
 
     log("")
     log("=" * 60)

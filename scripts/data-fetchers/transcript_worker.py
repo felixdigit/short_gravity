@@ -32,6 +32,13 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
 # roic.ai transcript URLs (free, full transcripts)
 # URL pattern: https://www.roic.ai/quote/ASTS/transcripts/{year}-year/{quarter_num}-quarter
+try:
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+    from discord.notify import notify_earnings
+    DISCORD_AVAILABLE = True
+except ImportError:
+    DISCORD_AVAILABLE = False
+
 KNOWN_TRANSCRIPTS = [
     # 2025
     {"quarter": "Q3", "year": "2025", "date": "2025-11-10", "url": "https://www.roic.ai/quote/ASTS/transcripts/2025-year/3-quarter"},
@@ -261,6 +268,15 @@ def process_transcript(transcript: Dict, existing: set) -> bool:
 
         supabase_request("POST", "inbox", inbox_item)
         log(f"  ✓ Stored")
+
+        # Discord notification
+        if DISCORD_AVAILABLE:
+            notify_earnings(
+                title=f"ASTS {transcript['quarter']} FY{transcript['year']} Earnings Call",
+                date=transcript["date"],
+                summary=(summary or "")[:500],
+            )
+
         return True
 
     except Exception as e:

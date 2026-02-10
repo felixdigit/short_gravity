@@ -31,6 +31,13 @@ try:
 except ImportError:
     STORAGE_AVAILABLE = False
 
+try:
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+    from discord.notify import notify_sec_filing, log as discord_log
+    DISCORD_AVAILABLE = True
+except ImportError:
+    DISCORD_AVAILABLE = False
+
 # Configuration
 ASTS_CIK = "0001780312"
 SEC_BASE_URL = "https://data.sec.gov"
@@ -441,6 +448,11 @@ def process_filing(filing: Dict) -> bool:
         # Create filing drop alert signal
         filing["content_length"] = content_length
         create_filing_signal(filing, summary)
+
+        # Discord notification
+        if DISCORD_AVAILABLE and form in HIGH_SIGNAL_FORMS:
+            notify_sec_filing(form=form, filing_date=filing["filing_date"],
+                              summary=summary, url=filing.get("url", ""))
 
         log(f"  ✓ Completed")
         return True
