@@ -255,25 +255,19 @@ def get_latest_filing_date(docket: str) -> Optional[str]:
 
 
 def upsert_filing(record: Dict) -> bool:
-    """Insert filing, skip if file_number already exists."""
+    """Upsert filing — insert or skip if file_number already exists."""
     try:
         supabase_request(
             "POST",
-            "fcc_filings",
+            "fcc_filings?on_conflict=filing_system,file_number",
             record,
-            extra_headers={"Prefer": "return=representation,resolution=merge-duplicates"},
+            extra_headers={"Prefer": "return=minimal,resolution=merge-duplicates"},
         )
         return True
     except urllib.error.HTTPError as e:
-        # 409 = conflict (already exists) -- treat as skip
         if e.code == 409:
             return False
-        # Try plain insert
-        try:
-            supabase_request("POST", "fcc_filings", record)
-            return True
-        except Exception:
-            return False
+        return False
     except Exception:
         return False
 

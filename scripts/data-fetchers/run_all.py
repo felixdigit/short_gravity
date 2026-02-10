@@ -53,6 +53,9 @@ WEEKLY_WORKERS = [
     ("Short Interest Worker", "short_interest_worker.py", [], 60),
     ("FCC ELS Scanner", "fcc_attachment_worker.py", ["--els-scan"], 600),
     ("Patent Enricher", "patent_enricher.py", ["--missing-only"], 600),
+    ("ITU Space Filings", "itu_worker.py", [], 300),
+    ("ISED Canada Regulatory", "ised_worker.py", [], 600),
+    ("Ofcom UK Regulatory", "ofcom_worker.py", [], 600),
 ]
 
 
