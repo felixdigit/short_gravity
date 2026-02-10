@@ -43,6 +43,7 @@ DAILY_WORKERS = [
     ("SEC Exhibit Backfill", "exhibit_backfill.py", ["--limit", "50"], 600),
     ("FCC ICFS Metadata", "icfs_servicenow_worker.py", [], 600),
     ("FCC ICFS Attachments", "fcc_attachment_worker.py", ["--icfs-incremental"], 600),
+    ("FCC ECFS Docket Crawler", "ecfs_worker.py", ["--no-pdf"], 600),
     ("Cash Position Worker", "cash_position_worker.py", [], 120),
     ("Patent Discovery", "patent_worker_v2.py", [], 600),
     ("Transcript Worker", "transcript_worker.py", [], 600),
