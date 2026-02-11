@@ -47,9 +47,21 @@ ICFS_BASE = "https://fccprod.servicenowservices.com/icfs"
 ICFS_DETAIL_URL = f"{ICFS_BASE}?id=ibfs_application_summary&number="
 
 # Seed anchor filings — one per call sign; "Related Filings" tab reveals all others
+# Covers AST SpaceMobile + every strategically relevant competitor/partner
 ANCHOR_FILINGS = [
-    "SAT-LOA-20200413-00034",   # S3065 (primary NGSO license)
+    # AST SpaceMobile
+    "SAT-LOA-20200413-00034",   # S3065 — primary NGSO license
     "SAT-MOD-20241104-00251",   # S2983/3018
+    # Ligado Networks (L-band spectrum partner, S2358)
+    "SAT-MOD-20251206-00374",   # SkyTerra Next modification — AST L-band gateway
+    # SpaceX (primary D2D competitor, SCS with T-Mobile)
+    "SAT-MOD-20230207-00021",   # Direct-to-Cellular mod — PCS G Block
+    # Lynk Global (D2D competitor, merging with Omnispace + SES)
+    "SAT-LOA-20210511-00064",   # S3087 — commercial D2D license
+    # Globalstar (Apple satellite partner, C-3 constellation)
+    "SAT-MOD-20171020-00141",   # S2115 — HIBLEO-4
+    # Iridium (L-band incumbent, opposing Ligado)
+    "SAT-MOD-20171030-00146",   # S2110 — Iridium NEXT
 ]
 
 FILING_NUMBER_RE = re.compile(r'((?:SAT|SES)-[A-Z/]+-\d{8}-\d{3,5})')
@@ -323,7 +335,7 @@ def scrape_filing_detail(page: Any, file_number: str) -> Optional[Dict]:
             "SES-STA": "Earth Station STA",
         }.get(filing_type, filing_type)
 
-        filer = fields.get("filer_name", "AST & Science, LLC")
+        filer = fields.get("filer_name", "Unknown Filer")
         title = f"{filer}: {filing_type_desc}"
         subtype = fields.get("filing_subtype", "")
         if subtype:

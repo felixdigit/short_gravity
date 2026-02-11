@@ -33,6 +33,7 @@ Usage:
 
 from __future__ import annotations
 import argparse
+import base64
 import json
 import os
 import sys
@@ -59,6 +60,9 @@ FCC_API_KEY = os.environ.get("FCC_API_KEY", "DEMO_KEY")
 RATE_LIMIT_DELAY = 1.0        # seconds between ECFS API requests
 RATE_LIMIT_429_WAIT = 15.0    # seconds to wait on 429 response
 MAX_RETRIES = 3
+CONTENT_EXTRACT_DELAY = 3.0   # Delay between Playwright PDF downloads
+
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
 # Target dockets - hardcoded for ASTS coverage
 TARGET_DOCKETS = [
@@ -640,6 +644,259 @@ def process_single_filing(
 
 
 # ============================================================================
+# Phase 2: Playwright Content Extraction
+# ============================================================================
+
+def try_import_playwright():
+    """Try to import Playwright, return None if unavailable."""
+    try:
+        from playwright.sync_api import sync_playwright
+        return sync_playwright
+    except ImportError:
+        return None
+
+
+def download_ecfs_document_playwright(browser, url: str) -> Optional[bytes]:
+    """Download a PDF from fcc.gov/ecfs/ via Playwright Firefox.
+
+    Opens a fresh page, navigates to the SPA document page, and intercepts the
+    PDF response that the React app fetches from /ecfs/documents/ (plural endpoint).
+    Fresh page per request avoids Akamai session/connection issues.
+    """
+    pdf_data = [None]
+
+    def capture_pdf(response):
+        ct = response.headers.get("content-type", "")
+        if "pdf" in ct and response.ok:
+            try:
+                body = response.body()
+                if body and len(body) > 500:
+                    pdf_data[0] = body
+            except Exception:
+                pass
+
+    page = browser.new_page()
+    page.on("response", capture_pdf)
+
+    try:
+        page.goto(url, wait_until="networkidle", timeout=30000)
+        return pdf_data[0]
+    except Exception as e:
+        # networkidle may timeout but PDF could still have been captured
+        if pdf_data[0]:
+            return pdf_data[0]
+        log(f"    Download error: {e}")
+        return None
+    finally:
+        page.close()
+
+
+def generate_content_summary(filing: Dict, content: str) -> str:
+    """Generate AI summary for extracted content using Claude Haiku."""
+    if not ANTHROPIC_API_KEY:
+        return ""
+
+    title = filing.get("title", "Unknown")
+    filer = filing.get("filer_name", "Unknown")
+    docket = filing.get("docket", "Unknown")
+
+    truncated = content[:30000] if len(content) > 30000 else content
+
+    prompt = f"""You are analyzing an FCC ECFS filing related to satellite-to-cellular communications.
+
+Filer: {filer}
+Docket: {docket}
+Title: {title}
+
+Filing content:
+{truncated}
+
+Provide a concise summary (2-3 sentences) focusing on:
+- The main argument or position taken
+- Any specific technical or regulatory points
+- Implications for AST SpaceMobile or the direct-to-device satellite industry
+
+Summary:"""
+
+    url = "https://api.anthropic.com/v1/messages"
+    headers = {
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+        "Content-Type": "application/json",
+    }
+    body = {
+        "model": "claude-haiku-4-5-20251001",
+        "max_tokens": 200,
+        "messages": [{"role": "user", "content": prompt}],
+    }
+
+    req = urllib.request.Request(url, data=json.dumps(body).encode(), headers=headers)
+
+    try:
+        with urllib.request.urlopen(req, timeout=60) as response:
+            result = json.loads(response.read().decode("utf-8"))
+            return result["content"][0]["text"].strip()
+    except Exception as e:
+        log(f"    Summary generation error: {e}")
+        return ""
+
+
+def backfill_content(args):
+    """Phase 2: Extract content from ECFS filings missing content_text via Playwright."""
+    sync_playwright = try_import_playwright()
+    if not sync_playwright:
+        log("ERROR: playwright not installed (pip install playwright && playwright install chromium)")
+        sys.exit(1)
+
+    extract_fn = try_import_pdf_extractor()
+    upload_filing_fn, _ = try_import_storage_utils()
+
+    log("=" * 70)
+    log("ECFS Content Extraction (Phase 2)")
+    log("=" * 70)
+
+    if not args.dry_run and not SUPABASE_SERVICE_KEY:
+        log("ERROR: SUPABASE_SERVICE_KEY not set")
+        sys.exit(1)
+
+    # Query filings with no content_text
+    query = "fcc_filings?filing_system=eq.ECFS&content_text=is.null&select=id,file_number,source_url,title,filer_name,docket,filing_type"
+    query += "&order=filed_date.desc"
+
+    if args.docket:
+        query += f"&docket=eq.{urllib.parse.quote(args.docket)}"
+
+    try:
+        filings = supabase_request("GET", query)
+    except Exception as e:
+        log(f"Error querying filings: {e}")
+        return
+
+    log(f"Filings missing content_text: {len(filings)}")
+
+    if not filings:
+        log("Nothing to extract. Done.")
+        return
+
+    if args.limit:
+        filings = filings[:args.limit]
+        log(f"Limited to {args.limit} filings")
+
+    if args.dry_run:
+        log("[DRY RUN] Would process:")
+        for f in filings:
+            doc_url = f.get("source_url", "")
+            log(f"  {f['file_number']} | {f.get('filer_name', '?')[:30]} | {doc_url[:60]}")
+        return
+
+    # Launch Playwright with Firefox (Chromium blocked by Akamai on www.fcc.gov)
+    log("Launching Playwright (Firefox)...")
+    pw = sync_playwright().start()
+    browser = pw.firefox.launch(headless=True)
+    log("Browser ready")
+
+    success = 0
+    failed = 0
+
+    try:
+        for i, filing in enumerate(filings):
+            file_number = filing["file_number"]
+            source_url = filing.get("source_url", "")
+            filer = filing.get("filer_name", "Unknown")[:30]
+
+            log(f"[{i+1}/{len(filings)}] {file_number} | {filer}")
+
+            # Build document URL if not present
+            if not source_url or "fcc.gov" not in source_url:
+                source_url = f"https://www.fcc.gov/ecfs/document/{file_number}/1"
+
+            # Download via Playwright
+            pdf_bytes = download_ecfs_document_playwright(browser, source_url)
+
+            if not pdf_bytes:
+                log(f"    No data downloaded, skipping")
+                failed += 1
+                time.sleep(CONTENT_EXTRACT_DELAY)
+                continue
+
+            log(f"    Downloaded {len(pdf_bytes):,} bytes")
+
+            is_pdf = pdf_bytes[:4] == b"%PDF"
+
+            # Extract text
+            content_text = None
+            if is_pdf and extract_fn:
+                content_text = extract_fn(pdf_bytes)
+            elif not is_pdf:
+                try:
+                    html = pdf_bytes.decode("utf-8", errors="replace")
+                    content_text = strip_html(html)
+                except Exception:
+                    pass
+
+            if not content_text or len(content_text) < 100:
+                log(f"    No usable text extracted")
+                failed += 1
+                time.sleep(CONTENT_EXTRACT_DELAY)
+                continue
+
+            log(f"    Extracted {len(content_text):,} chars")
+
+            # Upload to storage
+            storage_path = None
+            if is_pdf and upload_filing_fn:
+                storage_result = upload_filing_fn(
+                    filing_system="ecfs",
+                    file_number=file_number,
+                    content=pdf_bytes,
+                    filename="filing.pdf",
+                    content_type="application/pdf",
+                )
+                if storage_result.get("success"):
+                    storage_path = storage_result.get("path")
+                    log(f"    Stored: {storage_path}")
+
+            # Generate AI summary
+            ai_summary = generate_content_summary(filing, content_text)
+            if ai_summary:
+                log(f"    Summary: {ai_summary[:80]}...")
+
+            # PATCH the filing record
+            patch_data = {
+                "content_text": content_text[:500000],
+                "fetched_at": datetime.now(timezone.utc).isoformat(),
+            }
+            if storage_path:
+                patch_data["storage_path"] = storage_path
+            if ai_summary:
+                patch_data["ai_summary"] = ai_summary
+                patch_data["ai_model"] = "claude-haiku-4-5-20251001"
+                patch_data["ai_generated_at"] = datetime.now(timezone.utc).isoformat()
+
+            try:
+                supabase_request(
+                    "PATCH",
+                    f"fcc_filings?file_number=eq.{file_number}&filing_system=eq.ECFS",
+                    patch_data,
+                )
+                log(f"    ✓ Updated")
+                success += 1
+            except Exception as e:
+                log(f"    ✗ PATCH failed: {e}")
+                failed += 1
+
+            time.sleep(CONTENT_EXTRACT_DELAY)
+
+    finally:
+        browser.close()
+        pw.stop()
+
+    log("=" * 70)
+    log(f"Content extraction complete: {success} success, {failed} failed")
+    log("=" * 70)
+
+
+# ============================================================================
 # Main Worker
 # ============================================================================
 
@@ -847,10 +1104,19 @@ if __name__ == "__main__":
         help="Skip PDF download and text extraction.",
     )
     parser.add_argument(
+        "--extract-content",
+        action="store_true",
+        help="Phase 2: Playwright PDF extraction for filings missing content_text.",
+    )
+    parser.add_argument(
         "--limit",
         type=int,
         help="Limit number of filings to process.",
     )
 
     args = parser.parse_args()
-    run_worker(args)
+
+    if args.extract_content:
+        backfill_content(args)
+    else:
+        run_worker(args)

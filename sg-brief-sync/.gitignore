@@ -1,0 +1,12 @@
+# Auth — never commit these
+credentials.json
+token.json
+
+# Config contains your doc ID
+config.json
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/

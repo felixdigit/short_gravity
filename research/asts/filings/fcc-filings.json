@@ -1,0 +1,211 @@
+{
+  "fetchedAt": "2026-01-25T19:29:13.914792Z",
+  "company": {
+    "name": "AST SpaceMobile, Inc.",
+    "fccNames": [
+      "AST SpaceMobile",
+      "AST & Science",
+      "AST Science"
+    ],
+    "callSign": "S3065"
+  },
+  "resources": {
+    "fccReportCompany": "https://fcc.report/company/Ast-Spacemobile",
+    "fccReportELS": "https://fcc.report/ELS/AST-Spacemobile",
+    "ecfsSearch": "https://www.fcc.gov/ecfs/search/search-filings?q=AST%20SpaceMobile"
+  },
+  "keyFilings": [
+    {
+      "type": "Satellite License",
+      "callSign": "S3065",
+      "fileNumber": "SAT-LOA-20200727-00088",
+      "description": "SpaceMobile NGSO constellation license application",
+      "status": "Pending/Amended",
+      "url": "https://fcc.report/IBFS/SAT-LOA-20200727-00088"
+    },
+    {
+      "type": "License Amendment",
+      "callSign": "S3065",
+      "fileNumber": "SAT-AMD-20240311-00053",
+      "description": "Amendment for 248-satellite constellation (U.S. license)",
+      "status": "Pending",
+      "url": "https://fcc.report/IBFS/SAT-AMD-20240311-00053"
+    },
+    {
+      "type": "Experimental License",
+      "callSign": "Various",
+      "fileNumber": "Various",
+      "description": "BlueWalker 3 and BlueBird experimental authorizations",
+      "status": "Active",
+      "url": "https://fcc.report/ELS/AST-Spacemobile"
+    },
+    {
+      "type": "Spectrum Lease",
+      "parties": "AST & AT&T",
+      "description": "Spectrum manager lease for 700/850 MHz (Lower 700 A/B/C, Cellular)",
+      "coverage": "CONUS + Hawaii",
+      "status": "Active"
+    },
+    {
+      "type": "Spectrum Lease",
+      "parties": "AST & Verizon",
+      "description": "Spectrum manager lease for 800 MHz Cellular",
+      "coverage": "CONUS + Hawaii",
+      "status": "Active"
+    },
+    {
+      "type": "Ligado Partnership",
+      "fileNumber": "Pending",
+      "description": "L-band MSS spectrum partnership application",
+      "status": "Pending FCC approval",
+      "notes": "Combines Ligado L-band MSS spectrum with AST constellation"
+    }
+  ],
+  "spectrumBands": [
+    {
+      "band": "698-716 MHz",
+      "direction": "Earth-to-space",
+      "use": "SCS uplink",
+      "partner": "AT&T"
+    },
+    {
+      "band": "728-746 MHz",
+      "direction": "space-to-Earth",
+      "use": "SCS downlink",
+      "partner": "AT&T"
+    },
+    {
+      "band": "758-768 MHz",
+      "direction": "space-to-Earth",
+      "use": "SCS downlink",
+      "partner": "AT&T"
+    },
+    {
+      "band": "788-798 MHz",
+      "direction": "Earth-to-space",
+      "use": "SCS uplink",
+      "partner": "AT&T"
+    },
+    {
+      "band": "824-849 MHz",
+      "direction": "Earth-to-space",
+      "use": "SCS uplink (Cellular)",
+      "partner": "AT&T/Verizon"
+    },
+    {
+      "band": "869-894 MHz",
+      "direction": "space-to-Earth",
+      "use": "SCS downlink (Cellular)",
+      "partner": "AT&T/Verizon"
+    },
+    {
+      "band": "37.5-42 GHz",
+      "direction": "space-to-Earth",
+      "use": "Feeder downlink"
+    },
+    {
+      "band": "47.2-50.2 GHz",
+      "direction": "Earth-to-space",
+      "use": "Feeder uplink"
+    },
+    {
+      "band": "50.4-51.4 GHz",
+      "direction": "Earth-to-space",
+      "use": "Feeder uplink"
+    },
+    {
+      "band": "45.5-47 GHz",
+      "direction": "Earth-to-space",
+      "use": "Feeder uplink"
+    },
+    {
+      "band": "430-440 MHz",
+      "direction": "Both",
+      "use": "TT&C"
+    },
+    {
+      "band": "2025-2110 MHz",
+      "direction": "Earth-to-space",
+      "use": "TT&C uplink"
+    },
+    {
+      "band": "2200-2290 MHz",
+      "direction": "space-to-Earth",
+      "use": "TT&C downlink"
+    },
+    {
+      "band": "L-band MSS",
+      "direction": "Both",
+      "use": "5G direct-to-phone",
+      "partner": "Ligado",
+      "status": "Pending"
+    }
+  ],
+  "constellation": {
+    "totalSatellites": 248,
+    "shells": [
+      {
+        "count": 23,
+        "altitude_km": 520,
+        "inclination": 53.0,
+        "description": "Initial deployment"
+      },
+      {
+        "count": 192,
+        "altitude_km": 690,
+        "inclination": 53.0,
+        "description": "Main constellation"
+      },
+      {
+        "count": 28,
+        "altitude_km": 685,
+        "inclination": 98.13,
+        "description": "Polar coverage"
+      },
+      {
+        "count": 5,
+        "altitude_km": 725,
+        "inclination": 53.0,
+        "description": "First commercial Block 2"
+      }
+    ],
+    "blueBirdsLaunched": [
+      {
+        "name": "BlueWalker 3",
+        "launchDate": "2022-09-10",
+        "status": "Operational (test)"
+      },
+      {
+        "name": "BlueBird 1-5",
+        "launchDate": "2024-09-12",
+        "status": "Operational"
+      },
+      {
+        "name": "BlueBird 6",
+        "launchDate": "2024-12-23",
+        "status": "Operational"
+      }
+    ],
+    "plannedLaunches": [
+      {
+        "name": "BlueBird 7",
+        "targetDate": "2025-02 (late)",
+        "vehicle": "New Glenn-3"
+      }
+    ]
+  },
+  "keyDockets": [
+    {
+      "docket": "IB Docket 23-65",
+      "title": "SCS Rulemaking",
+      "description": "Supplemental Coverage from Space framework",
+      "url": "https://www.fcc.gov/ecfs/search/search-filings?q=23-65"
+    },
+    {
+      "docket": "WT Docket 22-271",
+      "title": "SCS Framework",
+      "description": "Single Network Future: SCS regulatory framework",
+      "url": "https://www.fcc.gov/ecfs/search/search-filings?q=22-271"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(npm install:*)",
+      "Bash(npx:*)",
+      "Bash(python3:*)",
+      "Bash(git:*)",
+      "Bash(gh:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(source:*)",
+      "Bash(cd:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(curl.*password.*:*)",
+      "Bash(curl.*secret.*:*)",
+      "Bash(curl.*token.*:*)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/format-ts.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "createdAt": "2026-01-25T19:29:14.022365Z",
+  "company": {
+    "name": "AST SpaceMobile, Inc.",
+    "ticker": "ASTS",
+    "cik": "0001780312",
+    "fccCallSign": "S3065"
+  },
+  "dataSources": {
+    "investor_relations": {
+      "path": "research/asts/investor-relations.json",
+      "fetchedAt": "2026-01-25T19:29:13.988716Z"
+    },
+    "sec_filings_all": {
+      "path": "research/asts/filings/sec-filings-all.json",
+      "fetchedAt": "2026-01-25T19:29:13.842144Z"
+    },
+    "sec_filings": {
+      "path": "research/asts/filings/sec-filings.json",
+      "fetchedAt": "2026-01-25T19:29:13.838180Z"
+    },
+    "fcc_filings": {
+      "path": "research/asts/filings/fcc-filings.json",
+      "fetchedAt": "2026-01-25T19:29:13.914792Z"
+    }
+  },
+  "quickLinks": {
+    "sec": {
+      "edgarSearch": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001780312",
+      "recentFilings": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001780312&type=&dateb=&owner=include&count=40"
+    },
+    "fcc": {
+      "fccReport": "https://fcc.report/company/Ast-Spacemobile",
+      "ecfsSearch": "https://www.fcc.gov/ecfs/search/search-filings?q=AST%20SpaceMobile",
+      "experimentalLicenses": "https://fcc.report/ELS/AST-Spacemobile"
+    },
+    "company": {
+      "investorRelations": "https://investors.ast-science.com/",
+      "pressReleases": "https://investors.ast-science.com/press-releases",
+      "secFilings": "https://investors.ast-science.com/sec-filings",
+      "quarterlyResults": "https://investors.ast-science.com/quarterly-results"
+    },
+    "tracking": {
+      "spaceTrack": "https://www.space-track.org/",
+      "celestrak": "https://celestrak.org/NORAD/elements/",
+      "n2yo": "https://www.n2yo.com/?s=54361"
+    },
+    "market": {
+      "nasdaq": "https://www.nasdaq.com/market-activity/stocks/asts",
+      "yahooFinance": "https://finance.yahoo.com/quote/ASTS",
+      "seekingAlpha": "https://seekingalpha.com/symbol/ASTS"
+    }
+  },
+  "localFiles": [
+    {
+      "path": "research/asts/investor-relations.json",
+      "size": 5480,
+      "modified": "2026-01-25T14:29:13.989245Z",
+      "records": 8
+    },
+    {
+      "path": "research/asts/filings/sec-filings-all.json",
+      "size": 229768,
+      "modified": "2026-01-25T14:29:13.849750Z",
+      "records": 528
+    },
+    {
+      "path": "research/asts/filings/sec-filings.json",
+      "size": 63326,
+      "modified": "2026-01-25T14:29:13.841960Z",
+      "records": 145
+    },
+    {
+      "path": "research/asts/filings/fcc-filings.json",
+      "size": 5426,
+      "modified": "2026-01-25T14:29:13.915309Z",
+      "records": null
+    }
+  ]
+}

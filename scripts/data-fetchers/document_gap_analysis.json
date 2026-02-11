@@ -1,0 +1,2617 @@
+{
+  "generated": "2026-02-09 19:35:20",
+  "total_analyzed": 70,
+  "total_references": 302,
+  "unique_references": 195,
+  "categories": {
+    "fcc_filing": [
+      {
+        "name": "Comments of DIRECTV LLC",
+        "type": "fcc_filing",
+        "identifier": "ICFS File No. SAT-MOD-20250805-00200, filed Nov. 18, 2025",
+        "public": true,
+        "context": "DIRECTV's initial comments raising concerns about SpaceX's EPFD waiver request and NGSO-GSO sharing framework.",
+        "source_doc": "FCC: DIRECTV Reply Comments on SpaceX Gen1 Mod.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 4,
+        "found_in": [
+          "FCC: DIRECTV Reply Comments on SpaceX Gen1 Mod.pdf"
+        ]
+      },
+      {
+        "name": "Comments of DIRECTV, LLC, SB Docket No. 25-157",
+        "type": "fcc_filing",
+        "identifier": "SB Docket No. 25-157, filed Jul. 28, 2025",
+        "public": true,
+        "context": "DIRECTV's comments on the NPRM regarding EPFD limits and NGSO-GSO sharing framework attached as Attachment A.",
+        "source_doc": "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 3,
+        "found_in": [
+          "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf"
+        ]
+      },
+      {
+        "name": "Single Network Future: Supplemental Coverage from Space, Space Innovation, GN Docket No. 23-65, IB Docket No. 22-271, Report and Order and Further Notice of Proposed Rulemaking",
+        "type": "fcc_filing",
+        "identifier": "GN Docket No. 23-65, IB Docket No. 22-271, 39 FCC Rcd 2622, para. 205 (2024)",
+        "public": true,
+        "context": "Referenced for the out-of-band PFD limit of -120 dBW/m2/MHz that AST SpaceMobile must comply with.",
+        "source_doc": "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1).pdf",
+        "source_file_number": "SAT-AMD-20250718-00181",
+        "mention_count": 3,
+        "found_in": [
+          "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1).pdf",
+          "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1.1).pdf"
+        ]
+      },
+      {
+        "name": "Space Exploration Holdings, LLC",
+        "type": "fcc_filing",
+        "identifier": "34 FCC Rcd. 2526 (IB 2019)",
+        "public": true,
+        "context": "Referenced as SpaceX Modification authorizing relocation of 1,584 satellites to 550 km altitude.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20190830-00087",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Consolidated Opposition to Petitions and Response to Comments of Space Exploration Holdings, LLC",
+        "type": "fcc_filing",
+        "identifier": "ICFS File Nos. SAT-MOD-20250805-00200 and SAT-STA-20250902-00246, filed Dec. 3, 2025",
+        "public": true,
+        "context": "SpaceX's response document addressing opposition and comments to its modification application and special temporary authority request.",
+        "source_doc": "FCC: DIRECTV Reply Comments on SpaceX Gen1 Mod.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: DIRECTV Reply Comments on SpaceX Gen1 Mod.pdf"
+        ]
+      },
+      {
+        "name": "Letter from Brenna Sparks, DIRECTV, to Marlene H. Dortch, FCC",
+        "type": "fcc_filing",
+        "identifier": "SB Docket No. 25-157, filed Dec. 8, 2025",
+        "public": true,
+        "context": "DIRECTV's analysis of SpaceX's test report from Bogota, Colombia campaign regarding EPFD impacts.",
+        "source_doc": "FCC: DIRECTV Reply Comments on SpaceX Gen1 Mod.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: DIRECTV Reply Comments on SpaceX Gen1 Mod.pdf"
+        ]
+      },
+      {
+        "name": "Letter from George V. John, Counsel to SES, to Marlene H. Dortch, FCC",
+        "type": "fcc_filing",
+        "identifier": "SB Docket No. 25-157, filed Dec. 9, 2025",
+        "public": true,
+        "context": "SES counsel letter discussing harmful interference from SpaceX's NGSO system that remained unresolved for over a year.",
+        "source_doc": "FCC: DIRECTV Reply Comments on SpaceX Gen1 Mod.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: DIRECTV Reply Comments on SpaceX Gen1 Mod.pdf"
+        ]
+      },
+      {
+        "name": "Schedule S",
+        "type": "fcc_filing",
+        "identifier": null,
+        "public": false,
+        "context": "Complementary schedule referenced alongside the pending FCC application for AST SpaceMobile satellite system.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-AMD-20230717-00172",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: Download",
+          "FCC: FCC Application Tech.pdf"
+        ]
+      },
+      {
+        "name": "FCC Form 312",
+        "type": "fcc_filing",
+        "identifier": "FCC Form 312",
+        "public": true,
+        "context": "Referenced as the primary application form with Schedule S portion that should be used alongside this technical appendix.",
+        "source_doc": "FCC: FCC Application Tech.pdf",
+        "source_file_number": "SAT-LOA-20230504-00103",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: FCC Application Tech.pdf"
+        ]
+      },
+      {
+        "name": "SAT-PDR-20200413-00034",
+        "type": "fcc_filing",
+        "identifier": "SAT-PDR-20200413-00034",
+        "public": true,
+        "context": "FCC IBFS file number for AST SpaceMobile's satellite application referenced in the letter header",
+        "source_doc": "FCC: AST SpaceMobile Meet.pdf",
+        "source_file_number": "SAT-LOA-20200413-00034",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: AST SpaceMobile Meet.pdf"
+        ]
+      },
+      {
+        "name": "SAT-APL-20200727-00088",
+        "type": "fcc_filing",
+        "identifier": "SAT-APL-20200727-00088",
+        "public": true,
+        "context": "FCC IBFS file number for AST SpaceMobile's satellite application referenced in the letter header",
+        "source_doc": "FCC: AST SpaceMobile Meet.pdf",
+        "source_file_number": "SAT-LOA-20200413-00034",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: AST SpaceMobile Meet.pdf"
+        ]
+      },
+      {
+        "name": "SAT-APL-20201028-00126",
+        "type": "fcc_filing",
+        "identifier": "SAT-APL-20201028-00126",
+        "public": true,
+        "context": "FCC IBFS file number for AST SpaceMobile's satellite application referenced in the letter header",
+        "source_doc": "FCC: AST SpaceMobile Meet.pdf",
+        "source_file_number": "SAT-LOA-20200413-00034",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: AST SpaceMobile Meet.pdf"
+        ]
+      },
+      {
+        "name": "CTIA, Comments, ICFS File No. SAT-LOA-20230315-00060",
+        "type": "fcc_filing",
+        "identifier": "SAT-LOA-20230315-00060",
+        "public": true,
+        "context": "CTIA opposition filing to Lockheed Martin's Lunar Terminal Application referenced in the ex parte presentation.",
+        "source_doc": "FCC: LMCO Lunar-Cislunar.pdf",
+        "source_file_number": "SAT-LOA-20230315-00060",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: LMCO Lunar-Cislunar.pdf"
+        ]
+      },
+      {
+        "name": "Space Exploration Holdings, LLC",
+        "type": "fcc_filing",
+        "identifier": "33 FCC Rcd. 3391 (2018)",
+        "public": true,
+        "context": "Referenced as SpaceX Initial Authorization granting SpaceX authority to construct, deploy, and operate a constellation of 4,425 NGSO satellites.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20190830-00087",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Teledesic LLC",
+        "type": "fcc_filing",
+        "identifier": "14 FCC Rcd. 2261 (IB 1999)",
+        "public": true,
+        "context": "Referenced for FCC precedent on granting NGSO modifications that present no significant interference problems.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20190830-00087",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "The Boeing Co.",
+        "type": "fcc_filing",
+        "identifier": "18 FCC Rcd. 12317 (IB 2003)",
+        "public": true,
+        "context": "Referenced for FCC precedent recognizing that modifications presenting no interference issues should be granted.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20190830-00087",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Amendment of Parts 2 and 25 of the Commission's Rules to Permit Operation of NGSO FSS Systems Co-Frequency with GSO and Terrestrial Systems in the Ku-Band Frequency Range",
+        "type": "fcc_filing",
+        "identifier": "16 FCC Rcd. 4096 (2000)",
+        "public": true,
+        "context": "Referenced for FCC findings that EPFD limits are sufficient to prevent harmful interference to spectrum licensees.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20190830-00087",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "AST&Science LLC, Order and Authorization, DA 24-756",
+        "type": "fcc_filing",
+        "identifier": "DA 24-756",
+        "public": true,
+        "context": "Referenced for FCC Commission's previous authorization of TT&C operations in 430-440 MHz band and finding that interference analysis was sufficient.",
+        "source_doc": "FCC: Interference Analysis.pdf",
+        "source_file_number": "ELS-376295",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Interference Analysis.pdf"
+        ]
+      },
+      {
+        "name": "BlueWalker 3 satellite experimental filing",
+        "type": "fcc_filing",
+        "identifier": "1059-EX-CN-2020",
+        "public": true,
+        "context": "Referenced for comparison of ControlSat component lists and reentry analysis results in previous authorization.",
+        "source_doc": "FCC: Interference Analysis.pdf",
+        "source_file_number": "ELS-376295",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Interference Analysis.pdf"
+        ]
+      },
+      {
+        "name": "FCC SCS (Supplemental Coverage from Space) Rules",
+        "type": "fcc_filing",
+        "identifier": null,
+        "public": true,
+        "context": "Referenced as the regulatory framework for which AST SpaceMobile will provide separate compliance showing in future filings.",
+        "source_doc": "FCC: AST SpaceMobile Supp.pdf",
+        "source_file_number": "SAT-AMD-20201028-00126",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST SpaceMobile Supp.pdf"
+        ]
+      },
+      {
+        "name": "AST & Science, LLC, Amendment to Petition for Declaratory Ruling",
+        "type": "fcc_filing",
+        "identifier": "ICFS File No. SAT-AMD-20240311-00053 (dated March 11, 2024)",
+        "public": false,
+        "context": "Prior FCC filing referenced regarding AST SpaceMobile's TT&C and feeder link frequency requests.",
+        "source_doc": "FCC: AST SpaceMobile Supp.pdf",
+        "source_file_number": "SAT-AMD-20201028-00126",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST SpaceMobile Supp.pdf"
+        ]
+      },
+      {
+        "name": "Amendment to Petition for Declaratory Ruling",
+        "type": "fcc_filing",
+        "identifier": "SAT-AMD-20240311-00053",
+        "public": true,
+        "context": "AST SpaceMobile's prior FCC filing detailing TT&C and feeder link frequency usage for initial satellite constellation.",
+        "source_doc": "FCC: AST SpaceMobile Supp.pdf",
+        "source_file_number": "SAT-AMD-20240311-00053",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST SpaceMobile Supp.pdf"
+        ]
+      },
+      {
+        "name": "Amendment to Petition for Declaratory Ruling",
+        "type": "fcc_filing",
+        "identifier": "ICFS File No. SAT-AMD-20240311-00053, dated March 11, 2024",
+        "public": true,
+        "context": "Referenced as prior AST SpaceMobile filing regarding SCS operations and spectrum use.",
+        "source_doc": "FCC: AST SpaceMobile Supp.pdf",
+        "source_file_number": "SAT-AMD-20230717-00172",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST SpaceMobile Supp.pdf"
+        ]
+      },
+      {
+        "name": "FCC SCS Rules",
+        "type": "fcc_filing",
+        "identifier": null,
+        "public": true,
+        "context": "Referenced as compliance requirement for future separate interference showing when relevant applications are filed.",
+        "source_doc": "FCC: AST SpaceMobile Supp.pdf",
+        "source_file_number": "SAT-AMD-20230717-00172",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST SpaceMobile Supp.pdf"
+        ]
+      },
+      {
+        "name": "Space Exploration Holdings, LLC, 33 FCC Rcd. 148 (2018)",
+        "type": "fcc_filing",
+        "identifier": "33 FCC Rcd. 148 (2018)",
+        "public": true,
+        "context": "Initial authorization for SpaceX to construct, deploy, and operate a constellation of 4,425 NGSO satellites using Ku- and Ka-band spectrum.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Space Exploration Holdings, LLC, 34 FCC Rcd. 12307 (IB 2019)",
+        "type": "fcc_filing",
+        "identifier": "34 FCC Rcd. 12307 (IB 2019)",
+        "public": true,
+        "context": "Second modification authorizing SpaceX to respace satellites for improved coverage and capacity across the United States.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Application for Approval for Orbital Deployment and Operating Authority for the SpaceX NGSO Satellite System",
+        "type": "fcc_filing",
+        "identifier": "IBFS File No. SAT-LOA-20161115-00118 (Nov. 15, 2016)",
+        "public": true,
+        "context": "Previous application for SpaceX NGSO satellite system orbital deployment and operating authority referenced as part of Previous Applications.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Application for Approval for Orbital Deployment and Operating Authority for the SpaceX NGSO Satellite System Supplement",
+        "type": "fcc_filing",
+        "identifier": "IBFS File No. SAT-LOA-20170726-00110 (July 26, 2017)",
+        "public": true,
+        "context": "Previous application supplement for SpaceX NGSO satellite system referenced as part of Previous Applications.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Application for Modification of Authorization for the SpaceX NGSO Satellite System",
+        "type": "fcc_filing",
+        "identifier": "IBFS File No. SAT-MOD-20181108-00083 (Nov. 8, 2018)",
+        "public": true,
+        "context": "Previous modification application for SpaceX NGSO satellite system referenced as part of Previous Applications.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Application for Modification of Authorization for the SpaceX NGSO Satellite System",
+        "type": "fcc_filing",
+        "identifier": "IBFS File No. SAT-MOD-20190830-00087 (Aug. 30, 2019)",
+        "public": true,
+        "context": "Previous modification application for SpaceX NGSO satellite system referenced as part of Previous Applications.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Space Exploration Holdings, LLC, 33 FCC Rcd. 148 (2018)",
+        "type": "fcc_filing",
+        "identifier": "33 FCC Rcd. 148",
+        "public": true,
+        "context": "References the original FCC authorization for SpaceX's 4,425 NGSO satellite constellation in March 2018.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20181108-00083",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Application for Approval for Orbital Deployment and Operating Authority for the SpaceX NGSO Satellite System",
+        "type": "fcc_filing",
+        "identifier": "IBFS File No. SAT-LOA-20161115-00118",
+        "public": true,
+        "context": "Original SpaceX application filed November 15, 2016 for NGSO satellite system authorization.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20181108-00083",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Application for Approval for Orbital Deployment and Operating Authority for the SpaceX NGSO Satellite System Supplement",
+        "type": "fcc_filing",
+        "identifier": "IBFS File No. SAT-LOA-20170726-00110",
+        "public": true,
+        "context": "Supplemental SpaceX application filed July 26, 2017 for NGSO satellite system authorization.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20181108-00083",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Space Exploration Holdings, LLC, ICFS File No. SAT-MOD-20250805-00200",
+        "type": "fcc_filing",
+        "identifier": "SAT-MOD-20250805-00200",
+        "public": true,
+        "context": "SpaceX's application for modification of authorization for Gen1 NGSO satellite system that DIRECTV is commenting on.",
+        "source_doc": "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf"
+        ]
+      },
+      {
+        "name": "Modernizing Spectrum Sharing for Satellite Broadband, Notice of Proposed Rulemaking",
+        "type": "fcc_filing",
+        "identifier": "40 FCC Rcd 3389 (2025)",
+        "public": true,
+        "context": "FCC NPRM exploring changes to NGSO-GSO sharing framework that is referenced as the appropriate venue for addressing broader sharing issues.",
+        "source_doc": "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf"
+        ]
+      },
+      {
+        "name": "Space Exploration Holdings, LLC, ICFS File No. SAT-MOD-20241011-00224",
+        "type": "fcc_filing",
+        "identifier": "SAT-MOD-20241011-00224",
+        "public": true,
+        "context": "SpaceX's prior waiver request for Gen2 system modification.",
+        "source_doc": "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf"
+        ]
+      },
+      {
+        "name": "Space Exploration Holdings, LLC, ICFS File No. SAT-AMD-20241017-00228",
+        "type": "fcc_filing",
+        "identifier": "SAT-AMD-20241017-00228",
+        "public": true,
+        "context": "SpaceX's prior amendment request for Gen2 system.",
+        "source_doc": "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf"
+        ]
+      },
+      {
+        "name": "Space Exploration Holdings, LLC, ICFS File No. SAT-LOA-20250916-00282",
+        "type": "fcc_filing",
+        "identifier": "SAT-LOA-20250916-00282",
+        "public": true,
+        "context": "SpaceX's filing for MSS system with similar waiver request.",
+        "source_doc": "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf"
+        ]
+      },
+      {
+        "name": "Kuiper Systems LLC, ICFS File No. SAT-LOA-20211104-00145",
+        "type": "fcc_filing",
+        "identifier": "SAT-LOA-20211104-00145",
+        "public": true,
+        "context": "Amazon's Kuiper NGSO system application filing.",
+        "source_doc": "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf"
+        ]
+      },
+      {
+        "name": "Kuiper Systems LLC, ICFS File No. SAT-AMD-20250311-00068",
+        "type": "fcc_filing",
+        "identifier": "SAT-AMD-20250311-00068",
+        "public": true,
+        "context": "Amazon's Kuiper system amendment with pending waiver request.",
+        "source_doc": "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf"
+        ]
+      },
+      {
+        "name": "Reply Comments of DIRECTV, LLC, SB Docket No. 25-157",
+        "type": "fcc_filing",
+        "identifier": "SB Docket No. 25-157, filed Aug. 27, 2025",
+        "public": true,
+        "context": "DIRECTV's reply comments on the NPRM attached as Attachment B.",
+        "source_doc": "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf"
+        ]
+      },
+      {
+        "name": "AST's pending FCC application",
+        "type": "fcc_filing",
+        "identifier": null,
+        "public": false,
+        "context": "Referenced as the main FCC application for which this interference analysis is being submitted as an amendment.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-AMD-20230717-00172",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Space Exploration Holdings, LLC, Request for Modification of the Authorization for the SpaceX NGSO Satellite System, Order and Authorization",
+        "type": "fcc_filing",
+        "identifier": "DA 21-34, released January 8, 2021",
+        "public": true,
+        "context": "Referenced as precedent for requiring SpaceX to operate satellites at or below 580 km altitude.",
+        "source_doc": "FCC: Amazon - Ex Parte re.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Amazon - Ex Parte re.pdf"
+        ]
+      },
+      {
+        "name": "NGSO FSS Processing Round",
+        "type": "fcc_filing",
+        "identifier": "initiated March 24, 2020",
+        "public": true,
+        "context": "Referenced as the processing round in which SpaceX's redesigned system should be included for coordination and competition purposes.",
+        "source_doc": "FCC: Amazon - Ex Parte re.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Amazon - Ex Parte re.pdf"
+        ]
+      },
+      {
+        "name": "Teledesic modification decision",
+        "type": "fcc_filing",
+        "identifier": null,
+        "public": true,
+        "context": "Cited as precedent for FCC policy on when modification applications present significant interference problems and should be treated as newly filed applications.",
+        "source_doc": "FCC: Amazon - Ex Parte re.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Amazon - Ex Parte re.pdf"
+        ]
+      },
+      {
+        "name": "SpaceX First Modification Reconsideration",
+        "type": "fcc_filing",
+        "identifier": null,
+        "public": true,
+        "context": "Referenced for FCC policy on frequency and duration of in-line events as meaningful factors in assessing interference impacts.",
+        "source_doc": "FCC: Amazon - Ex Parte re.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Amazon - Ex Parte re.pdf"
+        ]
+      },
+      {
+        "name": "SpaceX First Modification Authorization",
+        "type": "fcc_filing",
+        "identifier": null,
+        "public": true,
+        "context": "Cited for FCC requirement to examine both increased interference to other systems and whether the modified system becomes more susceptible to interference.",
+        "source_doc": "FCC: Amazon - Ex Parte re.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Amazon - Ex Parte re.pdf"
+        ]
+      },
+      {
+        "name": "Part 25 rules",
+        "type": "fcc_filing",
+        "identifier": "47 CFR Part 25",
+        "public": true,
+        "context": "Referenced for FCC regulatory requirements governing non-geostationary orbit satellite operations and licensing.",
+        "source_doc": "FCC: FCC Application Tech.pdf",
+        "source_file_number": "SAT-LOA-20230504-00103",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: FCC Application Tech.pdf"
+        ]
+      },
+      {
+        "name": "Section 25.114",
+        "type": "fcc_filing",
+        "identifier": "47 CFR 25.114",
+        "public": true,
+        "context": "Cited as the specific FCC rule requiring technical information in satellite license applications.",
+        "source_doc": "FCC: FCC Application Tech.pdf",
+        "source_file_number": "SAT-LOA-20230504-00103",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: FCC Application Tech.pdf"
+        ]
+      },
+      {
+        "name": "IBFS File No. SAT-MOD-20200417-00037",
+        "type": "fcc_filing",
+        "identifier": "SAT-MOD-20200417-00037",
+        "public": true,
+        "context": "SpaceX application to modify existing authorization to deploy and operate a non-geostationary orbit satellite system referenced throughout the filing.",
+        "source_doc": "FCC: SpaceX IB Ex Parte (.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: SpaceX IB Ex Parte (.pdf"
+        ]
+      },
+      {
+        "name": "Starlink Third Modification Application",
+        "type": "fcc_filing",
+        "identifier": "IBFS File No. SAT-MOD-20200417-00037",
+        "public": true,
+        "context": "Referenced as the subject proceeding in which Viasat is presenting positions and opposing Starlink's modification application.",
+        "source_doc": "FCC: Viasat Ex Parte Noti.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Viasat Ex Parte Noti.pdf"
+        ]
+      },
+      {
+        "name": "SpaceX ex parte presentation",
+        "type": "fcc_filing",
+        "identifier": "February 25, 2021",
+        "public": true,
+        "context": "Referenced to document SpaceX's claims regarding field of view and spectrum use in the proceeding.",
+        "source_doc": "FCC: Viasat Ex Parte Noti.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Viasat Ex Parte Noti.pdf"
+        ]
+      },
+      {
+        "name": "Report and Order, FCC 23-29",
+        "type": "fcc_filing",
+        "identifier": "FCC 23-29",
+        "public": true,
+        "context": "Commission's April 20, 2023 ruling adopting a degraded throughput criterion for interference protection between NGSO FSS systems, with implementation details subject to further NPRM.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-AMD-20240311-00053",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Letter from Ruth Pritchard-Kelly, et al. to Marlene H. Dortch",
+        "type": "fcc_filing",
+        "identifier": "RM-11768, Oct. 20, 2020",
+        "public": true,
+        "context": "Joint filing by six satellite operators summarizing opposition to MVDDS proposal",
+        "source_doc": "FCC: SpaceX MVDDS Ex Part.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: SpaceX MVDDS Ex Part.pdf"
+        ]
+      },
+      {
+        "name": "Letter from Patrick R. Halley to Marlene H. Dortch",
+        "type": "fcc_filing",
+        "identifier": "RM-11768, Oct. 21, 2020",
+        "public": true,
+        "context": "Filing by USTelecom explaining opposition to MVDDS proposal",
+        "source_doc": "FCC: SpaceX MVDDS Ex Part.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: SpaceX MVDDS Ex Part.pdf"
+        ]
+      },
+      {
+        "name": "Request for Special Temporary Authority",
+        "type": "fcc_filing",
+        "identifier": "File No. SAT-STA-20230426-00096, filed Apr. 26, 2023",
+        "public": true,
+        "context": "Prior STA filing by Intelsat for the same satellite operation being extended in this document.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-STA-20230524-00124",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Commission authorization dated August 2, 2024",
+        "type": "fcc_filing",
+        "identifier": "Call Sign S3065",
+        "public": true,
+        "context": "FCC authorization to launch and operate a subset of spacecraft that established condition 27(kk)(i) requiring submission of performance bond.",
+        "source_doc": "FCC: Performance Bond Sub.pdf",
+        "source_file_number": "SAT-AMD-20230717-00172",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Performance Bond Sub.pdf"
+        ]
+      },
+      {
+        "name": "Application for Approval for Orbital Deployment and Operating Authority for the SpaceX NGSO Satellite System",
+        "type": "fcc_filing",
+        "identifier": "ICFS File No. SAT-LOA-20161115-00118",
+        "public": true,
+        "context": "Referenced as original SpaceX Gen1 application filed November 15, 2016.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Application for Approval for Orbital Deployment and Operating Authority for the SpaceX NGSO Satellite System Supplement",
+        "type": "fcc_filing",
+        "identifier": "ICFS File No. SAT-LOA-20170726-00110",
+        "public": true,
+        "context": "Referenced as supplement to original SpaceX Gen1 application filed July 26, 2017.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Application for Modification of Authorization for the SpaceX NGSO Satellite System",
+        "type": "fcc_filing",
+        "identifier": "ICFS File No. SAT-MOD-20181108-00083",
+        "public": true,
+        "context": "Referenced as SpaceX Gen1 modification application filed November 8, 2018.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Application for Modification of Authorization for the SpaceX NGSO Satellite System",
+        "type": "fcc_filing",
+        "identifier": "ICFS File No. SAT-MOD-20200417-00037",
+        "public": true,
+        "context": "Referenced as SpaceX Gen1 modification application filed April 17, 2020.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Application for Modification of Authorization for the SpaceX NGSO Satellite System",
+        "type": "fcc_filing",
+        "identifier": "ICFS File No. SAT-MOD-20230215-00036",
+        "public": true,
+        "context": "Referenced as SpaceX Gen1 modification application filed February 15, 2023.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Stamp Grant, Muon Space Inc.",
+        "type": "fcc_filing",
+        "identifier": "ICFS File No. SAT-LOA-20230504-00103, granted Jan 30, 2024",
+        "public": true,
+        "context": "Referenced as the FCC authorization granting Muon Space Inc. permission to launch and operate satellites Musat-1 and Musat-2.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-LOA-20230504-00103",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Form S-8",
+        "type": "fcc_filing",
+        "identifier": "Registration No. 333-",
+        "public": true,
+        "context": "This document itself is a Form S-8 registration statement filed with the SEC.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Registration No. 333-282083",
+        "type": "fcc_filing",
+        "identifier": "333-282083",
+        "public": true,
+        "context": "Earlier registration statement for the Plan incorporated by reference in this Registration Statement.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Registration No. 333-285574",
+        "type": "fcc_filing",
+        "identifier": "333-285574",
+        "public": true,
+        "context": "Earlier registration statement for the Plan incorporated by reference in this Registration Statement.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Annual Report on Form 10-K for the year ended December 31, 2024",
+        "type": "fcc_filing",
+        "identifier": "File No. 001-39040, filed March 3, 2025",
+        "public": true,
+        "context": "Incorporated by reference for financial and operational information.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Quarterly Report on Form 10-Q for the quarter ended March 31, 2025",
+        "type": "fcc_filing",
+        "identifier": "File No. 001-39040, filed May 12, 2025",
+        "public": true,
+        "context": "Incorporated by reference for quarterly financial information.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Quarterly Report on Form 10-Q for the quarter ended June 30, 2025",
+        "type": "fcc_filing",
+        "identifier": "File No. 001-39040, filed August 11, 2025, amended September 12, 2025",
+        "public": true,
+        "context": "Incorporated by reference for quarterly financial information.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Quarterly Report on Form 10-Q for the quarter ended September 30, 2025",
+        "type": "fcc_filing",
+        "identifier": "File No. 001-39040, filed November 10, 2025",
+        "public": true,
+        "context": "Incorporated by reference for quarterly financial information.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Current Reports on Form 8-K",
+        "type": "fcc_filing",
+        "identifier": "File No. 001-39040, multiple dates January-November 2025",
+        "public": true,
+        "context": "Multiple current reports incorporated by reference for material events and updates.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      }
+    ],
+    "itu_document": [
+      {
+        "name": "AST SpaceMobile's ITU Filing USASAT-NGSO-20",
+        "type": "itu_document",
+        "identifier": "USASAT-NGSO-20",
+        "public": true,
+        "context": "Referenced as the source for the fully populated satellite orbital constellation used in the interference analysis simulations.",
+        "source_doc": "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1).pdf",
+        "source_file_number": "SAT-AMD-20250718-00181",
+        "mention_count": 3,
+        "found_in": [
+          "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1).pdf",
+          "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1.1).pdf"
+        ]
+      },
+      {
+        "name": "Recommendation ITU-R M.1036",
+        "type": "itu_document",
+        "identifier": "ITU-R M.1036",
+        "public": true,
+        "context": "ITU radio communications recommendation specifying FDD segmentation scheme for 723-728 MHz and 778-783 MHz frequency bands that the concessionaire must comply with.",
+        "source_doc": "FCC: AST Mexico STA_Supplement.pdf",
+        "source_file_number": "SAT-STA-20251210-00378",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: AST Mexico STA_Supplement.pdf"
+        ]
+      },
+      {
+        "name": "ITU Radio Regulations, Article 22",
+        "type": "itu_document",
+        "identifier": null,
+        "public": true,
+        "context": "Referenced for equivalent power flux-density (EPFD) limits that have been incorporated into FCC rules and must be complied with.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20190830-00087",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "ITU Radio Regs. No. 9.11A",
+        "type": "itu_document",
+        "identifier": "9.11A",
+        "public": true,
+        "context": "Referenced for ITU procedures establishing first-come, first-served coordination between NGSO and GSO networks in certain frequency ranges.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20190830-00087",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Resolution 76 of the ITU Radio Regulations",
+        "type": "itu_document",
+        "identifier": "76",
+        "public": true,
+        "context": "Referenced for limits on aggregate EPFD produced by co-frequency NGSO FSS systems in certain Ku- and Ka-bands.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20190830-00087",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "ITU cost recovery letter template",
+        "type": "itu_document",
+        "identifier": null,
+        "public": false,
+        "context": "Referenced as template that applicant was instructed to use for ITU cost recovery correspondence.",
+        "source_doc": "FCC: Interference Analysis.pdf",
+        "source_file_number": "ELS-376295",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Interference Analysis.pdf"
+        ]
+      },
+      {
+        "name": "ITU Radio Regulations",
+        "type": "itu_document",
+        "identifier": null,
+        "public": true,
+        "context": "International framework referenced throughout for frequency coordination and interference analysis requirements.",
+        "source_doc": "FCC: AST SpaceMobile Supp.pdf",
+        "source_file_number": "SAT-AMD-20240311-00053",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST SpaceMobile Supp.pdf"
+        ]
+      },
+      {
+        "name": "NOR-USA STEAM",
+        "type": "itu_document",
+        "identifier": null,
+        "public": true,
+        "context": "ITU filing that SpaceX indicated it would modify to correspond with the Ku/Ka-band license modification.",
+        "source_doc": "FCC: SpaceX IB Ex Parte (.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: SpaceX IB Ex Parte (.pdf"
+        ]
+      },
+      {
+        "name": "US USASAT",
+        "type": "itu_document",
+        "identifier": null,
+        "public": true,
+        "context": "ITU filing that SpaceX indicated it would modify to correspond with the Ku/Ka-band license modification.",
+        "source_doc": "FCC: SpaceX IB Ex Parte (.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: SpaceX IB Ex Parte (.pdf"
+        ]
+      },
+      {
+        "name": "ITU Radio Regulations, Resolution 8",
+        "type": "itu_document",
+        "identifier": "Resolution 8 of WRC-23",
+        "public": true,
+        "context": "Referenced for orbital and inclination tolerance standards that SpaceX seeks to align with.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      }
+    ],
+    "technical_standard": [
+      {
+        "name": "Rule 10b5-1(c)",
+        "type": "technical_standard",
+        "identifier": "Rule 10b5-1(c)",
+        "public": true,
+        "context": "Referenced regarding affirmative defense conditions for equity security transactions under Rule 10b5-1 plans.",
+        "source_doc": "SEC: 4 (2025-12-11)",
+        "source_file_number": "2025-12-11",
+        "mention_count": 11,
+        "found_in": [
+          "SEC: 4 (2025-12-11)",
+          "SEC: 4 (2025-12-10)",
+          "SEC: 4 (2025-12-08)",
+          "SEC: 4 (2025-12-03)",
+          "SEC: 4 (2025-11-28)",
+          "SEC: 4 (2025-11-24)",
+          "SEC: 4 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "47 C.F.R. \u00a7 25.117(c)",
+        "type": "technical_standard",
+        "identifier": "47 C.F.R. \u00a7 25.117(c)",
+        "public": true,
+        "context": "FCC rule allowing incorporation of technical information by reference from previous applications.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Part 25 of the Commission's rules",
+        "type": "technical_standard",
+        "identifier": "47 C.F.R. Part 25",
+        "public": true,
+        "context": "FCC rules governing satellite communications requiring updated technical information for the modified SpaceX authorization.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Section 25.114(c)(4)(vi)(B)",
+        "type": "technical_standard",
+        "identifier": "47 C.F.R. \u00a7 25.114(c)(4)(vi)(B)",
+        "public": true,
+        "context": "FCC rule requiring antenna gain contours for transmit and receive beams to be embedded in Schedule S filings.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "NASA-STD-8719.14, Appendix A",
+        "type": "technical_standard",
+        "identifier": "NASA-STD-8719.14",
+        "public": true,
+        "context": "Referenced as the standard for orbital debris assessment compliance in the Orbital Debris Assessment Report (ODAR).",
+        "source_doc": "FCC: FCC Application Tech.pdf",
+        "source_file_number": "SAT-LOA-20230504-00103",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: FCC Application Tech.pdf",
+          "FCC: Orbital Debris Assessment Report (ODAR).pdf"
+        ]
+      },
+      {
+        "name": "Rule 10b5-1(c)",
+        "type": "technical_standard",
+        "identifier": "10b5-1(c)",
+        "public": true,
+        "context": "Transaction was made pursuant to a contract satisfying the affirmative defense conditions of this SEC Rule.",
+        "source_doc": "SEC: 4 (2025-12-29)",
+        "source_file_number": "2025-12-29",
+        "mention_count": 2,
+        "found_in": [
+          "SEC: 4 (2025-12-29)",
+          "SEC: 4 (2025-12-17)"
+        ]
+      },
+      {
+        "name": "FCC Parts 24 and 27",
+        "type": "technical_standard",
+        "identifier": "Parts 24 and 27",
+        "public": true,
+        "context": "Referenced as the FCC emission requirements that SpaceMobile transmissions would meet and exceed for in-band and out-of-band emissions.",
+        "source_doc": "FCC: Davenport Ex parte M.pdf",
+        "source_file_number": "SAT-AMD-20200727-00088",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Davenport Ex parte M.pdf"
+        ]
+      },
+      {
+        "name": "FCC Parts 25 and Section 2.106",
+        "type": "technical_standard",
+        "identifier": "Parts 25 and Section 2.106",
+        "public": true,
+        "context": "Referenced in key waivers requested to operate on a non-interference, non-protected basis on specified frequency bands.",
+        "source_doc": "FCC: Davenport Ex parte M.pdf",
+        "source_file_number": "SAT-AMD-20200727-00088",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Davenport Ex parte M.pdf"
+        ]
+      },
+      {
+        "name": "DAS (Debris Assessment Software)",
+        "type": "technical_standard",
+        "identifier": null,
+        "public": false,
+        "context": "Referenced multiple times for modeling reentry behavior and computing critical mass-to-effective-area ratios for spacecraft components.",
+        "source_doc": "FCC: Interference Analysis.pdf",
+        "source_file_number": "ELS-376295",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Interference Analysis.pdf"
+        ]
+      },
+      {
+        "name": "47 C.F.R. \u00a7\u00a7 25.282, 25.283",
+        "type": "technical_standard",
+        "identifier": "47 C.F.R. \u00a7\u00a7 25.282, 25.283",
+        "public": true,
+        "context": "FCC rules authorizing telemetry, tracking, and control functions for geostationary orbit satellite systems that SpaceX requests for NGSO operations.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Section 25.114(c)(4)(v)",
+        "type": "technical_standard",
+        "identifier": "47 C.F.R. \u00a7 25.114(c)(4)(v)",
+        "public": true,
+        "context": "References requirement for saturation flux density measurements in satellite filings.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20181108-00083",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "LunaNet",
+        "type": "technical_standard",
+        "identifier": null,
+        "public": true,
+        "context": "Referenced as a proposed architecture with which Crescent's standardized interfaces are designed to be consistent.",
+        "source_doc": "FCC: LMCO Lunar-Cislunar.pdf",
+        "source_file_number": "SAT-LOA-20230315-00060",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: LMCO Lunar-Cislunar.pdf"
+        ]
+      },
+      {
+        "name": "NASA-STD-8719.14",
+        "type": "technical_standard",
+        "identifier": "NASA-STD-8719.14, Appendix A",
+        "public": true,
+        "context": "NASA technical standard specifying the required reporting format for orbital debris assessment reports.",
+        "source_doc": "FCC: Orbital Debris Assessment Report (ODAR).pdf",
+        "source_file_number": "ELS-380044",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Orbital Debris Assessment Report (ODAR).pdf"
+        ]
+      },
+      {
+        "name": "Rule 13d-3 under the Exchange Act",
+        "type": "technical_standard",
+        "identifier": "Rule 13d-3",
+        "public": true,
+        "context": "Referenced regarding group membership determination for beneficial ownership purposes.",
+        "source_doc": "SEC: 4 (2025-12-11)",
+        "source_file_number": "2025-12-11",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 4 (2025-12-11)"
+        ]
+      },
+      {
+        "name": "Rule 12b-2 of the Exchange Act",
+        "type": "technical_standard",
+        "identifier": "Rule 12b-2",
+        "public": true,
+        "context": "Referenced for definitions of large accelerated filer, accelerated filer, smaller reporting company, and emerging growth company.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "General Instruction E to Form S-8",
+        "type": "technical_standard",
+        "identifier": "General Instruction E",
+        "public": true,
+        "context": "Referenced for incorporation of earlier registration statements by reference.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      }
+    ],
+    "commercial_agreement": [
+      {
+        "name": "Company's Stockholders Agreement",
+        "type": "commercial_agreement",
+        "identifier": null,
+        "public": false,
+        "context": "Referenced regarding Rakuten's board designation rights and observer appointment rights.",
+        "source_doc": "SEC: 8-K (2026-01-16)",
+        "source_file_number": "2026-01-16",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 8-K (2026-01-16)"
+        ]
+      },
+      {
+        "name": "Stockholders' Agreement",
+        "type": "commercial_agreement",
+        "identifier": "dated April 6, 2021",
+        "public": true,
+        "context": "Filed as Exhibit 10.1 to Form 8-K on April 12, 2021; governs stockholder rights and group membership.",
+        "source_doc": "SEC: 4 (2025-12-11)",
+        "source_file_number": "2025-12-11",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 4 (2025-12-11)"
+        ]
+      },
+      {
+        "name": "Amended and Restated Stockholders' Agreement",
+        "type": "commercial_agreement",
+        "identifier": "dated June 5, 2024",
+        "public": true,
+        "context": "Filed as Exhibit 10.1 to Form 8-K on June 7, 2024; amends and restates the original stockholders agreement.",
+        "source_doc": "SEC: 4 (2025-12-11)",
+        "source_file_number": "2025-12-11",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 4 (2025-12-11)"
+        ]
+      },
+      {
+        "name": "First Amendment to Amended and Restated Stockholders' Agreement",
+        "type": "commercial_agreement",
+        "identifier": "dated February 5, 2025",
+        "public": true,
+        "context": "Filed as Exhibit 10.1 to Form 8-K on February 7, 2025; further amends the stockholders agreement.",
+        "source_doc": "SEC: 4 (2025-12-11)",
+        "source_file_number": "2025-12-11",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 4 (2025-12-11)"
+        ]
+      },
+      {
+        "name": "Amended and Restated AST SpaceMobile, Inc. 2024 Incentive Award Plan",
+        "type": "commercial_agreement",
+        "identifier": "Exhibit 10.1 to Form 8-K filed November 21, 2025",
+        "public": true,
+        "context": "The employee incentive plan being registered for additional shares under this S-8.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      }
+    ],
+    "government_doc": [
+      {
+        "name": "18 U.S.C. 1001",
+        "type": "government_doc",
+        "identifier": "18 U.S.C. 1001",
+        "public": true,
+        "context": "Referenced as statute governing criminal violations for intentional misstatements or omissions of facts.",
+        "source_doc": "SEC: 4 (2025-12-29)",
+        "source_file_number": "2025-12-29",
+        "mention_count": 15,
+        "found_in": [
+          "SEC: 4 (2025-12-29)",
+          "SEC: 4 (2025-12-17)",
+          "SEC: 4 (2025-12-12)",
+          "SEC: 4 (2025-12-11)",
+          "SEC: 144 (2025-12-10)",
+          "SEC: 4 (2025-12-10)",
+          "SEC: 4 (2025-12-08)",
+          "SEC: 4 (2025-12-03)",
+          "SEC: 4 (2025-11-28)",
+          "SEC: 4 (2025-11-24)",
+          "SEC: 4 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Securities Exchange Act of 1934",
+        "type": "government_doc",
+        "identifier": "Section 16(a)",
+        "public": true,
+        "context": "Form 4 filing is required pursuant to Section 16(a) of this Act for reporting changes in beneficial ownership.",
+        "source_doc": "SEC: 4 (2025-12-29)",
+        "source_file_number": "2025-12-29",
+        "mention_count": 14,
+        "found_in": [
+          "SEC: 4 (2025-12-29)",
+          "SEC: 4 (2025-12-17)",
+          "SEC: 4 (2025-12-12)",
+          "SEC: 4 (2025-12-11)",
+          "SEC: 4 (2025-12-10)",
+          "SEC: 4 (2025-12-08)",
+          "SEC: 4 (2025-12-03)",
+          "SEC: 4 (2025-11-28)",
+          "SEC: 4 (2025-11-24)",
+          "SEC: 4 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Investment Company Act of 1940",
+        "type": "government_doc",
+        "identifier": "Section 30(h)",
+        "public": true,
+        "context": "Form 4 or Form 5 obligations may continue under Section 30(h) of this Act.",
+        "source_doc": "SEC: 4 (2025-12-29)",
+        "source_file_number": "2025-12-29",
+        "mention_count": 14,
+        "found_in": [
+          "SEC: 4 (2025-12-29)",
+          "SEC: 4 (2025-12-17)",
+          "SEC: 4 (2025-12-12)",
+          "SEC: 4 (2025-12-11)",
+          "SEC: 4 (2025-12-10)",
+          "SEC: 4 (2025-12-08)",
+          "SEC: 4 (2025-12-03)",
+          "SEC: 4 (2025-11-28)",
+          "SEC: 4 (2025-11-24)",
+          "SEC: 4 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "15 U.S.C. 78ff(a)",
+        "type": "government_doc",
+        "identifier": "15 U.S.C. 78ff(a)",
+        "public": true,
+        "context": "Referenced as statute governing criminal violations for intentional misstatements or omissions of facts.",
+        "source_doc": "SEC: 4 (2025-12-29)",
+        "source_file_number": "2025-12-29",
+        "mention_count": 14,
+        "found_in": [
+          "SEC: 4 (2025-12-29)",
+          "SEC: 4 (2025-12-17)",
+          "SEC: 4 (2025-12-12)",
+          "SEC: 4 (2025-12-11)",
+          "SEC: 4 (2025-12-10)",
+          "SEC: 4 (2025-12-08)",
+          "SEC: 4 (2025-12-03)",
+          "SEC: 4 (2025-11-28)",
+          "SEC: 4 (2025-11-24)",
+          "SEC: 4 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "FCC Table of Frequency Allocations",
+        "type": "government_doc",
+        "identifier": null,
+        "public": true,
+        "context": "Referenced to establish primary and secondary allocations for frequency bands used by AST SpaceMobile's operations.",
+        "source_doc": "FCC: AST SpaceMobile Supp.pdf",
+        "source_file_number": "SAT-AMD-20201028-00126",
+        "mention_count": 3,
+        "found_in": [
+          "FCC: AST SpaceMobile Supp.pdf"
+        ]
+      },
+      {
+        "name": "47 C.F.R. \u00a7 25.114(c)(4)(vi)(B)",
+        "type": "government_doc",
+        "identifier": "47 CFR 25.114(c)(4)(vi)(B)",
+        "public": true,
+        "context": "Specifies FCC regulatory requirements for non-geostationary orbit space stations to provide predicted antenna gain contours and technical specifications for transmit and receive beams.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-LOA-20230504-00103",
+        "mention_count": 3,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Securities Act of 1933",
+        "type": "government_doc",
+        "identifier": null,
+        "public": true,
+        "context": "Federal legislation under which Rule 144 operates for securities sales.",
+        "source_doc": "SEC: 144 (2025-12-10)",
+        "source_file_number": "2025-12-10",
+        "mention_count": 3,
+        "found_in": [
+          "SEC: 144 (2025-12-10)",
+          "SEC: S-8 (2025-11-21)",
+          "SEC: 8-K (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Exchange Act",
+        "type": "government_doc",
+        "identifier": "Securities Exchange Act of 1934",
+        "public": true,
+        "context": "Referenced regarding sections 13(a), 13(c), 14, and 15(d) for incorporation of subsequent filings.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 3,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)",
+          "SEC: 8-K (2025-11-21)",
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Testimony of Brendan Carr before the Subcommittee on Communications and Technology of the United States House of Representatives Committee on Energy and Commerce",
+        "type": "government_doc",
+        "identifier": "Jul. 9, 2025",
+        "public": true,
+        "context": "Referenced regarding FCC policy against picking winners and losers in the marketplace.",
+        "source_doc": "FCC: DIRECTV Reply Comments on SpaceX Gen1 Mod.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: DIRECTV Reply Comments on SpaceX Gen1 Mod.pdf"
+        ]
+      },
+      {
+        "name": "47 CFR 1.924(b)",
+        "type": "government_doc",
+        "identifier": "47 CFR 1.924(b)",
+        "public": true,
+        "context": "Referenced for field strength limits applicable to the Table Mountain Radio Receiving Zone in Boulder County, Colorado.",
+        "source_doc": "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1).pdf",
+        "source_file_number": "SAT-MOD-20250612-00145",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1).pdf",
+          "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1.1).pdf"
+        ]
+      },
+      {
+        "name": "NPR 8715.6A",
+        "type": "government_doc",
+        "identifier": "NPR 8715.6A",
+        "public": true,
+        "context": "NASA procedural requirement that mandates compliance with orbital debris assessment reporting format.",
+        "source_doc": "FCC: Orbital Debris Assessment Report (ODAR).pdf",
+        "source_file_number": "ELS-380044",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: Orbital Debris Assessment Report (ODAR).pdf"
+        ]
+      },
+      {
+        "name": "Section 25.165(a)(1) of the Commission's rules",
+        "type": "government_doc",
+        "identifier": "47 CFR 25.165(a)(1)",
+        "public": true,
+        "context": "FCC regulation cited as basis for requirement to submit surety bond with satellite authorization.",
+        "source_doc": "FCC: Performance Bond Sub.pdf",
+        "source_file_number": "SAT-AMD-20230717-00172",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: Performance Bond Sub.pdf",
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Fiscal year 2021 Senate Appropriations Bill for Financial Service and General Government",
+        "type": "government_doc",
+        "identifier": "FY 2021",
+        "public": true,
+        "context": "Cited as legislative provision expressing interest in direct satellite to cellular technologies and encouraging FCC to address regulatory hurdles.",
+        "source_doc": "FCC: Davenport Ex parte M.pdf",
+        "source_file_number": "SAT-AMD-20200727-00088",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Davenport Ex parte M.pdf"
+        ]
+      },
+      {
+        "name": "Fiscal Year 2020 House National Defense Authorization Committee Report",
+        "type": "government_doc",
+        "identifier": "FY 2020",
+        "public": true,
+        "context": "Referenced for expressing interest in next-generation LEO-based satellite technology for direct satellite to broadband cellular connectivity.",
+        "source_doc": "FCC: Davenport Ex parte M.pdf",
+        "source_file_number": "SAT-AMD-20200727-00088",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Davenport Ex parte M.pdf"
+        ]
+      },
+      {
+        "name": "Fiscal year 2019 House Appropriations Bill for Commerce, Justice, Science and Related Agencies",
+        "type": "government_doc",
+        "identifier": "FY 2019",
+        "public": true,
+        "context": "Cited for encouraging NTIA and FirstNet to leverage advanced satellite technology for emergency communications.",
+        "source_doc": "FCC: Davenport Ex parte M.pdf",
+        "source_file_number": "SAT-AMD-20200727-00088",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Davenport Ex parte M.pdf"
+        ]
+      },
+      {
+        "name": "47 C.F.R. \u00a7\u00a7 25.108(c)(3) and (9), 25.146(c)",
+        "type": "government_doc",
+        "identifier": null,
+        "public": true,
+        "context": "Referenced as FCC rules incorporating ITU Radio Regulations EPFD limits by reference.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20190830-00087",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Further Revised ODAR (Orbital Debris Assessment Report)",
+        "type": "government_doc",
+        "identifier": null,
+        "public": false,
+        "context": "Concurrently submitted document containing updated orbital debris analysis with references to future satellites removed.",
+        "source_doc": "FCC: Interference Analysis.pdf",
+        "source_file_number": "ELS-376295",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Interference Analysis.pdf"
+        ]
+      },
+      {
+        "name": "Section 25.114 and Part 25 rules",
+        "type": "government_doc",
+        "identifier": "47 CFR \u00a7 25.114",
+        "public": true,
+        "context": "Referenced as the regulatory requirement governing technical information submission for NGSO satellite license applications.",
+        "source_doc": "FCC: FCC Application Tech.pdf",
+        "source_file_number": "SAT-LOA-20230504-00103",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: FCC Application Tech.pdf"
+        ]
+      },
+      {
+        "name": "47 CFR 1.924 (b)",
+        "type": "government_doc",
+        "identifier": "47 CFR 1.924 (b)",
+        "public": true,
+        "context": "Referenced for field strength limits applicable to the Table Mountain Radio Receiving Zone in Boulder County, Colorado.",
+        "source_doc": "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1).pdf",
+        "source_file_number": "SAT-AMD-20250718-00181",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1).pdf"
+        ]
+      },
+      {
+        "name": "LM/NASA Reconciled FAI",
+        "type": "government_doc",
+        "identifier": null,
+        "public": false,
+        "context": "Future Agenda Item reconciled with NASA regarding frequency band allocations for Parsec lunar communications system.",
+        "source_doc": "FCC: LMCO Lunar-Cislunar.pdf",
+        "source_file_number": "SAT-LOA-20230315-00060",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: LMCO Lunar-Cislunar.pdf"
+        ]
+      },
+      {
+        "name": "U.S. Space Priorities Framework",
+        "type": "government_doc",
+        "identifier": null,
+        "public": true,
+        "context": "White House policy document quoted regarding U.S. leadership in space exploration and technology development.",
+        "source_doc": "FCC: LMCO Lunar-Cislunar.pdf",
+        "source_file_number": "SAT-LOA-20230315-00060",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: LMCO Lunar-Cislunar.pdf"
+        ]
+      },
+      {
+        "name": "FirstNet public safety broadband network",
+        "type": "government_doc",
+        "identifier": null,
+        "public": true,
+        "context": "Band 14 (758-768 MHz) is assigned exclusively for use by FirstNet, which serves emergency response agencies across the nation.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-AMD-20250718-00181",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Table Mountain Quiet Zone",
+        "type": "government_doc",
+        "identifier": null,
+        "public": true,
+        "context": "A regulatory-constrained area within CONUS where the AST system must maintain acceptable co-channel interference levels.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-AMD-20250718-00181",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "47 C.F.R. \u00a7 25.261",
+        "type": "government_doc",
+        "identifier": "47 CFR 25.261",
+        "public": true,
+        "context": "Referenced regarding FCC requirement for applicants in a processing round to coordinate their systems in good faith.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-AMD-20240311-00053",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Rural Digital Opportunity Fund Auction (Auction 904) Closes; Winning Bidders Announced, Public Notice",
+        "type": "government_doc",
+        "identifier": "DA 20-1422, AU Docket No. 20-34, WC Docket No. 19-126, WC Docket No. 10-90, rel. Dec. 7, 2020",
+        "public": true,
+        "context": "FCC announcement of winning bidders in Phase I of Rural Digital Opportunity Fund Auction including SpaceX",
+        "source_doc": "FCC: SpaceX MVDDS Ex Part.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: SpaceX MVDDS Ex Part.pdf"
+        ]
+      },
+      {
+        "name": "U.S. Munitions List",
+        "type": "government_doc",
+        "identifier": null,
+        "public": true,
+        "context": "Referenced as control list for technical data contained in the SpaceX Starlink presentation",
+        "source_doc": "FCC: SpaceX MVDDS Ex Part.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: SpaceX MVDDS Ex Part.pdf"
+        ]
+      },
+      {
+        "name": "Political Constitution of the United Mexican States",
+        "type": "government_doc",
+        "identifier": null,
+        "public": true,
+        "context": "Referenced as legal basis for the Federal Telecommunications Institute's authority to grant radio spectrum concessions.",
+        "source_doc": "FCC: AST Mexico STA_Supplement.pdf",
+        "source_file_number": "SAT-STA-20251210-00378",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST Mexico STA_Supplement.pdf"
+        ]
+      },
+      {
+        "name": "Federal Telecommunications and Broadcasting Law",
+        "type": "government_doc",
+        "identifier": null,
+        "public": true,
+        "context": "Primary Mexican telecommunications law cited as authority for granting spectrum concessions and establishing conditions.",
+        "source_doc": "FCC: AST Mexico STA_Supplement.pdf",
+        "source_file_number": "SAT-STA-20251210-00378",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST Mexico STA_Supplement.pdf"
+        ]
+      },
+      {
+        "name": "Decree Issuing the Law on Telecommunications and Broadcasting",
+        "type": "government_doc",
+        "identifier": "Published in Official Gazette of the Federation on July 16, 2025",
+        "public": true,
+        "context": "Legislative decree establishing the telecommunications framework referenced as legal authority for the concession.",
+        "source_doc": "FCC: AST Mexico STA_Supplement.pdf",
+        "source_file_number": "SAT-STA-20251210-00378",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST Mexico STA_Supplement.pdf"
+        ]
+      },
+      {
+        "name": "Organic Statute of the Federal Telecommunications Institute",
+        "type": "government_doc",
+        "identifier": null,
+        "public": true,
+        "context": "Institutional charter cited as authority for the Federal Telecommunications Institute's powers to issue spectrum concessions.",
+        "source_doc": "FCC: AST Mexico STA_Supplement.pdf",
+        "source_file_number": "SAT-STA-20251210-00378",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST Mexico STA_Supplement.pdf"
+        ]
+      },
+      {
+        "name": "Resolution P/lFT/240925/324",
+        "type": "government_doc",
+        "identifier": "P/lFT/240925/324, dated September 24, 2025",
+        "public": false,
+        "context": "Federal Telecommunications Institute Plenary Session resolution that determined to grant the spectrum concession to Alt\u00e1n Redes.",
+        "source_doc": "FCC: AST Mexico STA_Supplement.pdf",
+        "source_file_number": "SAT-STA-20251210-00378",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST Mexico STA_Supplement.pdf"
+        ]
+      },
+      {
+        "name": "Resolution P/IFT/240925/324",
+        "type": "government_doc",
+        "identifier": "P/IFT/240925/324, dated September 24, 2025",
+        "public": false,
+        "context": "Mexican Federal Telecommunications Institute resolution granting Alt\u00e1n Redes the spectrum concession for experimental mobile satellite service.",
+        "source_doc": "FCC: AST Mexico STA_Supplement.pdf",
+        "source_file_number": "SAT-STA-20251121-00333",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST Mexico STA_Supplement.pdf"
+        ]
+      },
+      {
+        "name": "Official Gazette of the Federation",
+        "type": "government_doc",
+        "identifier": "December 20, 2024 and July 16, 2025 publications",
+        "public": true,
+        "context": "Official Mexican publication containing amendments to constitutional and telecommunications law cited as authority.",
+        "source_doc": "FCC: AST Mexico STA_Supplement.pdf",
+        "source_file_number": "SAT-STA-20251121-00333",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST Mexico STA_Supplement.pdf"
+        ]
+      },
+      {
+        "name": "Federal Telecommunications and Broadcasting Law",
+        "type": "government_doc",
+        "identifier": "Articles 1, 2, 3, 4, 5, 7, 15, 16, 17, 55, 75, 76, 82",
+        "public": true,
+        "context": "Mexican federal law providing statutory authority for spectrum concessions and technical requirements.",
+        "source_doc": "FCC: AST Mexico STA_Supplement.pdf",
+        "source_file_number": "SAT-STA-20251121-00333",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST Mexico STA_Supplement.pdf"
+        ]
+      },
+      {
+        "name": "Decree Issuing the Law on Telecommunications and Broadcasting",
+        "type": "government_doc",
+        "identifier": "Transitory Articles First, Second, Third, and Eighth; published July 16, 2025",
+        "public": true,
+        "context": "Mexican decree establishing telecommunications law framework referenced as authority for concession.",
+        "source_doc": "FCC: AST Mexico STA_Supplement.pdf",
+        "source_file_number": "SAT-STA-20251121-00333",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST Mexico STA_Supplement.pdf"
+        ]
+      },
+      {
+        "name": "Organic Statute of the Federal Telecommunications Institute",
+        "type": "government_doc",
+        "identifier": "Articles 1, 4, 6, 14",
+        "public": true,
+        "context": "Organizational framework for the Mexican Federal Telecommunications Institute issuing the concession.",
+        "source_doc": "FCC: AST Mexico STA_Supplement.pdf",
+        "source_file_number": "SAT-STA-20251121-00333",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST Mexico STA_Supplement.pdf"
+        ]
+      },
+      {
+        "name": "Satellite Policy Branch Information; Actions Taken, Report No. SAT-01706",
+        "type": "government_doc",
+        "identifier": "SAT-01706, File No. SAT-STA-20230327-00064",
+        "public": true,
+        "context": "FCC Public Notice documenting prior STA grant for Intelsat 902 C-band operations referenced as background for extension request.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-STA-20230524-00124",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Satellite Policy Branch Information; Actions Taken, Report No. SAT-01488",
+        "type": "government_doc",
+        "identifier": "SAT-01488, File No. SAT-MOD-20200326-00028, Aug. 7, 2020",
+        "public": true,
+        "context": "FCC Public Notice documenting permanent license authorization for Intelsat 902 at 50.1\u00b0 W.L. with original C-band coverages.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-STA-20230524-00124",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Rule 10b5-1(c)",
+        "type": "government_doc",
+        "identifier": "17 CFR 240.10b5-1(c)",
+        "public": true,
+        "context": "Referenced for affirmative defense conditions related to Rule 10b5-1 plans for equity security transactions.",
+        "source_doc": "SEC: 4 (2025-12-12)",
+        "source_file_number": "2025-12-12",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 4 (2025-12-12)"
+        ]
+      },
+      {
+        "name": "Section 7(a)(2)(B) of the Securities Act",
+        "type": "government_doc",
+        "identifier": "Section 7(a)(2)(B)",
+        "public": true,
+        "context": "Referenced regarding extended transition period for financial accounting standards compliance for emerging growth companies.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Rule 425 under the Securities Act",
+        "type": "government_doc",
+        "identifier": "17 CFR 230.425",
+        "public": true,
+        "context": "Referenced as provision for written communications that this Form 8-K may satisfy.",
+        "source_doc": "SEC: 8-K (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 8-K (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Rule 14a-12 under the Exchange Act",
+        "type": "government_doc",
+        "identifier": "17 CFR 240.14a-12",
+        "public": true,
+        "context": "Referenced as provision for soliciting material that this Form 8-K may satisfy.",
+        "source_doc": "SEC: 8-K (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 8-K (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Rule 14d-2(b) under the Exchange Act",
+        "type": "government_doc",
+        "identifier": "17 CFR 240.14d-2(b)",
+        "public": true,
+        "context": "Referenced as provision for pre-commencement communications that this Form 8-K may satisfy.",
+        "source_doc": "SEC: 8-K (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 8-K (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Rule 13e-4(c) under the Exchange Act",
+        "type": "government_doc",
+        "identifier": "17 CFR 240.13e-4(c)",
+        "public": true,
+        "context": "Referenced as provision for pre-commencement communications that this Form 8-K may satisfy.",
+        "source_doc": "SEC: 8-K (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 8-K (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Rule 12b-2 under the Exchange Act of 1934",
+        "type": "government_doc",
+        "identifier": "17 CFR 240.12b-2",
+        "public": true,
+        "context": "Referenced regarding emerging growth company definition.",
+        "source_doc": "SEC: 8-K (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 8-K (2025-11-21)"
+        ]
+      }
+    ],
+    "international_regulator": [
+      {
+        "name": "Mexico-Narrowband Agreement (824-869 MHz)",
+        "type": "international_regulator",
+        "identifier": "824_869.pdf",
+        "public": true,
+        "context": "Referenced for the field strength limit of 393 dB\u03bcV/m applicable in Mexico for the frequency band studied.",
+        "source_doc": "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1).pdf",
+        "source_file_number": "SAT-AMD-20250718-00181",
+        "mention_count": 3,
+        "found_in": [
+          "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1).pdf",
+          "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1.1).pdf"
+        ]
+      },
+      {
+        "name": "FCC Arrangement S with Canada",
+        "type": "international_regulator",
+        "identifier": "Arrangement_S.pdf",
+        "public": true,
+        "context": "Referenced for the field strength limit of 50.75 dB\u03bcV/m/MHz over Canada derived from -102 dBW/m2/200kHz.",
+        "source_doc": "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1).pdf",
+        "source_file_number": "SAT-AMD-20250718-00181",
+        "mention_count": 3,
+        "found_in": [
+          "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1).pdf",
+          "FCC: SCS 700-800 MHz Interference Analysis (Annex B rev1.1).pdf"
+        ]
+      },
+      {
+        "name": "International Telecommunications Union (ITU) Radio Regulations",
+        "type": "international_regulator",
+        "identifier": "Article 4.4, Radio Regulation No. 4.4 (RR 4.4)",
+        "public": true,
+        "context": "Referenced as the regulatory framework governing non-interference operations for AST SpaceMobile's NGSO constellation in shared frequency bands.",
+        "source_doc": "FCC: AST SpaceMobile Supp.pdf",
+        "source_file_number": "SAT-AMD-20201028-00126",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: AST SpaceMobile Supp.pdf"
+        ]
+      },
+      {
+        "name": "Article 21 power flux density limits",
+        "type": "international_regulator",
+        "identifier": "Article 21",
+        "public": true,
+        "context": "Referenced as compliance requirement for SpaceMobile constellation regarding power flux density limits.",
+        "source_doc": "FCC: Davenport Ex parte M.pdf",
+        "source_file_number": "SAT-AMD-20200727-00088",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Davenport Ex parte M.pdf"
+        ]
+      },
+      {
+        "name": "Article 4.4 of the International Telecommunications Union Radio Regulations",
+        "type": "international_regulator",
+        "identifier": "ITU RR 4.4",
+        "public": true,
+        "context": "Referenced as the regulatory framework governing non-interference operations for AST SpaceMobile's SCS service in shared frequency bands.",
+        "source_doc": "FCC: AST SpaceMobile Supp.pdf",
+        "source_file_number": "SAT-AMD-20240311-00053",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST SpaceMobile Supp.pdf"
+        ]
+      }
+    ],
+    "third_party_report": [
+      {
+        "name": "NASA's Debris Assessment Software (DAS)",
+        "type": "third_party_report",
+        "identifier": null,
+        "public": true,
+        "context": "Referenced as tool used by NASA to assess collision risk based on satellite lifetime, altitude, and inclination parameters.",
+        "source_doc": "FCC: Download",
+        "source_file_number": "SAT-MOD-20190830-00087",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: Download"
+        ]
+      },
+      {
+        "name": "Orbital Debris Assessment Report (ODAR) for MuSat-2 and MuSat-3",
+        "type": "third_party_report",
+        "identifier": null,
+        "public": false,
+        "context": "Referenced as a separate exhibit documenting compliance with orbital debris requirements under NASA-STD-8719.14 and Section 25.114(d)(14).",
+        "source_doc": "FCC: FCC Application Tech.pdf",
+        "source_file_number": "SAT-LOA-20230504-00103",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: FCC Application Tech.pdf"
+        ]
+      },
+      {
+        "name": "GSMA Intelligence",
+        "type": "third_party_report",
+        "identifier": "3/31/2021",
+        "public": true,
+        "context": "Source cited for the 1.5 billion subscribers data point representing mobile network operators with whom AST has agreements",
+        "source_doc": "FCC: AST SpaceMobile Meet.pdf",
+        "source_file_number": "SAT-LOA-20200413-00034",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST SpaceMobile Meet.pdf"
+        ]
+      },
+      {
+        "name": "GSMA Intelligence",
+        "type": "third_party_report",
+        "identifier": "data as of 3/31/2021",
+        "public": true,
+        "context": "Source cited for subscriber count data from mobile network operators.",
+        "source_doc": "FCC: AST SpaceMobile Meet.pdf",
+        "source_file_number": "SAT-AMD-20201028-00126",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST SpaceMobile Meet.pdf"
+        ]
+      }
+    ],
+    "legal_case": [
+      {
+        "name": "WAIT Radio v. FCC",
+        "type": "legal_case",
+        "identifier": "418 F.2d 1153, 1157 (D.C. Cir 1969)",
+        "public": true,
+        "context": "Court precedent establishing that waiver applicants must demonstrate the grant would not undermine the purpose of the rules.",
+        "source_doc": "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf"
+        ]
+      },
+      {
+        "name": "Ne. Cellular Tel. Co. v. FCC",
+        "type": "legal_case",
+        "identifier": "897 F.2d 1164, 1166 (D.C. Cir. 1990)",
+        "public": true,
+        "context": "Court precedent establishing waiver standards for FCC rule waivers.",
+        "source_doc": "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf",
+        "source_file_number": "SAT-MOD-20250805-00200",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: DIRECTV Comments on SpaceX Gen1 Mod FINAL.pdf"
+        ]
+      },
+      {
+        "name": "International Traffic in Arms Regulations",
+        "type": "legal_case",
+        "identifier": "22 CFR Parts 120-130",
+        "public": true,
+        "context": "Export control regulations referenced for technical data controls on ITAR-listed materials",
+        "source_doc": "FCC: SpaceX MVDDS Ex Part.pdf",
+        "source_file_number": "SAT-MOD-20200417-00037",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: SpaceX MVDDS Ex Part.pdf"
+        ]
+      },
+      {
+        "name": "Political Constitution of the United Mexican States",
+        "type": "legal_case",
+        "identifier": "Article 28, paragraphs sixteen, seventeen and eighteenth",
+        "public": true,
+        "context": "Constitutional basis cited for authority to grant radio spectrum concessions.",
+        "source_doc": "FCC: AST Mexico STA_Supplement.pdf",
+        "source_file_number": "SAT-STA-20251121-00333",
+        "mention_count": 1,
+        "found_in": [
+          "FCC: AST Mexico STA_Supplement.pdf"
+        ]
+      },
+      {
+        "name": "Securities Exchange Act of 1934",
+        "type": "legal_case",
+        "identifier": "Section 13 or 15(d)",
+        "public": true,
+        "context": "Referenced as the statutory basis for Form 8-K filing requirements.",
+        "source_doc": "SEC: 8-K (2026-01-16)",
+        "source_file_number": "2026-01-16",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 8-K (2026-01-16)"
+        ]
+      },
+      {
+        "name": "Securities Act of 1933",
+        "type": "legal_case",
+        "identifier": "Rule 405 (17 CFR 230.405)",
+        "public": true,
+        "context": "Referenced to define emerging growth company status.",
+        "source_doc": "SEC: 8-K (2026-01-16)",
+        "source_file_number": "2026-01-16",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 8-K (2026-01-16)"
+        ]
+      },
+      {
+        "name": "Securities Exchange Act of 1934",
+        "type": "legal_case",
+        "identifier": "Rule 12b-2 (17 CFR 240.12b-2)",
+        "public": true,
+        "context": "Referenced as alternative basis for defining emerging growth company status.",
+        "source_doc": "SEC: 8-K (2026-01-16)",
+        "source_file_number": "2026-01-16",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 8-K (2026-01-16)"
+        ]
+      },
+      {
+        "name": "Securities Exchange Act of 1934",
+        "type": "legal_case",
+        "identifier": "Section 18",
+        "public": true,
+        "context": "Referenced regarding liabilities associated with filed information.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-12-11)",
+        "source_file_number": "2025-12-11",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-12-11)"
+        ]
+      },
+      {
+        "name": "Rule 144",
+        "type": "legal_case",
+        "identifier": "Rule 144 under the Securities Act of 1933",
+        "public": true,
+        "context": "Governs the notice of proposed sale of securities and defines requirements for the filing.",
+        "source_doc": "SEC: 144 (2025-12-10)",
+        "source_file_number": "2025-12-10",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 144 (2025-12-10)"
+        ]
+      },
+      {
+        "name": "Rule 10b5-1 under the Exchange Act",
+        "type": "legal_case",
+        "identifier": "Rule 10b5-1",
+        "public": true,
+        "context": "Referenced regarding trading plans and instructions related to securities sales.",
+        "source_doc": "SEC: 144 (2025-12-10)",
+        "source_file_number": "2025-12-10",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 144 (2025-12-10)"
+        ]
+      },
+      {
+        "name": "Second Amended and Restated Certificate of Incorporation of AST SpaceMobile, Inc.",
+        "type": "legal_case",
+        "identifier": "Exhibit 3.1 to Form 8-K filed April 12, 2021",
+        "public": true,
+        "context": "Corporate governance document incorporated by reference as Exhibit 4.1.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Certificate of Amendment to the Second Amended and Restated Certificate of Incorporation of AST SpaceMobile, Inc.",
+        "type": "legal_case",
+        "identifier": "Exhibit 3.1 to Form 8-K filed June 9, 2025",
+        "public": true,
+        "context": "Certificate amendment incorporated by reference as Exhibit 4.2.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amended and Restated Bylaws of AST SpaceMobile, Inc.",
+        "type": "legal_case",
+        "identifier": "Exhibit 3.2 to Form 8-K filed April 12, 2021",
+        "public": true,
+        "context": "Corporate bylaws incorporated by reference as Exhibit 4.3.",
+        "source_doc": "SEC: S-8 (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: S-8 (2025-11-21)"
+        ]
+      }
+    ],
+    "other": [
+      {
+        "name": "Email from Joe Hill to Timothy L. Bransford",
+        "type": "other",
+        "identifier": "May 21, 2024",
+        "public": false,
+        "context": "FCC communication requesting information on interference potential from USASAT-NGSO-20 system in certain frequency bands.",
+        "source_doc": "FCC: AST SpaceMobile Supp.pdf",
+        "source_file_number": "SAT-AMD-20201028-00126",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: AST SpaceMobile Supp.pdf"
+        ]
+      },
+      {
+        "name": "DAS v3.2.6",
+        "type": "other",
+        "identifier": "v3.2.6",
+        "public": false,
+        "context": "Software tool used to perform the orbital debris analysis for this ODAR report.",
+        "source_doc": "FCC: Orbital Debris Assessment Report (ODAR).pdf",
+        "source_file_number": "ELS-380044",
+        "mention_count": 2,
+        "found_in": [
+          "FCC: Orbital Debris Assessment Report (ODAR).pdf"
+        ]
+      },
+      {
+        "name": "Quarterly Report on Form 10-Q",
+        "type": "sec_filing",
+        "identifier": "filed November 10, 2025",
+        "public": true,
+        "context": "Referenced for outstanding shares of Class A Common Stock as of November 6, 2025.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-12-11)",
+        "source_file_number": "2025-12-11",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-12-11)"
+        ]
+      },
+      {
+        "name": "Prospectus Supplement filed pursuant to Rule 424(b)(5)",
+        "type": "sec_filing",
+        "identifier": "filed November 13, 2025",
+        "public": true,
+        "context": "Referenced for disclosure of registered direct offering of 2,048,849 shares of Class A Common Stock.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-12-11)",
+        "source_file_number": "2025-12-11",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-12-11)"
+        ]
+      },
+      {
+        "name": "Prospectus Supplement filed pursuant to Rule 424(b)(5)",
+        "type": "sec_filing",
+        "identifier": "filed November 14, 2025",
+        "public": true,
+        "context": "Referenced for disclosure of registered direct offering of 381,990 shares of Class A Common Stock.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-12-11)",
+        "source_file_number": "2025-12-11",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-12-11)"
+        ]
+      },
+      {
+        "name": "Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "filed April 16, 2021",
+        "public": true,
+        "context": "Original Schedule 13D filing that Amendment No. 1 amends and supplements.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-12-11)",
+        "source_file_number": "2025-12-11",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-12-11)"
+        ]
+      },
+      {
+        "name": "Current Report on Form 8-K",
+        "type": "sec_filing",
+        "identifier": "filed April 12, 2021",
+        "public": true,
+        "context": "SEC filing containing Stockholders' Agreement as Exhibit 10.1.",
+        "source_doc": "SEC: 4 (2025-12-11)",
+        "source_file_number": "2025-12-11",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 4 (2025-12-11)"
+        ]
+      },
+      {
+        "name": "Current Report on Form 8-K",
+        "type": "sec_filing",
+        "identifier": "filed June 7, 2024",
+        "public": true,
+        "context": "SEC filing containing Amended and Restated Stockholders' Agreement as Exhibit 10.1.",
+        "source_doc": "SEC: 4 (2025-12-11)",
+        "source_file_number": "2025-12-11",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 4 (2025-12-11)"
+        ]
+      },
+      {
+        "name": "Current Report on Form 8-K",
+        "type": "sec_filing",
+        "identifier": "filed February 7, 2025",
+        "public": true,
+        "context": "SEC filing containing First Amendment to Amended and Restated Stockholders' Agreement as Exhibit 10.1.",
+        "source_doc": "SEC: 4 (2025-12-11)",
+        "source_file_number": "2025-12-11",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 4 (2025-12-11)"
+        ]
+      },
+      {
+        "name": "Definitive Proxy Statement on Schedule 14A",
+        "type": "sec_filing",
+        "identifier": "filed October 28, 2025",
+        "public": true,
+        "context": "Contains detailed description of Proposal No. 1 regarding the Amended and Restated 2024 Incentive Award Plan.",
+        "source_doc": "SEC: 8-K (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: 8-K (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Schedule 13D Original Filing",
+        "type": "sec_filing",
+        "identifier": "March 11, 2022",
+        "public": true,
+        "context": "Initial Schedule 13D filing by Abel Avellan that is being amended by this document.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 15 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "October 31, 2025",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 14 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "July 15, 2025",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 13 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "June 20, 2025",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 12 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "January 27, 2025",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 11 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "November 20, 2024",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 10 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "October 15, 2024",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 9 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "September 26, 2024",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 8 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "August 26, 2024",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 7 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "July 11, 2024",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 6 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "June 14, 2024",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 5 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "March 6, 2024",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 4 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "January 25, 2024",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 3 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "July 6, 2023",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 2 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "May 2, 2023",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      },
+      {
+        "name": "Amendment No. 1 to Schedule 13D",
+        "type": "sec_filing",
+        "identifier": "December 13, 2022",
+        "public": true,
+        "context": "Previous amendment to the Schedule 13D being further amended by this filing.",
+        "source_doc": "SEC: SCHEDULE 13D/A (2025-11-21)",
+        "source_file_number": "2025-11-21",
+        "mention_count": 1,
+        "found_in": [
+          "SEC: SCHEDULE 13D/A (2025-11-21)"
+        ]
+      }
+    ]
+  }
+}

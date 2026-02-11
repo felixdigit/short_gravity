@@ -72,8 +72,13 @@ KEY_DOCKETS = [
 
     # Space Bureau proceedings
     {"docket": "25-201", "name": "AST SpaceMobile Modification Application", "importance": "high"},
-    {"docket": "25-306", "name": "AST SpaceMobile Filings", "importance": "high"},
     {"docket": "25-340", "name": "AST SpaceMobile Filings", "importance": "high"},
+
+    # Competitor SCS proceedings
+    {"docket": "23-135", "name": "SpaceX/T-Mobile SCS Application", "importance": "critical"},
+
+    # Space Bureau structural reform
+    {"docket": "25-306", "name": "Space Modernization NPRM (Part 100)", "importance": "high"},
 
     # Related spectrum/satellite dockets
     {"docket": "22-411", "name": "Space Bureau Spectrum", "importance": "normal"},
@@ -95,6 +100,9 @@ HIGH_IMPORTANCE_FILERS = [
     "starlink",
     "spacex",
     "lynk",
+    "ligado",
+    "globalstar",
+    "iridium",
     "federal communications commission",
 ]
 

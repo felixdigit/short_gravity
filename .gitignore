@@ -29,3 +29,14 @@ yarn-error.log*
 .DS_Store
 *.swp
 *.swo
+
+# Python
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+logs/
+
+# Temp
+supabase/.temp/
