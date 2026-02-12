@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG Telemetry Layout</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #030305;
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+  }
+
+  /* ─── TOP BAR ─── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .back-arrow {
+    color: rgba(255,255,255,0.3);
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .sat-name {
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .norad-id {
+    font-size: 8px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.15em;
+  }
+
+  .sat-type {
+    font-size: 8px;
+    color: rgba(255,255,255,0.12);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Sat nav pills */
+  .sat-nav {
+    display: flex;
+    gap: 3px;
+  }
+  .sat-nav a {
+    padding: 3px 8px;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.25);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .sat-nav a:hover { color: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.1); }
+  .sat-nav a.active { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); }
+
+  /* ─── COMPARE BAR ─── */
+  .compare-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .compare-label {
+    font-size: 7px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+  .compare-pill {
+    padding: 3px 8px;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.25);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .compare-pill:hover { color: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.1); }
+  .compare-pill.pinned-amber { color: #FBBF24; border-color: rgba(251,191,36,0.25); background: rgba(251,191,36,0.06); }
+  .compare-pill.pinned-blue { color: #60A5FA; border-color: rgba(96,165,250,0.25); background: rgba(96,165,250,0.06); }
+
+  /* ─── MAIN GRID ─── */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    grid-template-rows: auto auto;
+    gap: 0;
+    min-height: calc(100vh - 90px);
+  }
+
+  /* ─── LEFT: CHART AREA ─── */
+  .chart-area {
+    padding: 16px 20px;
+    border-right: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .section-label {
+    font-size: 8px;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .metric-tabs {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 12px;
+  }
+  .metric-tab {
+    padding: 3px 8px;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.2);
+    background: transparent;
+    cursor: pointer;
+  }
+  .metric-tab.active { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin-left: auto;
+    align-items: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 7px;
+  }
+  .legend-line { width: 14px; height: 1px; }
+  .legend-line.solid { background: rgba(255,255,255,0.7); }
+  .legend-line.dashed-amber { background: repeating-linear-gradient(90deg, #FBBF24 0 4px, transparent 4px 7px); opacity: 0.7; }
+  .legend-line.dashed-blue { background: repeating-linear-gradient(90deg, #60A5FA 0 4px, transparent 4px 7px); opacity: 0.7; }
+
+  /* Mock chart canvas */
+  .chart-canvas {
+    background: rgba(10,10,12,0.8);
+    border: 1px solid rgba(255,255,255,0.06);
+    height: 360px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Simulated chart lines */
+  .chart-canvas svg { width: 100%; height: 100%; }
+  .chart-canvas .grid-line {
+    stroke: rgba(255,255,255,0.02);
+    stroke-width: 0.5;
+  }
+  .chart-canvas .data-line {
+    fill: none;
+    stroke-width: 1;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+    font-size: 10px;
+  }
+  .stat-label { color: rgba(255,255,255,0.25); margin-bottom: 2px; }
+  .stat-value { color: rgba(255,255,255,0.7); font-variant-numeric: tabular-nums; }
+  .stat-value.warn { color: #F59E0B; }
+
+  /* ─── RIGHT SIDEBAR ─── */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(255,255,255,0.04);
+    overflow-y: auto;
+  }
+
+  .sidebar-section {
+    padding: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .sidebar-header .section-label { margin-bottom: 0; }
+
+  .sidebar-meta {
+    font-size: 8px;
+    color: rgba(255,255,255,0.12);
+    letter-spacing: 0.1em;
+  }
+
+  /* Conjunction mini chart */
+  .conj-mini-chart {
+    height: 80px;
+    background: rgba(10,10,12,0.5);
+    border: 1px solid rgba(255,255,255,0.04);
+    margin-bottom: 10px;
+  }
+
+  /* Conjunction list */
+  .conj-event {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 9px;
+  }
+  .conj-event:last-child { border-bottom: none; }
+  .conj-tca { color: rgba(255,255,255,0.35); font-variant-numeric: tabular-nums; }
+  .conj-object { color: rgba(255,255,255,0.5); }
+  .conj-range { text-align: right; font-variant-numeric: tabular-nums; }
+  .conj-range.critical { color: #EF4444; }
+  .conj-range.warning { color: #F59E0B; }
+  .conj-range.nominal { color: rgba(255,255,255,0.5); }
+
+  /* Signal list */
+  .signal-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .signal-item:last-child { border-bottom: none; }
+  .signal-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .signal-dot.high { background: #EF4444; }
+  .signal-dot.medium { background: #F59E0B; }
+  .signal-dot.low { background: rgba(255,255,255,0.3); }
+  .signal-type {
+    font-size: 7px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .signal-title {
+    font-size: 9px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 1px;
+  }
+  .signal-time {
+    font-size: 8px;
+    color: rgba(255,255,255,0.15);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* ─── BOTTOM STATUS BAR ─── */
+  .statusbar {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 20px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .statusbar-left {
+    font-size: 8px;
+    color: rgba(255,255,255,0.15);
+  }
+  .statusbar-right {
+    font-size: 8px;
+    color: rgba(255,255,255,0.07);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+
+  /* ─── ORBITAL HEALTH STRIP ─── */
+  .health-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .health-cell {
+    padding: 10px 16px;
+    background: #030305;
+  }
+  .health-cell .label {
+    font-size: 7px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .health-cell .value {
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.8);
+    font-variant-numeric: tabular-nums;
+  }
+  .health-cell .value .unit {
+    font-size: 9px;
+    color: rgba(255,255,255,0.25);
+    margin-left: 2px;
+  }
+  .health-cell .delta {
+    font-size: 8px;
+    font-variant-numeric: tabular-nums;
+    margin-top: 2px;
+  }
+  .health-cell .delta.down { color: #F59E0B; }
+  .health-cell .delta.up { color: #22C55E; }
+  .health-cell .delta.neutral { color: rgba(255,255,255,0.2); }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="back-arrow">&larr;</span>
+    <div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="sat-name">BlueWalker 3</span>
+        <span class="norad-id">NORAD 53807</span>
+        <span class="sat-type">Test Article</span>
+      </div>
+    </div>
+  </div>
+  <div class="sat-nav">
+    <a href="#" class="active">BW3</a>
+    <a href="#">BB-1</a>
+    <a href="#">BB-2</a>
+    <a href="#">BB-3</a>
+    <a href="#">BB-4</a>
+    <a href="#">BB-5</a>
+    <a href="#">FM1</a>
+  </div>
+</div>
+
+<!-- COMPARE BAR -->
+<div class="compare-bar">
+  <span class="compare-label">Compare</span>
+  <button class="compare-pill">BB-1</button>
+  <button class="compare-pill">BB-2</button>
+  <button class="compare-pill">BB-3</button>
+  <button class="compare-pill">BB-4</button>
+  <button class="compare-pill pinned-amber">BB-5</button>
+  <button class="compare-pill pinned-blue">FM1</button>
+</div>
+
+<!-- HEALTH STRIP -->
+<div class="health-strip">
+  <div class="health-cell">
+    <div class="label">Altitude</div>
+    <div class="value">515.2<span class="unit">km</span></div>
+    <div class="delta down">&darr; 0.34 km / 30d</div>
+  </div>
+  <div class="health-cell">
+    <div class="label">B* Drag</div>
+    <div class="value">1.24e-4</div>
+    <div class="delta down">&uarr; +18.2% / 30d</div>
+  </div>
+  <div class="health-cell">
+    <div class="label">Inclination</div>
+    <div class="value">51.64<span class="unit">&deg;</span></div>
+    <div class="delta neutral">&plusmn; 0.001&deg;</div>
+  </div>
+  <div class="health-cell">
+    <div class="label">TLE Age</div>
+    <div class="value">2.1<span class="unit">hr</span></div>
+    <div class="delta up">FRESH</div>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main">
+
+  <!-- LEFT: CHART -->
+  <div class="chart-area">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+      <div class="section-label" style="margin-bottom:0;">Orbital Metrics &middot; 180 days</div>
+      <div class="legend">
+        <div class="legend-item">
+          <span class="legend-line solid"></span>
+          <span style="color:rgba(255,255,255,0.4)">BW3</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-line dashed-amber"></span>
+          <span style="color:rgba(251,191,36,0.6)">BB-5</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-line dashed-blue"></span>
+          <span style="color:rgba(96,165,250,0.6)">FM1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="metric-tabs">
+      <button class="metric-tab active">ALT</button>
+      <button class="metric-tab">B*</button>
+      <button class="metric-tab">MM</button>
+      <button class="metric-tab">INCL</button>
+      <button class="metric-tab">ECC</button>
+      <button class="metric-tab">RAAN</button>
+    </div>
+
+    <div class="chart-canvas">
+      <svg viewBox="0 0 800 360" preserveAspectRatio="none">
+        <!-- Grid -->
+        <line class="grid-line" x1="0" y1="72" x2="800" y2="72"/>
+        <line class="grid-line" x1="0" y1="144" x2="800" y2="144"/>
+        <line class="grid-line" x1="0" y1="216" x2="800" y2="216"/>
+        <line class="grid-line" x1="0" y1="288" x2="800" y2="288"/>
+        <!-- Y axis labels -->
+        <text x="6" y="70" fill="rgba(255,255,255,0.15)" font-family="JetBrains Mono" font-size="9">520 km</text>
+        <text x="6" y="142" fill="rgba(255,255,255,0.15)" font-family="JetBrains Mono" font-size="9">518 km</text>
+        <text x="6" y="214" fill="rgba(255,255,255,0.15)" font-family="JetBrains Mono" font-size="9">516 km</text>
+        <text x="6" y="286" fill="rgba(255,255,255,0.15)" font-family="JetBrains Mono" font-size="9">514 km</text>
+        <!-- Primary line (BW3) — solid white -->
+        <polyline class="data-line" stroke="rgba(255,255,255,0.7)"
+          points="50,200 100,195 150,190 200,192 250,196 300,210 350,215 400,220 450,218 500,225 550,230 600,228 650,235 700,240 750,245"/>
+        <!-- Compare: BB-5 — dashed amber -->
+        <polyline class="data-line" stroke="#FBBF24" stroke-dasharray="4,3" opacity="0.6"
+          points="50,160 100,158 150,155 200,150 250,148 300,152 350,155 400,160 450,158 500,162 550,165 600,163 650,168 700,170 750,172"/>
+        <!-- Compare: FM1 — dashed blue -->
+        <polyline class="data-line" stroke="#60A5FA" stroke-dasharray="4,3" opacity="0.6"
+          points="50,100 100,102 150,98 200,95 250,92 300,90 350,88 400,85 450,87 500,84 550,82 600,85 650,83 700,80 750,78"/>
+      </svg>
+    </div>
+
+    <div class="stats-row">
+      <div>
+        <div class="stat-label">Initial B*</div>
+        <div class="stat-value">1.050e-4</div>
+      </div>
+      <div>
+        <div class="stat-label">Current B*</div>
+        <div class="stat-value">1.241e-4</div>
+      </div>
+      <div>
+        <div class="stat-label">B* Change</div>
+        <div class="stat-value warn">+18.2%</div>
+      </div>
+      <div>
+        <div class="stat-label">Avg Altitude</div>
+        <div class="stat-value">515.2 km</div>
+      </div>
+      <div>
+        <div class="stat-label">Alt Change</div>
+        <div class="stat-value warn">-0.34 km</div>
+      </div>
+      <div>
+        <div class="stat-label">Data Points</div>
+        <div class="stat-value">847 (612CT / 235ST)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- Conjunctions -->
+    <div class="sidebar-section">
+      <div class="sidebar-header">
+        <div class="section-label">Conjunctions</div>
+        <span class="sidebar-meta">SOCRATES &middot; 7d</span>
+      </div>
+      <div class="conj-mini-chart"></div>
+
+      <div class="conj-event">
+        <div>
+          <div class="conj-tca">Feb 14 &middot; 08:22</div>
+          <div class="conj-object">STARLINK-36412</div>
+        </div>
+        <div class="conj-range critical">178 m</div>
+      </div>
+      <div class="conj-event">
+        <div>
+          <div class="conj-tca">Feb 15 &middot; 14:51</div>
+          <div class="conj-object">CZ-6A DEB</div>
+        </div>
+        <div class="conj-range warning">2.4 km</div>
+      </div>
+      <div class="conj-event">
+        <div>
+          <div class="conj-tca">Feb 16 &middot; 03:17</div>
+          <div class="conj-object">COSMOS 2251 DEB</div>
+        </div>
+        <div class="conj-range nominal">8.7 km</div>
+      </div>
+      <div class="conj-event">
+        <div>
+          <div class="conj-tca">Feb 17 &middot; 19:44</div>
+          <div class="conj-object">FENGYUN 1C DEB</div>
+        </div>
+        <div class="conj-range nominal">12.1 km</div>
+      </div>
+      <div class="conj-event">
+        <div>
+          <div class="conj-tca">Feb 18 &middot; 06:02</div>
+          <div class="conj-object">SL-8 R/B</div>
+        </div>
+        <div class="conj-range nominal">15.3 km</div>
+      </div>
+    </div>
+
+    <!-- Signals -->
+    <div class="sidebar-section" style="flex:1;">
+      <div class="sidebar-header">
+        <div class="section-label">Signals</div>
+        <span class="sidebar-meta">3 active</span>
+      </div>
+
+      <div class="signal-item">
+        <div class="signal-dot high"></div>
+        <div>
+          <div class="signal-type">CONJUNCTION</div>
+          <div class="signal-title">BW3 &lt;178m from STARLINK-36412</div>
+        </div>
+        <span class="signal-time">2h</span>
+      </div>
+      <div class="signal-item">
+        <div class="signal-dot medium"></div>
+        <div>
+          <div class="signal-type">DRAG</div>
+          <div class="signal-title">B* increased 18% over 30 days</div>
+        </div>
+        <span class="signal-time">6h</span>
+      </div>
+      <div class="signal-item">
+        <div class="signal-dot low"></div>
+        <div>
+          <div class="signal-type">TLE</div>
+          <div class="signal-title">Source divergence: CT vs ST &gt;0.5km</div>
+        </div>
+        <span class="signal-time">1d</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="statusbar">
+    <div class="statusbar-left">CelesTrak &middot; Space-Track &middot; SOCRATES &middot; Updated 2h ago</div>
+    <div class="statusbar-right">Short Gravity</div>
+  </div>
+</div>
+
+</body>
+</html>

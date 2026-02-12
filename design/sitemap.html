@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG Sitemap</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #111;
+    color: #888;
+    font-family: monospace;
+    font-size: 10px;
+    min-height: 100vh;
+    padding: 40px;
+    overflow: auto;
+  }
+
+  h1 {
+    color: #555;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    color: #333;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    margin-bottom: 40px;
+  }
+
+  /* Layout */
+  .tier {
+    margin-bottom: 48px;
+  }
+  .tier-label {
+    color: #444;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #222;
+  }
+  .tier-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  /* Page card */
+  .page {
+    border: 1px dashed #444;
+    width: 220px;
+    flex-shrink: 0;
+  }
+  .page.hero { width: 300px; }
+  .page.small { width: 160px; }
+
+  .page-header {
+    padding: 6px 10px;
+    border-bottom: 1px solid #282828;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .page-name {
+    color: #aaa;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .page-route {
+    color: #333;
+    font-size: 8px;
+  }
+
+  .page-body {
+    padding: 8px 10px;
+    min-height: 80px;
+  }
+  .page.hero .page-body { min-height: 140px; }
+
+  .widget-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .w {
+    border: 1px solid #282828;
+    padding: 3px 5px;
+    font-size: 8px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex: 1;
+  }
+  .w.full { flex: none; width: 100%; }
+  .w.tall { min-height: 40px; }
+  .w.hero-tall { min-height: 70px; }
+
+  /* Arrows / connections */
+  .connections {
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid #222;
+  }
+  .conn {
+    color: #444;
+    font-size: 8px;
+    margin-bottom: 2px;
+  }
+  .conn span { color: #666; }
+
+  /* Link highlight */
+  .page.primary { border-color: #555; }
+  .page.dev { border-color: #333; border-style: dotted; }
+  .page.auth { border-color: #3a3020; }
+</style>
+</head>
+<body>
+
+<h1>Short Gravity &mdash; Sitemap</h1>
+<div class="subtitle">Page architecture &middot; wireframe view &middot; Feb 2026</div>
+
+<!-- ═══ PUBLIC CORE ═══ -->
+<div class="tier">
+  <div class="tier-label">Public Core</div>
+  <div class="tier-row">
+
+    <!-- Landing -->
+    <div class="page primary">
+      <div class="page-header">
+        <span class="page-name">Landing</span>
+        <span class="page-route">/</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Hero / CTA</div>
+        <div class="w full" style="margin-top:4px;">Features</div>
+        <div class="w full" style="margin-top:4px;">Patreon CTA</div>
+      </div>
+      <div class="connections">
+        <div class="conn">&rarr; <span>/asts</span> (Terminal)</div>
+        <div class="conn">&rarr; <span>/login</span></div>
+      </div>
+    </div>
+
+    <!-- Terminal -->
+    <div class="page primary hero">
+      <div class="page-header">
+        <span class="page-name">Terminal</span>
+        <span class="page-route">/asts</span>
+      </div>
+      <div class="page-body">
+        <div class="widget-row">
+          <div class="w">Branding</div>
+          <div class="w">$ASTS Price</div>
+        </div>
+        <div class="widget-row">
+          <div class="w tall">
+            Telemetry<br>
+            Constellation<br>
+            FM1 Watch<br>
+            Mercator
+          </div>
+          <div class="w hero-tall" style="flex:1.5; text-align:center; color:#333;">
+            3D Globe
+          </div>
+          <div class="w tall">
+            Short Int<br>
+            Cash Pos<br>
+            Launch<br>
+            Activity
+          </div>
+        </div>
+        <div class="w full" style="margin-top:4px;">Globe Controls &middot; Brain Search</div>
+      </div>
+      <div class="connections">
+        <div class="conn">&rarr; <span>/intel</span> (Dashboard link)</div>
+        <div class="conn">&rarr; <span>/satellite/[id]</span> (Click sat)</div>
+        <div class="conn">&rarr; <span>/orbital</span> (Telemetry feed)</div>
+        <div class="conn">&rarr; <span>/asts/query</span> (Brain search)</div>
+      </div>
+    </div>
+
+    <!-- Intel -->
+    <div class="page primary">
+      <div class="page-header">
+        <span class="page-name">Intel Dashboard</span>
+        <span class="page-route">/intel</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Signals</div>
+        <div class="w full" style="margin-top:4px;">Price Chart + Milestones</div>
+        <div class="widget-row" style="margin-top:4px;">
+          <div class="w">Filing Impact</div>
+          <div class="w">Catalyst Bars</div>
+        </div>
+        <div class="w full" style="margin-top:4px;">Cross-References</div>
+        <div class="widget-row" style="margin-top:4px;">
+          <div class="w">Sentiment</div>
+          <div class="w">Voice Rankings</div>
+        </div>
+        <div class="w full" style="margin-top:4px;">Brain Search</div>
+      </div>
+      <div class="connections">
+        <div class="conn">&rarr; <span>/asts</span> (Back to terminal)</div>
+        <div class="conn">&rarr; <span>/research</span></div>
+        <div class="conn">&rarr; <span>/patents</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ SATELLITE / ORBITAL ═══ -->
+<div class="tier">
+  <div class="tier-label">Satellite &amp; Orbital</div>
+  <div class="tier-row">
+
+    <!-- Orbital -->
+    <div class="page primary">
+      <div class="page-header">
+        <span class="page-name">Orbital Overview</span>
+        <span class="page-route">/orbital</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Constellation Grid (all sats)</div>
+        <div class="w full" style="margin-top:4px;">Orbital Analysis Charts</div>
+        <div class="w full" style="margin-top:4px;">SOCRATES Conjunctions</div>
+        <div class="w full" style="margin-top:4px;">Space Weather</div>
+      </div>
+      <div class="connections">
+        <div class="conn">&rarr; <span>/satellite/[id]</span> (Click sat row)</div>
+        <div class="conn">&rarr; <span>/dev/telemetry/[id]</span> (NEW)</div>
+      </div>
+    </div>
+
+    <!-- Satellite Detail -->
+    <div class="page primary">
+      <div class="page-header">
+        <span class="page-name">Satellite Detail</span>
+        <span class="page-route">/satellite/[noradId]</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Sat header + stats</div>
+        <div class="w full" style="margin-top:4px;">Altitude Chart</div>
+        <div class="w full" style="margin-top:4px;">Drag Trend Chart</div>
+        <div class="w full" style="margin-top:4px;">TLE History Table</div>
+      </div>
+      <div class="connections">
+        <div class="conn">&rarr; <span>/orbital</span></div>
+      </div>
+    </div>
+
+    <!-- Telemetry (NEW) -->
+    <div class="page dev">
+      <div class="page-header">
+        <span class="page-name">Telemetry (NEW)</span>
+        <span class="page-route">/dev/telemetry/[id]</span>
+      </div>
+      <div class="page-body">
+        <div class="widget-row">
+          <div class="w" style="flex:2;">Sat Name &middot; Nav</div>
+          <div class="w">Compare Bar</div>
+        </div>
+        <div class="widget-row" style="margin-top:4px;">
+          <div class="w">Alt</div>
+          <div class="w">B*</div>
+          <div class="w">Incl</div>
+          <div class="w">TLE Age</div>
+        </div>
+        <div class="widget-row" style="margin-top:4px;">
+          <div class="w tall" style="flex:2;">
+            Multi-Sat Chart<br>
+            6 metrics
+          </div>
+          <div class="w tall">
+            Conjunctions<br>
+            Signals
+          </div>
+        </div>
+      </div>
+      <div class="connections">
+        <div class="conn">&rarr; <span>/orbital</span></div>
+        <div class="conn">&harr; <span>/dev/telemetry/[other]</span> (SatNav)</div>
+      </div>
+    </div>
+
+    <!-- Compare -->
+    <div class="page small">
+      <div class="page-header">
+        <span class="page-name">Compare</span>
+        <span class="page-route">/compare</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Side-by-side sats</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ RESEARCH / DATA ═══ -->
+<div class="tier">
+  <div class="tier-label">Research &amp; Data</div>
+  <div class="tier-row">
+
+    <div class="page primary">
+      <div class="page-header">
+        <span class="page-name">Research</span>
+        <span class="page-route">/research</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Filing search + RAG</div>
+        <div class="w full" style="margin-top:4px;">Results + Citations</div>
+      </div>
+    </div>
+
+    <div class="page primary">
+      <div class="page-header">
+        <span class="page-name">Patents</span>
+        <span class="page-route">/patents</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Patent browser</div>
+        <div class="w full" style="margin-top:4px;">Claims + Families</div>
+      </div>
+      <div class="connections">
+        <div class="conn">&rarr; <span>/patents/download</span></div>
+      </div>
+    </div>
+
+    <div class="page small">
+      <div class="page-header">
+        <span class="page-name">Brain Query</span>
+        <span class="page-route">/asts/query</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Persistent brain chat</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ AUTH ═══ -->
+<div class="tier">
+  <div class="tier-label">Auth</div>
+  <div class="tier-row">
+
+    <div class="page auth small">
+      <div class="page-header">
+        <span class="page-name">Login</span>
+        <span class="page-route">/login</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Patreon OAuth</div>
+      </div>
+    </div>
+
+    <div class="page auth small">
+      <div class="page-header">
+        <span class="page-name">Account</span>
+        <span class="page-route">/account</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Tier &middot; Profile</div>
+      </div>
+    </div>
+
+    <div class="page auth small">
+      <div class="page-header">
+        <span class="page-name">Admin</span>
+        <span class="page-route">/admin</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Admin panel</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ DEV PAGES ═══ -->
+<div class="tier">
+  <div class="tier-label">Dev / Experimental</div>
+  <div class="tier-row">
+
+    <div class="page dev small">
+      <div class="page-header">
+        <span class="page-name">Dev Index</span>
+        <span class="page-route">/dev</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Link list</div>
+      </div>
+    </div>
+
+    <div class="page dev small">
+      <div class="page-header">
+        <span class="page-name">HUD v2</span>
+        <span class="page-route">/dev/hud-v2</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Stable ref</div>
+      </div>
+    </div>
+
+    <div class="page dev small">
+      <div class="page-header">
+        <span class="page-name">HUD v3</span>
+        <span class="page-route">/dev/hud-v3</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Latest iter</div>
+      </div>
+    </div>
+
+    <div class="page dev small">
+      <div class="page-header">
+        <span class="page-name">Globe</span>
+        <span class="page-route">/dev/globe</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Globe isolation</div>
+      </div>
+    </div>
+
+    <div class="page dev small">
+      <div class="page-header">
+        <span class="page-name">3D</span>
+        <span class="page-route">/dev/3d</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Three.js</div>
+      </div>
+    </div>
+
+    <div class="page dev small">
+      <div class="page-header">
+        <span class="page-name">Constellation</span>
+        <span class="page-route">/dev/constellation</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Constellation viz</div>
+      </div>
+    </div>
+
+    <div class="page dev small">
+      <div class="page-header">
+        <span class="page-name">Chart Styles</span>
+        <span class="page-route">/dev/chart-styles</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">SG engine demo</div>
+      </div>
+    </div>
+
+    <div class="page dev small">
+      <div class="page-header">
+        <span class="page-name">System Health</span>
+        <span class="page-route">/dev/system-health</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Worker status</div>
+      </div>
+    </div>
+
+    <div class="page dev small">
+      <div class="page-header">
+        <span class="page-name">Workers</span>
+        <span class="page-route">/dev/workers</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Worker runs</div>
+      </div>
+    </div>
+
+    <div class="page dev small">
+      <div class="page-header">
+        <span class="page-name">Experiments</span>
+        <span class="page-route">/experiments</span>
+      </div>
+      <div class="page-body">
+        <div class="w full">Misc</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

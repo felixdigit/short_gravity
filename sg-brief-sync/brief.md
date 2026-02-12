@@ -16,7 +16,7 @@ Production. 21+ automated data pipelines running on cron schedules. 530 SEC fili
 
 ## Key Technical Work
 
-- **Dual-source TLE pipeline** — CelesTrak operator ephemeris (primary) + Space-Track radar (validation), with automated health anomaly detection (altitude drops, drag spikes, stale data)
+- **Dual-source TLE pipeline** — CelesTrak supplemental GP (primary for position) + Space-Track radar (primary for BSTAR/drag), with automated health anomaly detection and source divergence tracking
 - **RAG-powered research assistant** — hybrid vector + keyword search across all data sources, Claude synthesis with full citation chains (~$0.001/query)
 - **International patent coverage** — claims data from USPTO, EPO, WIPO, JPO, KIPO, IP Australia, CIPO (2,482 claims mapped into 29 patent families)
 - **International regulatory tracking** — ITU, ISED Canada, Ofcom UK scrapers alongside FCC ECFS/ICFS/ULS

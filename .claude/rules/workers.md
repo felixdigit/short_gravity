@@ -28,6 +28,10 @@ When modifying a worker, update BOTH copies. Python 3.9+, stdlib only (`urllib` 
 | ised_worker.py | ISED Drupal, Canada Gazette | fcc_filings (ISED-*) | Weekly Tue 11:00 | `--backfill`, `--gazette-only` |
 | ofcom_worker.py | Ofcom via Wayback Machine | fcc_filings (OFCOM-*) | Weekly Wed 9:00 | `--live-only`, `--wayback-only` |
 | uls_worker.py | fcc.report | fcc_filings (ELS) | Weekly Thu 10:00 | `--backfill` |
+| space_weather_worker.py | CelesTrak SW CSV | space_weather | Daily 16:30 | `--backfill` |
+| socrates_worker.py | CelesTrak SOCRATES | conjunctions | Daily 14:30 | — |
+| short_interest_worker.py | Yahoo Finance | short_interest | Weekly Fri 22:00 | — |
+| cash_position_worker.py | SEC filings | cash_position | Daily 09:00 | — |
 | staleness-alert | All tables | — (GitHub Issues) | Daily 16:00 | — |
 
 ## Vercel Cron (exception to GH Actions pattern)
@@ -46,8 +50,6 @@ These need GH Actions workflows to be fully automated:
 |--------|--------|-------|-------|
 | exhibit_backfill.py | SEC EDGAR | sec_filing_exhibits | `--limit N` |
 | fcc_attachment_worker.py | FCC ELS/ICFS | fcc_filing_attachments | `--icfs-incremental`, `--els-scan` |
-| cash_position_worker.py | SEC filings | cash_position | — |
-| short_interest_worker.py | Yahoo Finance | short_interest | — |
 | patent_enricher.py | Google Patents | patents, patent_claims | `--missing-only` |
 
 ## International Filing System Workaround

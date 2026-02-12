@@ -8,7 +8,8 @@ Supabase PostgreSQL with pgvector extension. All tables have RLS (public SELECT,
 |-------|----|--------------------|-----------------|
 | satellites | norad_id TEXT | — | tle_worker |
 | tle_history | id UUID | (norad_id, epoch, source) | tle_worker |
-| conjunctions | id UUID | cdm_id | tle_worker |
+| conjunctions | id UUID | cdm_id | tle_worker, socrates_worker |
+| space_weather | id UUID | date | space_weather_worker |
 | filings | id UUID | accession_number | filing_worker |
 | sec_filing_exhibits | id UUID | (accession_number, exhibit_number) | exhibit_backfill |
 | fcc_filings | id UUID | (filing_system, file_number) | ecfs_worker, icfs_worker, uls_worker, ised_worker, ofcom_worker, itu_worker |
@@ -72,3 +73,4 @@ Supabase PostgreSQL with pgvector extension. All tables have RLS (public SELECT,
 | glossary_terms | 500+ |
 | brain_chunks | 13,000+ |
 | tle_history | 50,000+ |
+| space_weather | 25,000+ |

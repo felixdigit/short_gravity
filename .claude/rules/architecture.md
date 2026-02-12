@@ -31,6 +31,8 @@ External APIs → Python Workers → Supabase Tables → Embedding Worker → br
 | launch-worker | Daily 15:30 | Launch schedule extraction |
 | filing-embedding-worker | Daily 15:00 | Embed filings, fcc_filings, x_posts |
 | signal-scanner | Twice daily 13:00 & 21:00 | Cross-source anomaly detection |
+| space-weather-worker | Daily 16:30 | CelesTrak solar flux, Kp, Ap, sunspots |
+| socrates-worker | Daily 14:30 | CelesTrak SOCRATES conjunction data |
 | staleness-alert | Daily 16:00 | Data freshness monitoring |
 | ised-worker | Weekly Tue 11:00 | ISED Canada regulatory |
 | ofcom-worker | Weekly Wed 09:00 | Ofcom UK regulatory |
@@ -58,22 +60,43 @@ External APIs → Python Workers → Supabase Tables → Embedding Worker → br
 
 ## Frontend Architecture
 
-- **Primary UI:** `/terminal` (immersive HUD v2)
-- **Dev pages:** `/dev/hud-v2` (clean), `/dev/globe`, `/dev/3d`, `/bluebird-demo`
-- **State:** React Query (server data) + Zustand (UI state)
+- **Primary UI:** `/asts` (immersive terminal — the reference implementation)
+- **Orbital Intelligence:** `/orbital` — constellation health, orbital analysis, space weather
+- **Satellite Detail:** `/satellite/[noradId]` — per-satellite telemetry, orbit, coverage
+- **Dev pages:** `/dev/hud-v2`, `/dev/hud-v3`, `/dev/globe`, `/dev/3d`, `/dev/constellation`
+- **State:** React Query (server data) + Zustand (UI state via `terminal-store`)
 - **3D:** Three.js globe + satellite.js TLE propagation
 - **Search:** Hybrid vector (pgvector) + keyword, with LLM reranking
+
+### UI Component System
+
+Three-layer architecture. **All pages must use this system. No raw Tailwind for panels, stats, text, or loading states.**
+
+**Layer 1 — Primitives** (`components/primitives/`):
+Atomic building blocks: `Panel` (compound: Header, Content, Section, Divider), `Text` (7 variants, 8 sizes), `Label`, `Value`, `Muted`, `Stat` (hero numbers with units/deltas), `StatusDot`, `LoadingState`, `Skeleton`, `ProgressBar`. Chart primitives: `Crosshair`, `HairlinePath`, `ValueReadout`, `CornerBrackets`, `Baseline`, `GhostTrend`.
+
+**Layer 2 — Widget System** (`components/hud/widgets/`):
+Self-contained data panels. Each widget exports a component + `WidgetManifest` (id, name, category, sizing). Registered in `registry.ts`. Rendered via `WidgetPanel` which takes `WidgetSlot[]`. Wrapped by `WidgetHost` (ErrorBoundary, sizing, spacing).
+
+Registered widgets: `telemetry-feed`, `constellation-progress`, `fm1-watch`, `mercator-map`, `short-interest`, `cash-position`, `launch-countdown`, `activity-feed`, `patreon-strip`, `signal-feed`, `regulatory-status`, `intel-link`, `email-signup`.
+
+**Layer 3 — Layout + Presets**:
+`HUDLayout` compound component (`Canvas`, `Overlay`, `TopLeft`, `TopRight`, `LeftPanel`, `RightPanel`, `BottomCenter`, `Attribution`). Named presets in `lib/terminal/presets.ts` (`default`, `launch-day`, `post-unfold`, `earnings-week`) define which widgets go where.
+
+**Reference implementation:** `/asts` page — ~50 lines of composition. That's the target for every page.
 
 ## Key Integration Points
 
 ## TLE Pipeline (Vercel Cron — exception to GH Actions pattern)
 
 Single pipeline via Vercel cron (`/api/cron/tle-refresh`, every 4h):
-- **CelesTrak** (PRIMARY) — AST SpaceMobile's operator-supplied ephemeris (~10x more accurate than radar)
-- **Space-Track** (SECONDARY) — SSN radar tracking for independent validation
-- CelesTrak preferred for `satellites` table. Both write to `tle_history` with source tag.
+- **CelesTrak** (PRIMARY for position) — Supplemental GP data. CelesTrak is a third-party platform that receives operator-informed positions and fits its own GP elements. Better positional accuracy than radar, but GP fitting introduces BSTAR volatility artifacts.
+- **Space-Track** (PRIMARY for BSTAR) — US Space Force SSN radar tracking. Independent source. Smoother BSTAR output — preferred for drag trend analysis.
+- CelesTrak preferred for `satellites` table (positional state). Both always write to `tle_history` with source tag.
+- **Source trust by use case:** Positional accuracy → CelesTrak. BSTAR/drag trends → Space-Track. Long-term baselines → both converge.
 - Includes health anomaly detection (altitude drops, drag spikes, stale TLEs) → creates `signals`
 - Frontend also uses `lib/celestrak.ts` for on-demand lookups with 6h in-memory cache
+- `source_divergence` view compares latest CelesTrak vs Space-Track BSTAR per satellite (threshold: delta > 0.0001)
 
 This is the ONE pipeline that runs via Vercel cron instead of GH Actions because it needs the TypeScript/Supabase client for health monitoring. The Python `tle_worker.py` in the parent repo is a local dev/backfill tool only.
 
