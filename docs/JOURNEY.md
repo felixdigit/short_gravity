@@ -55,3 +55,16 @@ This document captures key decisions, ideas, and milestones in the collaboration
   - Updated IntelLink widget → points to `/signals`. Removed duplicate nav-intel from command palette.
 - Context package: `docs/gemini-deep-think-004-next-priority.md`
 - Gemini spec: `docs/claude-md-draft-r3.md`
+
+**Collaboration protocol upgrade + Clearance Modal (Loop 5):**
+- Upgraded Gemini model from `gemini-2.5-pro` to `gemini-3-pro-preview` (Google's newest flagship).
+- Built multi-turn conversation protocol: Claude and Gemini now have structured dialogues (2-4 turns) before building. Conversations stored in `docs/gemini-conversations/loop-NNN.md`.
+- First multi-turn dialogue: Gemini proposed the "Clearance Level" pattern — diegetic upgrade flow that fits the HUD aesthetic. Users "request clearance" instead of "buying a plan."
+- Claude implemented:
+  - `ClearanceModal` — spec sheet overlay comparing Standard vs Full Spectrum parameters. z-[65], portaled, framer-motion. Shows "$15/MO" price. CTA adapts: "LOG IN TO REQUEST CLEARANCE" (guests), "REQUEST CLEARANCE" (free), "CLEARANCE ACTIVE" (paid).
+  - AuthIndicator "UPGRADE" → opens ClearanceModal instead of external Patreon link.
+  - BrainSearch HAIKU badge → clickable for free users, opens ClearanceModal.
+  - ChatMessage Patreon nudge → "View Full Spectrum parameters" opens ClearanceModal.
+  - PatreonStrip widget → opens ClearanceModal instead of external link.
+  - All upgrade touchpoints now funnel through one diegetic modal.
+- Conversation: `docs/gemini-conversations/loop-005.md`

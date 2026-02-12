@@ -22,24 +22,45 @@ Two AI agents, one spec. Gabriel bridges both.
 - **This document is the source of truth.** Gemini helps evolve it; Claude implements against it.
 
 ### Claude ↔ Gemini Collaboration Protocol
-Claude has direct access to Gemini via the `gemini` CLI (`gemini -p "..." --model gemini-2.5-pro -o text`).
+Claude has direct access to Gemini via the `gemini` CLI.
+
+**Model:** `gemini-3-pro-preview` (upgraded from gemini-2.5-pro on 2026-02-12)
 
 **When to invoke Gemini:**
 - Before building a new page, feature, or architectural component — ask Gemini to research approaches and produce a spec
 - When facing a design decision with multiple valid paths — let Gemini analyze tradeoffs
 - When Gabriel asks "what should we build next" — collaborate with Gemini on prioritization
 
-**The workflow:**
-1. Claude drafts a context package with the question + relevant codebase state (save to `docs/gemini-deep-think-NNN-*.md`)
-2. Claude sends it to Gemini via CLI: `gemini -p "$(cat docs/gemini-deep-think-NNN-*.md)" --model gemini-2.5-pro -o text`
-3. Gemini returns spec language (architecture, taxonomy, API changes, phases)
-4. Claude saves Gemini's output to `docs/claude-md-draft-rN.md`
-5. Gabriel reviews. Claude implements approved sections.
+**The workflow — Multi-Turn Dialogue:**
+
+Conversations live in `docs/gemini-conversations/loop-NNN.md`. Each loop is a structured dialogue, not a one-shot prompt. Claude and Gemini deliberate before code is written.
+
+1. Claude creates a conversation file with Turn 1 (context + question)
+2. Claude sends the conversation to Gemini: `gemini -p "$(cat docs/gemini-conversations/loop-NNN.md)" --model gemini-3-pro-preview -o text`
+3. Claude appends Gemini's response as `## GEMINI (turn N)`
+4. Claude responds with pushback, refinements, or follow-up questions as `## CLAUDE (turn N+1)`
+5. Repeat steps 2-4 for 2-4 turns until the spec converges
+6. Claude summarizes the agreed spec and implements
+
+**Conversation file format:**
+```markdown
+# Loop NNN: [Topic]
+## CLAUDE (turn 1)
+[Context package + question]
+## GEMINI (turn 1)
+[Response]
+## CLAUDE (turn 2)
+[Pushback/refinement]
+## GEMINI (turn 2)
+[Refined spec]
+```
 
 **Rules:**
+- Multi-turn by default. One-shot only for simple yes/no priority questions.
 - Gemini's output is a recommendation, not a mandate. Gabriel approves before Claude implements.
-- Context packages go in `docs/` with sequential numbering for traceability.
+- Conversations are append-only. Never edit previous turns — only add new ones.
 - Gemini writes spec, not code. Claude writes code, not spec. Respect the boundary.
+- When Claude disagrees with Gemini, Claude should say so and explain why. The goal is convergence, not deference.
 
 ---
 
