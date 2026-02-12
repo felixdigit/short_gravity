@@ -39,16 +39,25 @@ SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://dviagnysjftidxudeuyo.supa
 SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
-try:
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-    from discord.notify import notify_signal
-    DISCORD_AVAILABLE = True
-except ImportError:
-    DISCORD_AVAILABLE = False
-
 
 def log(msg: str):
     print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
+
+
+# ── Category & Confidence Mapping ────────────────────────────────
+# Every signal_type maps to a category and base confidence score.
+# These populate the new columns from migration 022.
+
+SIGNAL_CATEGORY_MAP: Dict[str, Dict[str, Any]] = {
+    "sentiment_shift":          {"category": "market",     "confidence_score": 0.60},
+    "filing_cluster":           {"category": "regulatory", "confidence_score": 0.90},
+    "fcc_status_change":        {"category": "regulatory", "confidence_score": 0.95},
+    "cross_source":             {"category": "community",  "confidence_score": 0.80},
+    "short_interest_spike":     {"category": "market",     "confidence_score": 0.70},
+    "new_content":              {"category": "corporate",  "confidence_score": 0.50},
+    "patent_regulatory_crossref": {"category": "ip",       "confidence_score": 0.85},
+    "earnings_language_shift":  {"category": "corporate",  "confidence_score": 0.75},
+}
 
 
 def utc_iso(dt: datetime) -> str:
@@ -121,10 +130,19 @@ def fingerprint(*parts: str) -> str:
 
 
 def store_signal(signal: Dict, dry_run: bool = False) -> bool:
-    """Store a signal, skip if fingerprint already exists."""
+    """Store a signal, skip if fingerprint already exists.
+    Auto-populates category and confidence_score from SIGNAL_CATEGORY_MAP."""
+    # Auto-populate category + confidence from mapping
+    sig_type = signal.get("signal_type", "")
+    mapping = SIGNAL_CATEGORY_MAP.get(sig_type, {})
+    if "category" not in signal and "category" in mapping:
+        signal["category"] = mapping["category"]
+    if "confidence_score" not in signal and "confidence_score" in mapping:
+        signal["confidence_score"] = mapping["confidence_score"]
+
     fp = signal.get("fingerprint", "")
     if dry_run:
-        log(f"  [DRY RUN] {signal['severity'].upper()} — {signal['title']}")
+        log(f"  [DRY RUN] {signal['severity'].upper()} [{signal.get('category', '?')}] — {signal['title']}")
         return True
 
     try:
@@ -655,6 +673,265 @@ def detect_new_content(dry_run: bool = False) -> List[Dict]:
     return signals
 
 
+# ── Detector 7: Patent↔Regulatory Cross-References ──────────────
+
+def detect_patent_crossrefs(dry_run: bool = False) -> List[Dict]:
+    """Find patents whose technology is referenced in recent FCC/SEC filings.
+    Ported from /intel client-side cross-reference computation."""
+    log("Scanning: Patent↔Regulatory cross-references...")
+    signals: List[Dict] = []
+
+    now = datetime.now(timezone.utc)
+    d30 = utc_iso(now - timedelta(days=30))
+
+    # Get recent patents (last 90d or latest 20)
+    patents = supabase_request(
+        "GET",
+        "patents?select=patent_number,title,abstract,filing_date"
+        "&order=filing_date.desc&limit=20"
+    ) or []
+
+    if not patents:
+        log("  No patents found — skipping")
+        return signals
+
+    # Get recent FCC filings
+    fcc_recent = supabase_request(
+        "GET",
+        f"fcc_filings?select=title,file_number,filing_type,filed_date,ai_summary"
+        f"&filed_date=gte.{d30[:10]}&order=filed_date.desc&limit=30"
+    ) or []
+
+    # Get recent SEC filings
+    sec_recent = supabase_request(
+        "GET",
+        f"filings?select=form,filing_date,summary,accession_number"
+        f"&filing_date=gte.{d30[:10]}&order=filing_date.desc&limit=20"
+    ) or []
+
+    if not fcc_recent and not sec_recent:
+        log("  No recent filings to cross-reference — skipping")
+        return signals
+
+    # Extract key technology terms from patent titles/abstracts
+    patent_terms: Dict[str, Dict] = {}
+    for p in patents:
+        title = (p.get("title") or "").lower()
+        abstract = (p.get("abstract") or "").lower()
+        # Key technology keywords that would indicate patent↔filing connection
+        tech_keywords = []
+        for kw in ["antenna", "beamforming", "phased array", "direct-to-cell",
+                    "direct to cell", "d2c", "spectrum", "mimo", "unfold",
+                    "deployment", "satellite constellation", "bluebird",
+                    "low earth orbit", "terrestrial", "cellular", "handset"]:
+            if kw in title or kw in abstract:
+                tech_keywords.append(kw)
+        if tech_keywords:
+            patent_terms[p.get("patent_number", "")] = {
+                "patent": p,
+                "keywords": tech_keywords,
+            }
+
+    if not patent_terms:
+        log("  No technology keywords extracted from patents — skipping")
+        return signals
+
+    # Check each recent filing for patent technology overlap
+    matches_found = 0
+    for filing in fcc_recent + sec_recent:
+        is_sec = "form" in filing
+        filing_text = (
+            (filing.get("title") or "") + " " +
+            (filing.get("ai_summary") or filing.get("summary") or "")
+        ).lower()
+
+        for pat_num, pat_info in patent_terms.items():
+            overlap = [kw for kw in pat_info["keywords"] if kw in filing_text]
+            if len(overlap) >= 2:  # Need 2+ keyword overlaps
+                matches_found += 1
+                pat = pat_info["patent"]
+                filing_title = filing.get("form", "") or filing.get("title", "")
+                filing_id = filing.get("accession_number", filing.get("file_number", ""))
+                filing_date = filing.get("filing_date", filing.get("filed_date", ""))
+
+                description = ""
+                if ANTHROPIC_API_KEY and matches_found <= 3:  # Limit API calls
+                    try:
+                        description = haiku_classify(f"""A patent and a regulatory filing reference the same technology:
+
+Patent: {pat.get('title', '')}
+Patent #: {pat_num}
+Technology keywords: {', '.join(overlap)}
+
+Filing: {filing_title} ({filing_date})
+Filing summary: {(filing.get('ai_summary') or filing.get('summary') or '')[:300]}
+
+Write a 2-sentence intelligence briefing. What's the technology link and why does it matter for ASTS commercialization?""")
+                    except Exception as e:
+                        log(f"  Haiku error: {e}")
+
+                sig = {
+                    "signal_type": "patent_regulatory_crossref",
+                    "severity": "high" if len(overlap) >= 3 else "medium",
+                    "title": f"Patent↔Filing link: {', '.join(overlap[:3])} ({pat_num[:20]})",
+                    "description": description or f"Patent {pat_num} ({pat.get('title', '')[:60]}) shares technology terms ({', '.join(overlap)}) with {filing_title}.",
+                    "source_refs": [
+                        {
+                            "table": "patents",
+                            "id": pat_num,
+                            "title": pat.get("title", "")[:80],
+                            "date": pat.get("filing_date", ""),
+                        },
+                        {
+                            "table": "filings" if is_sec else "fcc_filings",
+                            "id": filing_id,
+                            "title": f"{filing_title[:60]}",
+                            "date": filing_date,
+                        },
+                    ],
+                    "metrics": {
+                        "overlap_keywords": overlap,
+                        "overlap_count": len(overlap),
+                        "patent_number": pat_num,
+                    },
+                    "fingerprint": fingerprint("patent_crossref", pat_num, filing_id),
+                    "detected_at": utc_iso(now),
+                    "expires_at": utc_iso(now + timedelta(days=14)),
+                }
+                if store_signal(sig, dry_run):
+                    signals.append(sig)
+                    log(f"  SIGNAL: {sig['title']}")
+
+                if len(signals) >= 5:  # Cap at 5 cross-ref signals per scan
+                    break
+        if len(signals) >= 5:
+            break
+
+    if not signals:
+        log(f"  No patent↔filing cross-references detected")
+
+    return signals
+
+
+# ── Detector 8: Earnings Language Shift ──────────────────────────
+
+def detect_earnings_shifts(dry_run: bool = False) -> List[Dict]:
+    """Compare most recent two earnings transcripts for significant language changes.
+    Ported from /intel client-side earnings diff computation."""
+    log("Scanning: Earnings language shifts...")
+    signals: List[Dict] = []
+
+    now = datetime.now(timezone.utc)
+
+    # Get latest 2 transcripts
+    transcripts = supabase_request(
+        "GET",
+        "earnings_transcripts?select=company,fiscal_year,fiscal_quarter,content_text,published_at"
+        "&company=eq.ASTS&order=published_at.desc&limit=2"
+    ) or []
+
+    if len(transcripts) < 2:
+        log(f"  Need 2+ transcripts, have {len(transcripts)} — skipping")
+        return signals
+
+    current = transcripts[0]
+    previous = transcripts[1]
+
+    current_text = (current.get("content_text") or "")[:5000]
+    previous_text = (previous.get("content_text") or "")[:5000]
+
+    if not current_text or not previous_text:
+        log("  Transcripts missing content — skipping")
+        return signals
+
+    current_label = f"Q{current.get('fiscal_quarter', '?')} {current.get('fiscal_year', '?')}"
+    previous_label = f"Q{previous.get('fiscal_quarter', '?')} {previous.get('fiscal_year', '?')}"
+
+    # Use Haiku to identify language shifts
+    if not ANTHROPIC_API_KEY:
+        log("  No ANTHROPIC_API_KEY — skipping language analysis")
+        return signals
+
+    try:
+        analysis = haiku_classify(f"""Compare these two ASTS earnings call transcripts for significant language shifts.
+
+PREVIOUS ({previous_label}):
+{previous_text[:2500]}
+
+CURRENT ({current_label}):
+{current_text[:2500]}
+
+Identify the top 3 most significant changes in language, terminology, or emphasis between these calls.
+Format as JSON array: [{{"topic": "...", "direction": "new|dropped|shifted", "detail": "..."}}]
+Only include genuinely significant shifts, not routine changes. Return empty array [] if nothing notable.""", max_tokens=800)
+
+        # Parse the response
+        shifts = []
+        try:
+            # Extract JSON from response
+            json_start = analysis.find("[")
+            json_end = analysis.rfind("]") + 1
+            if json_start >= 0 and json_end > json_start:
+                shifts = json.loads(analysis[json_start:json_end])
+        except (json.JSONDecodeError, ValueError):
+            log(f"  Could not parse Haiku response as JSON")
+
+        if shifts and len(shifts) > 0:
+            shift_summary = "; ".join(
+                f"{s.get('topic', '?')} ({s.get('direction', '?')})"
+                for s in shifts[:3]
+            )
+
+            description = ""
+            try:
+                description = haiku_classify(f"""The ASTS earnings call language shifted from {previous_label} to {current_label}:
+
+Shifts detected:
+{json.dumps(shifts[:3], indent=2)}
+
+Write a 2-sentence intelligence briefing about what these language changes signal for ASTS. Be specific and actionable.""")
+            except Exception:
+                pass
+
+            sig = {
+                "signal_type": "earnings_language_shift",
+                "severity": "high" if len(shifts) >= 3 else "medium",
+                "title": f"Earnings language shift: {current_label} vs {previous_label}",
+                "description": description or f"Language shifts detected between {previous_label} and {current_label}: {shift_summary}",
+                "source_refs": [
+                    {
+                        "table": "earnings_transcripts",
+                        "title": f"{current_label} Earnings Call",
+                        "date": current.get("published_at", ""),
+                    },
+                    {
+                        "table": "earnings_transcripts",
+                        "title": f"{previous_label} Earnings Call",
+                        "date": previous.get("published_at", ""),
+                    },
+                ],
+                "metrics": {
+                    "shifts": shifts[:3],
+                    "shift_count": len(shifts),
+                    "current_quarter": current_label,
+                    "previous_quarter": previous_label,
+                },
+                "fingerprint": fingerprint("earnings_shift", current_label, previous_label),
+                "detected_at": utc_iso(now),
+                "expires_at": utc_iso(now + timedelta(days=90)),
+            }
+            if store_signal(sig, dry_run):
+                signals.append(sig)
+                log(f"  SIGNAL: {sig['title']}")
+        else:
+            log(f"  No significant language shifts between {previous_label} and {current_label}")
+
+    except Exception as e:
+        log(f"  Error in earnings analysis: {e}")
+
+    return signals
+
+
 # ── Main ─────────────────────────────────────────────────────────────
 
 def run_scanner():
@@ -668,7 +945,7 @@ def run_scanner():
         sys.exit(1)
 
     log("=" * 60)
-    log("SIGNAL SCANNER v1")
+    log("SIGNAL SCANNER v2")
     log("=" * 60)
 
     detectors = {
@@ -678,6 +955,8 @@ def run_scanner():
         "cross": detect_cross_source,
         "short": detect_short_interest,
         "content": detect_new_content,
+        "patent_crossref": detect_patent_crossrefs,
+        "earnings": detect_earnings_shifts,
     }
 
     if args.detector:
@@ -695,15 +974,6 @@ def run_scanner():
             all_signals.extend(signals)
         except Exception as e:
             log(f"  ERROR in {name} detector: {e}")
-
-    # Discord notifications for all detected signals
-    if DISCORD_AVAILABLE and not args.dry_run:
-        for sig in all_signals:
-            notify_signal(
-                signal_type=sig.get("signal_type", "unknown"),
-                description=sig.get("title", ""),
-                severity=sig.get("severity", "medium"),
-            )
 
     log("")
     log("=" * 60)
