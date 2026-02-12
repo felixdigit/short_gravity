@@ -61,6 +61,7 @@ External APIs → Python Workers → Supabase Tables → Embedding Worker → br
 ## Frontend Architecture
 
 - **Primary UI:** `/asts` (immersive terminal — the reference implementation)
+- **Intelligence Feed:** `/signals` — unified signals dashboard with price correlation, filtering, detail drill-down
 - **Orbital Intelligence:** `/orbital` — constellation health, orbital analysis, space weather
 - **Satellite Detail:** `/satellite/[noradId]` — per-satellite telemetry, orbit, coverage
 - **Dev pages:** `/dev/hud-v2`, `/dev/hud-v3`, `/dev/globe`, `/dev/3d`, `/dev/constellation`

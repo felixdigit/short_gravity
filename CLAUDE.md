@@ -21,6 +21,26 @@ Two AI agents, one spec. Gabriel bridges both.
 - **Gemini** (via CLI or app) — Researches. Analyzes reference material, explores architectural approaches, produces spec recommendations. Defined in `GEMINI.md`.
 - **This document is the source of truth.** Gemini helps evolve it; Claude implements against it.
 
+### Claude ↔ Gemini Collaboration Protocol
+Claude has direct access to Gemini via the `gemini` CLI (`gemini -p "..." --model gemini-2.5-pro -o text`).
+
+**When to invoke Gemini:**
+- Before building a new page, feature, or architectural component — ask Gemini to research approaches and produce a spec
+- When facing a design decision with multiple valid paths — let Gemini analyze tradeoffs
+- When Gabriel asks "what should we build next" — collaborate with Gemini on prioritization
+
+**The workflow:**
+1. Claude drafts a context package with the question + relevant codebase state (save to `docs/gemini-deep-think-NNN-*.md`)
+2. Claude sends it to Gemini via CLI: `gemini -p "$(cat docs/gemini-deep-think-NNN-*.md)" --model gemini-2.5-pro -o text`
+3. Gemini returns spec language (architecture, taxonomy, API changes, phases)
+4. Claude saves Gemini's output to `docs/claude-md-draft-rN.md`
+5. Gabriel reviews. Claude implements approved sections.
+
+**Rules:**
+- Gemini's output is a recommendation, not a mandate. Gabriel approves before Claude implements.
+- Context packages go in `docs/` with sequential numbering for traceability.
+- Gemini writes spec, not code. Claude writes code, not spec. Respect the boundary.
+
 ---
 
 # PART 1: CORE — The Convergent Specification
@@ -109,6 +129,7 @@ Every worker MUST implement a completeness check that answers: **"Source has X r
 7. **Full pipeline or nothing** — A new data source isn't "done" until all five links exist. Partial pipelines are tech debt.
 8. **Document architectural work immediately** — Update CLAUDE.md and `.claude/rules/` BEFORE the session ends. Architecture that isn't in the docs doesn't exist for the next session. Context gets compacted, sessions restart — the only thing that persists is what's written down. Non-negotiable.
 9. **Code conventions** — Read before modifying. Follow existing patterns exactly. TypeScript strict mode. No over-engineering. No unnecessary comments.
+10. **Log significant work** — After completing a significant implementation task (e.g., creating a new component, modifying a worker, or fixing a bug), append a brief, factual log entry to `docs/JOURNEY.md`. The entry must include the date and a summary of the task completed.
 
 ## C5: Access Tiers
 
