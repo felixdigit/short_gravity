@@ -116,7 +116,7 @@ Threads compound when they link to each other. These are the active cross-thread
 
 ## Thread 002: Event Horizon
 
-**Status:** FRAYED
+**Status:** GOLDEN
 **Priority:** P1
 **Intent:** "What's next? What are the known-unknowns on the calendar that could move the stock? When do I need to pay attention?"
 **North Star:** User sees a timeline of upcoming catalysts for the next 7/30/90 days, each linked to its source.
@@ -142,7 +142,7 @@ Threads compound when they link to each other. These are the active cross-thread
   → catalysts: ✅ from catalysts table (22 upcoming + 35 completed seeded via migration 023)
   → FCC expirations: ✅ from fcc_filings (expiration_date) + fcc_dockets (comment/reply deadlines)
   → patent expirations: ⚠️ many patents may not have expiration_date populated
-  → earnings calls: ⚠️ manually populated, not automated
+  → earnings calls: ✅ from earnings_calls (earnings_worker via Finnhub calendar)
   → ~~GAP 1: Curated catalysts hardcoded~~ → **CLOSED** (migration 023 + API + UI)
   → ~~GAP 2: FCC comment/reply deadlines not captured by ECFS worker~~ → **CLOSED**
   → **GAP 3: No automated earnings date discovery**
@@ -166,7 +166,7 @@ Threads compound when they link to each other. These are the active cross-thread
 | Conjunction data | ✅ | `conjunctions` table — SOCRATES daily updates |
 | FCC expiration data | ✅ | `fcc_filings.expiration_date` + `fcc_dockets.comment_deadline`/`reply_deadline` |
 | Patent expiration data | ⚠️ | `patents.expiration_date` — needs audit |
-| Earnings data | ⚠️ | `earnings_calls.call_date` — manual only |
+| Earnings data | ✅ | `earnings_calls.call_date` — automated via earnings_worker (Finnhub calendar) |
 | Catalyst database | ✅ | `catalysts` table — migration 023, 22 upcoming + 35 completed seeded |
 | Command palette link | ✅ | Added to navigation commands |
 
@@ -174,7 +174,7 @@ Threads compound when they link to each other. These are the active cross-thread
 
 1. ~~Curated catalysts not in timeline~~ → **CLOSED** (migration 023 + API query + UI filter/badge)
 2. ~~FCC comment/reply deadlines~~ → **CLOSED** (fcc_dockets table + ECFS worker sync + Horizon query)
-3. **Earnings date automation** — No worker discovers next earnings dates from SEC filings.
+3. ~~Earnings date automation~~ → **CLOSED** (earnings_worker.py via Finnhub calendar)
 4. ~~Navigation discovery~~ → **CLOSED** (landing page EXPLORE grid, /signals↔/horizon cross-links)
 5. ~~Depends on Thread 001~~ → **RESOLVED** (T001 is GOLDEN)
 
@@ -184,6 +184,7 @@ Threads compound when they link to each other. These are the active cross-thread
 - **GAP 1 → CLOSED (2026-02-12):** Catalysts migrated to database. Created `catalysts` table (migration 023) with 22 upcoming + 35 completed items seeded from `lib/data/catalysts.ts`. API queries catalysts with `estimateDateFromPeriod()` for fuzzy dates. UI shows CATALYSTS filter tab, purple CATALYST badge, and fuzzy date indicator (~Q2 2026) for items without precise dates. **NOTE: Migration 023 must be run in Supabase SQL Editor.**
 - **GAP 4 → CLOSED (2026-02-12):** Navigation discovery. Added /horizon to landing page EXPLORE grid (5-col). Added HORIZON cross-link in /signals header. Added SIGNALS cross-link in /horizon header. Both pages now cross-reference each other + TERMINAL.
 - **GAP 2 → CLOSED (2026-02-13):** FCC docket metadata. Created `fcc_dockets` table (migration 026) with comment/reply deadline fields, bureau, tags, filing activity. ECFS worker gets `sync_docket_metadata()` that polls FCC proceedings API — never overwrites non-null DB values with null API values (preserves manual seeds). Horizon API queries docket deadlines as source #6. FCC API has the fields but doesn't populate them; deadlines can be manually seeded and the worker will preserve them. **NOTE: Migration 026 must be run in Supabase SQL Editor.**
+- **GAP 3 → CLOSED (2026-02-13):** Earnings date automation. New `earnings_worker.py` fetches Finnhub `/calendar/earnings` for ASTS. Upserts into `earnings_calls` table respecting immutable history (never overwrites `status='complete'`). Maps `hour` field to call_time. 3 future dates populated: Q4 2025 (2026-03-02), Q1 2026 (2026-05-11), Q2 2026 (2026-08-10). Weekly Wednesday schedule (needs GH Actions workflow).
 
 ---
 

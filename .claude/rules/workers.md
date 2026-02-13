@@ -32,6 +32,7 @@ When modifying a worker, update BOTH copies. Python 3.9+, stdlib only (`urllib` 
 | socrates_worker.py | CelesTrak SOCRATES | conjunctions | Daily 14:30 | — |
 | short_interest_worker.py | Yahoo Finance | short_interest | Weekly Fri 22:00 | — |
 | cash_position_worker.py | SEC filings | cash_position | Daily 09:00 | — |
+| earnings_worker.py | Finnhub | earnings_calls | Weekly Wed 14:30 | `--dry-run` |
 | staleness-alert | All tables | — (GitHub Issues) | Daily 16:00 | — |
 
 ## Vercel Cron (exception to GH Actions pattern)
