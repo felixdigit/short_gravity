@@ -12,6 +12,7 @@ Supabase PostgreSQL with pgvector extension. All tables have RLS (public SELECT,
 | space_weather | id UUID | date | space_weather_worker |
 | filings | id UUID | accession_number | filing_worker |
 | sec_filing_exhibits | id UUID | (accession_number, exhibit_number) | exhibit_backfill |
+| fcc_dockets | docket_number TEXT | — | ecfs_worker (sync_docket_metadata) |
 | fcc_filings | id UUID | (filing_system, file_number) | ecfs_worker, icfs_worker, uls_worker, ised_worker, ofcom_worker, itu_worker |
 | fcc_filing_attachments | id UUID | — | fcc_attachment_worker |
 | patents | id UUID | patent_number | patent_worker_v2, patent_enricher |

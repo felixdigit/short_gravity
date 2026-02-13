@@ -29,6 +29,7 @@ Usage:
 
 from __future__ import annotations
 import argparse
+import base64
 import json
 import os
 import sys
@@ -109,6 +110,7 @@ HIGH_IMPORTANCE_FILERS = [
 # Rate limits
 RATE_LIMIT_SECONDS = 0.5
 RATE_LIMIT_RETRY_SECONDS = 10  # Wait time on 429 error
+CONTENT_EXTRACT_DELAY = 3.0  # Delay between Playwright PDF downloads
 
 
 # ============================================================================
@@ -230,6 +232,112 @@ def upsert_fcc_filing(filing: Dict) -> Dict:
         )
     else:
         return supabase_request("POST", "fcc_filings", filing)
+
+
+# ============================================================================
+# FCC ECFS Docket Metadata
+# ============================================================================
+
+FCC_PROCEEDINGS_BASE = "https://publicapi.fcc.gov/ecfs/proceedings"
+
+
+def fetch_proceeding_metadata(docket: str) -> Optional[Dict]:
+    """Fetch docket/proceeding metadata from FCC ECFS API."""
+    url = f"{FCC_PROCEEDINGS_BASE}?api_key={FCC_API_KEY}&name={docket}"
+    try:
+        data = fetch_json(url)
+        proceedings = data.get("proceeding", [])
+        if proceedings:
+            return proceedings[0]
+    except Exception as e:
+        log(f"  Error fetching proceeding metadata for {docket}: {e}")
+    return None
+
+
+def sync_docket_metadata(dry_run: bool = False):
+    """Sync docket metadata from FCC API into fcc_dockets table.
+
+    Polls /ecfs/proceedings for each KEY_DOCKET. Upserts into fcc_dockets.
+    CRITICAL: Never overwrite non-null DB values with null API values.
+    This preserves manually-seeded deadline data while allowing the API
+    to take over if it ever starts populating those fields.
+    """
+    log("-" * 60)
+    log("Syncing docket metadata...")
+    synced = 0
+
+    for entry in KEY_DOCKETS:
+        docket = entry["docket"]
+        log(f"  Fetching metadata for docket {docket}...")
+
+        proc = fetch_proceeding_metadata(docket)
+        if not proc:
+            log(f"    No proceeding data found for {docket}")
+            time.sleep(RATE_LIMIT_SECONDS)
+            continue
+
+        # Build upsert record from API data
+        record = {
+            "docket_number": docket,
+            "title": proc.get("description") or proc.get("description_display") or entry["name"],
+            "filing_status": proc.get("filingStatus"),
+            "bureau_name": (proc.get("bureau") or {}).get("name"),
+            "tags": proc.get("tags") or [],
+        }
+
+        # Only set date fields if API returns non-null values
+        api_dates = {
+            "date_published": proc.get("date_public_notice"),
+            "comment_deadline": proc.get("comment_end_date"),
+            "reply_deadline": proc.get("comment_reply_end_date"),
+        }
+        for field, value in api_dates.items():
+            if value is not None:
+                record[field] = value
+
+        # Derive filing activity from last_30_days field
+        last_activity = proc.get("last_30_days")
+        if last_activity:
+            record["latest_filing_date"] = last_activity
+
+        record["last_updated"] = datetime.utcnow().isoformat() + "Z"
+
+        if dry_run:
+            log(f"    [DRY RUN] Would upsert: {docket} — {record.get('title', '')[:50]}")
+        else:
+            try:
+                # First check if record exists and has manually-seeded dates
+                existing = supabase_request(
+                    "GET",
+                    f"fcc_dockets?docket_number=eq.{docket}&select=docket_number,comment_deadline,reply_deadline,date_published"
+                )
+
+                if existing:
+                    # Preserve non-null DB values — don't overwrite with null
+                    db_row = existing[0] if isinstance(existing, list) else existing
+                    for field in ["comment_deadline", "reply_deadline", "date_published"]:
+                        if db_row.get(field) and field not in record:
+                            pass  # Already preserved by not including null fields above
+
+                    supabase_request(
+                        "PATCH",
+                        f"fcc_dockets?docket_number=eq.{docket}",
+                        record
+                    )
+                else:
+                    # New docket — insert with status 'Open'
+                    record["status"] = "Open"
+                    supabase_request("POST", "fcc_dockets", record)
+
+                synced += 1
+                log(f"    ✓ Synced {docket}: {record.get('title', '')[:50]}")
+            except Exception as e:
+                log(f"    ✗ Failed to sync {docket}: {e}")
+
+        time.sleep(RATE_LIMIT_SECONDS)
+
+    log(f"Docket metadata sync complete: {synced}/{len(KEY_DOCKETS)} synced")
+    log("-" * 60)
 
 
 # ============================================================================
@@ -449,7 +557,7 @@ Summary:"""
         "Content-Type": "application/json",
     }
     body = {
-        "model": "claude-sonnet-4-20250514",
+        "model": "claude-haiku-4-5-20251001",
         "max_tokens": 200,
         "messages": [{"role": "user", "content": prompt}],
     }
@@ -640,7 +748,7 @@ def process_filing(filing: Dict, dry_run: bool = False, fetch_content: bool = Tr
         if summary:
             db_record.update({
                 "ai_summary": summary,
-                "ai_model": "claude-sonnet-4-20250514",
+                "ai_model": "claude-haiku-4-5-20251001",
                 "ai_generated_at": datetime.utcnow().isoformat() + "Z",
             })
 
@@ -653,6 +761,202 @@ def process_filing(filing: Dict, dry_run: bool = False, fetch_content: bool = Tr
     except Exception as e:
         log(f"  ✗ Error: {e}")
         return False
+
+
+# ============================================================================
+# Phase 2: Playwright Content Extraction
+# ============================================================================
+
+def download_ecfs_document_playwright(browser, url: str) -> Optional[bytes]:
+    """Download a PDF from fcc.gov/ecfs/ via Playwright Firefox.
+
+    Opens a fresh page, navigates to the SPA document page, and intercepts the
+    PDF response that the React app fetches from /ecfs/documents/ (plural endpoint).
+    Fresh page per request avoids Akamai session/connection issues.
+    """
+    pdf_data = [None]
+
+    def capture_pdf(response):
+        ct = response.headers.get("content-type", "")
+        if "pdf" in ct and response.ok:
+            try:
+                body = response.body()
+                if body and len(body) > 500:
+                    pdf_data[0] = body
+            except Exception:
+                pass
+
+    page = browser.new_page()
+    page.on("response", capture_pdf)
+
+    try:
+        page.goto(url, wait_until="networkidle", timeout=30000)
+        return pdf_data[0]
+    except Exception as e:
+        # networkidle may timeout but PDF could still have been captured
+        if pdf_data[0]:
+            return pdf_data[0]
+        log(f"    Download error: {e}")
+        return None
+    finally:
+        page.close()
+
+
+def backfill_content(args):
+    """Phase 2: Extract content from ECFS filings that have no content_text.
+
+    Launches Playwright, navigates to fcc.gov/ecfs/ for same-origin context,
+    then downloads PDFs via page.evaluate() fetch for each filing missing content.
+    """
+    from playwright.sync_api import sync_playwright
+
+    log("=" * 60)
+    log("ECFS Content Extraction (Phase 2)")
+    log("=" * 60)
+
+    if not args.dry_run and not SUPABASE_SERVICE_KEY:
+        log("ERROR: SUPABASE_SERVICE_KEY not set")
+        sys.exit(1)
+
+    # Query filings with no content_text
+    query = "fcc_filings?filing_system=eq.ECFS&content_text=is.null&select=id,file_number,source_url,title,filer_name,docket,filing_type"
+    query += "&order=filed_date.desc"
+
+    if args.docket:
+        query += f"&docket=eq.{urllib.parse.quote(args.docket)}"
+
+    try:
+        filings = supabase_request("GET", query)
+    except Exception as e:
+        log(f"Error querying filings: {e}")
+        return
+
+    log(f"Filings missing content_text: {len(filings)}")
+
+    if not filings:
+        log("Nothing to extract. Done.")
+        return
+
+    if args.limit:
+        filings = filings[:args.limit]
+        log(f"Limited to {args.limit} filings")
+
+    if args.dry_run:
+        log("[DRY RUN] Would process:")
+        for f in filings:
+            doc_url = f.get("source_url", "")
+            log(f"  {f['file_number']} | {f.get('filer_name', '?')[:30]} | {doc_url[:60]}")
+        return
+
+    # Launch Playwright with Firefox (Chromium blocked by Akamai on www.fcc.gov)
+    log("Launching Playwright (Firefox)...")
+    pw = sync_playwright().start()
+    browser = pw.firefox.launch(headless=True)
+    log("Browser ready")
+
+    success = 0
+    failed = 0
+
+    try:
+        for i, filing in enumerate(filings):
+            file_number = filing["file_number"]
+            source_url = filing.get("source_url", "")
+            filer = filing.get("filer_name", "Unknown")[:30]
+
+            log(f"[{i+1}/{len(filings)}] {file_number} | {filer}")
+
+            # Build document URL if not present
+            if not source_url or "fcc.gov" not in source_url:
+                source_url = f"https://www.fcc.gov/ecfs/document/{file_number}/1"
+
+            # Download PDF via Playwright
+            pdf_bytes = download_ecfs_document_playwright(browser, source_url)
+
+            if not pdf_bytes:
+                log(f"    No data downloaded, skipping")
+                failed += 1
+                time.sleep(CONTENT_EXTRACT_DELAY)
+                continue
+
+            log(f"    Downloaded {len(pdf_bytes):,} bytes")
+
+            # Check if it's a PDF
+            is_pdf = pdf_bytes[:4] == b"%PDF"
+
+            # Extract text
+            content_text = None
+            if is_pdf:
+                content_text = extract_pdf_text(pdf_bytes)
+            else:
+                # Might be HTML response — try to extract text
+                try:
+                    html = pdf_bytes.decode("utf-8", errors="replace")
+                    content_text = extract_text_from_html(html)
+                except Exception:
+                    pass
+
+            if not content_text or len(content_text) < 100:
+                log(f"    No usable text extracted")
+                failed += 1
+                time.sleep(CONTENT_EXTRACT_DELAY)
+                continue
+
+            log(f"    Extracted {len(content_text):,} chars")
+
+            # Upload to storage
+            storage_path = None
+            if is_pdf:
+                storage_result = upload_fcc_filing(
+                    filing_system="ecfs",
+                    file_number=file_number,
+                    content=pdf_bytes,
+                    filename="filing.pdf",
+                    content_type="application/pdf",
+                )
+                if storage_result.get("success"):
+                    storage_path = storage_result.get("path")
+                    log(f"    Stored: {storage_path}")
+
+            # Generate AI summary
+            ai_summary = ""
+            if ANTHROPIC_API_KEY:
+                ai_summary = generate_ecfs_summary(filing, content_text)
+                if ai_summary:
+                    log(f"    Summary: {ai_summary[:80]}...")
+
+            # PATCH the filing record
+            patch_data = {
+                "content_text": content_text[:500000],
+                "fetched_at": datetime.utcnow().isoformat() + "Z",
+            }
+            if storage_path:
+                patch_data["storage_path"] = storage_path
+            if ai_summary:
+                patch_data["ai_summary"] = ai_summary
+                patch_data["ai_model"] = "claude-haiku-4-5-20251001"
+                patch_data["ai_generated_at"] = datetime.utcnow().isoformat() + "Z"
+
+            try:
+                supabase_request(
+                    "PATCH",
+                    f"fcc_filings?file_number=eq.{file_number}&filing_system=eq.ECFS",
+                    patch_data,
+                )
+                log(f"    ✓ Updated")
+                success += 1
+            except Exception as e:
+                log(f"    ✗ PATCH failed: {e}")
+                failed += 1
+
+            time.sleep(CONTENT_EXTRACT_DELAY)
+
+    finally:
+        browser.close()
+        pw.stop()
+
+    log("=" * 60)
+    log(f"Content extraction complete: {success} success, {failed} failed")
+    log("=" * 60)
 
 
 # ============================================================================
@@ -669,6 +973,9 @@ def run_worker(args):
     if not args.dry_run and not SUPABASE_SERVICE_KEY:
         log("ERROR: SUPABASE_SERVICE_KEY not set")
         sys.exit(1)
+
+    # Sync docket metadata before processing filings
+    sync_docket_metadata(dry_run=args.dry_run)
 
     # Discover all filings
     all_filings = discover_all_filings(args.docket)
@@ -732,7 +1039,12 @@ if __name__ == "__main__":
     parser.add_argument("--docket", help="Process specific docket only")
     parser.add_argument("--dry-run", action="store_true", help="Don't write to database")
     parser.add_argument("--no-content", action="store_true", help="Skip fetching document content")
+    parser.add_argument("--extract-content", action="store_true", help="Phase 2: Playwright PDF extraction for filings missing content_text")
     parser.add_argument("--limit", type=int, help="Limit number of filings to process")
 
     args = parser.parse_args()
-    run_worker(args)
+
+    if args.extract_content:
+        backfill_content(args)
+    else:
+        run_worker(args)

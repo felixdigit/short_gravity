@@ -140,11 +140,11 @@ Threads compound when they link to each other. These are the active cross-thread
   → launches: ✅ from next_launches (launch_worker)
   → conjunctions: ✅ from conjunctions (socrates_worker)
   → catalysts: ✅ from catalysts table (22 upcoming + 35 completed seeded via migration 023)
-  → FCC expirations: ⚠️ sparse — only populated where expiration_date is set
+  → FCC expirations: ✅ from fcc_filings (expiration_date) + fcc_dockets (comment/reply deadlines)
   → patent expirations: ⚠️ many patents may not have expiration_date populated
   → earnings calls: ⚠️ manually populated, not automated
   → ~~GAP 1: Curated catalysts hardcoded~~ → **CLOSED** (migration 023 + API + UI)
-  → **GAP 2: FCC comment/reply deadlines not captured by ECFS worker**
+  → ~~GAP 2: FCC comment/reply deadlines not captured by ECFS worker~~ → **CLOSED**
   → **GAP 3: No automated earnings date discovery**
 
 [User discovers /horizon via]
@@ -159,12 +159,12 @@ Threads compound when they link to each other. These are the active cross-thread
 
 | Component | Exists? | Notes |
 |-----------|---------|-------|
-| Horizon API | ✅ | `/api/horizon` aggregates 6 sources (incl. catalysts), type filter + days range |
+| Horizon API | ✅ | `/api/horizon` aggregates 7 sources (incl. docket deadlines + catalysts), type filter + days range |
 | Horizon page | ✅ | `/horizon` — full page with filters, month grouping, severity, countdown |
 | DocumentViewer integration | ✅ | Events with source_ref clickable → opens document viewer |
 | Launch data | ✅ | `next_launches` table — 3 known launches |
 | Conjunction data | ✅ | `conjunctions` table — SOCRATES daily updates |
-| FCC expiration data | ⚠️ | `fcc_filings.expiration_date` — sparse population |
+| FCC expiration data | ✅ | `fcc_filings.expiration_date` + `fcc_dockets.comment_deadline`/`reply_deadline` |
 | Patent expiration data | ⚠️ | `patents.expiration_date` — needs audit |
 | Earnings data | ⚠️ | `earnings_calls.call_date` — manual only |
 | Catalyst database | ✅ | `catalysts` table — migration 023, 22 upcoming + 35 completed seeded |
@@ -173,7 +173,7 @@ Threads compound when they link to each other. These are the active cross-thread
 ### Open GAPs
 
 1. ~~Curated catalysts not in timeline~~ → **CLOSED** (migration 023 + API query + UI filter/badge)
-2. **FCC comment/reply deadlines** — ECFS dockets have comment windows but workers don't capture them.
+2. ~~FCC comment/reply deadlines~~ → **CLOSED** (fcc_dockets table + ECFS worker sync + Horizon query)
 3. **Earnings date automation** — No worker discovers next earnings dates from SEC filings.
 4. ~~Navigation discovery~~ → **CLOSED** (landing page EXPLORE grid, /signals↔/horizon cross-links)
 5. ~~Depends on Thread 001~~ → **RESOLVED** (T001 is GOLDEN)
@@ -183,6 +183,7 @@ Threads compound when they link to each other. These are the active cross-thread
 - **Phase 1 → DONE (2026-02-12):** Built `/api/horizon` endpoint aggregating 5 sources (launches, conjunctions, FCC expirations, patent expirations, earnings). Built `/horizon` page with type filters, range selector (30D/90D/6M/1Y), month grouping, severity dots, countdown, type badges. Events with source refs link to DocumentViewer. Added to command palette navigation.
 - **GAP 1 → CLOSED (2026-02-12):** Catalysts migrated to database. Created `catalysts` table (migration 023) with 22 upcoming + 35 completed items seeded from `lib/data/catalysts.ts`. API queries catalysts with `estimateDateFromPeriod()` for fuzzy dates. UI shows CATALYSTS filter tab, purple CATALYST badge, and fuzzy date indicator (~Q2 2026) for items without precise dates. **NOTE: Migration 023 must be run in Supabase SQL Editor.**
 - **GAP 4 → CLOSED (2026-02-12):** Navigation discovery. Added /horizon to landing page EXPLORE grid (5-col). Added HORIZON cross-link in /signals header. Added SIGNALS cross-link in /horizon header. Both pages now cross-reference each other + TERMINAL.
+- **GAP 2 → CLOSED (2026-02-13):** FCC docket metadata. Created `fcc_dockets` table (migration 026) with comment/reply deadline fields, bureau, tags, filing activity. ECFS worker gets `sync_docket_metadata()` that polls FCC proceedings API — never overwrites non-null DB values with null API values (preserves manual seeds). Horizon API queries docket deadlines as source #6. FCC API has the fields but doesn't populate them; deadlines can be manually seeded and the worker will preserve them. **NOTE: Migration 026 must be run in Supabase SQL Editor.**
 
 ---
 
