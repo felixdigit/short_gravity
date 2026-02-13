@@ -21,22 +21,44 @@ Two AI agents, one spec. Gabriel bridges both.
 - **Gemini** (via CLI or app) — Researches. Analyzes reference material, explores architectural approaches, produces spec recommendations. Defined in `GEMINI.md`.
 - **This document is the source of truth.** Gemini helps evolve it; Claude implements against it.
 
+### Thread System — The Build Loop
+
+We don't build features. We pull **Threads**. A Thread is a durable, multi-session narrative arc that answers a specific user intent. State lives in `THREADS.md` at the repo root.
+
+**The loop:**
+1. **READ** `THREADS.md` — understand current state of all threads
+2. **TRACE** — Claude writes/updates the trace for the highest-priority open GAP (grounded in actual code, not speculation)
+3. **WEAVE** — Send trace to Gemini. Gemini critiques the trace and specs the transition that bridges the GAP.
+4. **FABRICATE** — Claude implements the transition
+5. **PROOF** — Claude re-runs the trace. If the GAP is closed, mark it. If new GAPs appear, log them.
+6. **UPDATE** `THREADS.md` — new status, completed transitions, any new GAPs discovered
+
+**Thread statuses:** GOLDEN (complete) / FRAYED (works but painful) / BROKEN (dead end) / PLANNED (spec phase) / DARK (user intent exists, zero surface area)
+
+**Cadence:** Thread-driven, not time-driven. Each loop picks the highest-value GAP across all open threads. Gabriel sets thread priority.
+
+**Current threads (see THREADS.md):**
+- Thread 001: Signal-to-Source (P0, BROKEN) — Own the Present
+- Thread 002: Event Horizon (P1, DARK) — Own the Future
+- Thread 003: Thesis Builder (P2, DARK) — Own the Argument
+
 ### Claude ↔ Gemini Collaboration Protocol
+
 Claude has direct access to Gemini via the `gemini` CLI.
 
-**Model:** `gemini-3-pro-preview` (upgraded from gemini-2.5-pro on 2026-02-12)
+**Model:** `gemini-2.5-pro` (default)
 
 **When to invoke Gemini:**
-- Before building a new page, feature, or architectural component — ask Gemini to research approaches and produce a spec
+- **WEAVE phase** — Send a thread trace with GAPs. Gemini critiques and specs the transition.
+- Before building a new page, feature, or architectural component — ask Gemini to research approaches
 - When facing a design decision with multiple valid paths — let Gemini analyze tradeoffs
-- When Gabriel asks "what should we build next" — collaborate with Gemini on prioritization
 
 **The workflow — Multi-Turn Dialogue:**
 
-Conversations live in `docs/gemini-conversations/loop-NNN.md`. Each loop is a structured dialogue, not a one-shot prompt. Claude and Gemini deliberate before code is written.
+Conversations live in `docs/gemini-conversations/`. Each loop is a structured dialogue, not a one-shot prompt. Claude and Gemini deliberate before code is written.
 
 1. Claude creates a conversation file with Turn 1 (context + question)
-2. Claude sends the conversation to Gemini: `gemini -p "$(cat docs/gemini-conversations/loop-NNN.md)" --model gemini-3-pro-preview -o text`
+2. Claude sends the conversation to Gemini: `cat docs/gemini-conversations/file.md | gemini -m gemini-2.5-pro -o text`
 3. Claude appends Gemini's response as `## GEMINI (turn N)`
 4. Claude responds with pushback, refinements, or follow-up questions as `## CLAUDE (turn N+1)`
 5. Repeat steps 2-4 for 2-4 turns until the spec converges

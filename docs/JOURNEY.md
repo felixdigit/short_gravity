@@ -68,3 +68,139 @@ This document captures key decisions, ideas, and milestones in the collaboration
   - PatreonStrip widget → opens ClearanceModal instead of external link.
   - All upgrade touchpoints now funnel through one diegetic modal.
 - Conversation: `docs/gemini-conversations/loop-005.md`
+
+---
+
+## 2026-02-12: The Meta-Loop — Redesigning the Process
+
+**Objective:** Stop building features and start building threads. Redesign the Claude↔Gemini collaboration loop to produce depth, not breadth.
+
+**The Problem:** 5 loops produced 5 independent features that don't compound. Each loop adds surface area but no depth. Root cause: the context package asks "what's the most visible gap?" which always produces a new feature.
+
+**Process:**
+1. Claude diagnosed the problem: loops produce breadth, not depth. Proposed 3-phase loop (CRITIQUE → CONNECT → BUILD+VERIFY).
+2. Sent to Gemini for meta-analysis. 3-turn dialogue in `docs/gemini-conversations/meta-loop-design.md`.
+3. Gemini proposed **The Thread System** — replace feature-driven loops with user-journey-driven threads.
+4. Claude refined: grounded traces (Claude writes, Gemini critiques), DARK status for zero-surface-area intents, thread-driven cadence (not time-driven).
+5. Gemini identified three pillars: **Signal-to-Source** (own the present), **Event Horizon** (own the future), **Thesis Builder** (own the argument).
+6. Converged: Thread 001 first — it's the load-bearing infrastructure.
+
+**Outcome:**
+- Created `THREADS.md` — living state file for all active threads
+- Encoded Thread System Protocol in `CLAUDE.md`
+- Three threads seeded: Signal-to-Source (P0), Event Horizon (P1), Thesis Builder (P2)
+
+---
+
+## 2026-02-12: Thread 001 GAP 1 — Signal-to-Source Link
+
+**Thread:** 001 (Signal-to-Source)
+**GAP:** Evidence items in SignalDetail were static text — users could see what triggered a signal but couldn't click through to the source document.
+
+**Trace → Weave → Fabricate → Proof:**
+1. Claude wrote grounded trace identifying exact break point: evidence items render `ref.id` but don't use it.
+2. Gemini spec'd the transition: extend Document API with natural key lookup, make evidence clickable, reuse DocumentViewer.
+3. Claude implemented:
+   - **Document API** (`/api/widgets/document`): Added natural key mode (`?table=filings&ref=accession_number`). Refactored into per-table fetcher functions. Added patent support (was 404). Backward-compatible with existing UUID-based mode.
+   - **DocumentViewer**: Added `sourceTable` + `sourceRef` props for natural key lookup alongside existing `itemId`.
+   - **SignalDetail**: Evidence items are now clickable buttons with hover state + arrow icon. Click → DocumentViewer modal opens with source document.
+4. Build passes. Thread 001 status: BROKEN → FRAYED (primary path works, brain citations still not linked).
+
+- Conversation: `docs/gemini-conversations/thread-001-gap-1.md`
+
+---
+
+## 2026-02-12: Thread 001 GAP 5 — Brain Citations → DocumentViewer
+
+**Thread:** 001 (Signal-to-Source)
+**GAP:** Brain search citations (in ChatMessage and /signals brain panel) didn't open DocumentViewer.
+
+**Trace → Weave → Fabricate → Proof:**
+1. Traced the brain citation flow: SearchResult has `source` type + `id` (natural key) — all data needed for DocumentViewer exists.
+2. Gemini spec'd: lift state via `onSelect` callback on Citation, add `getDocumentViewerParams()` utility.
+3. Claude implemented:
+   - `lib/brain/search.ts`: Added `getDocumentViewerParams()` — maps brain source types to table names.
+   - `Citation.tsx`: Added `onSelect` callback prop. Prefers callback over external URL link.
+   - `ChatMessage.tsx`: Wired Citation `onSelect` → local state → DocumentViewer modal.
+   - `app/signals/page.tsx`: Brain panel sources now clickable buttons. DocumentViewer integrated.
+4. Build passes. **Thread 001: GOLDEN.** All three paths work: signal evidence, brain citations in chat, brain panel on /signals.
+
+- Conversation: `docs/gemini-conversations/thread-001-gap-5.md`
+- **Thread 001 is GOLDEN. Moving to Thread 002 (Event Horizon).**
+
+---
+
+## 2026-02-12: Thread 002 Phase 1 — Event Horizon Timeline
+
+**Thread:** 002 (Event Horizon)
+**Status change:** DARK → BROKEN (first surface area created)
+
+**Trace → Weave → Fabricate → Proof:**
+1. Traced the "what's next?" user journey — found zero unified surface, but rich existing data: launches (3 in DB), conjunctions (SOCRATES daily), FCC expirations, patent expirations, earnings dates, plus 35 hardcoded catalysts.
+2. Gemini spec'd Phase 1: aggregate existing date-stamped data into unified API + page. Phase 2 later: migrate catalysts to DB.
+3. Claude implemented:
+   - **`/api/horizon`**: Unified timeline API. Parallel queries to 5 tables (next_launches, conjunctions, fcc_filings, patents, earnings_calls). Supports `?days=N` range and `?type=` filter. Severity classification for conjunctions based on miss distance + collision probability. 15min cache.
+   - **`/horizon` page**: Full Event Horizon page. Type filter (all/launches/conjunctions/regulatory/patents/earnings). Range selector (30D/90D/6M/1Y). Events grouped by month, sorted chronologically. Each event: severity dot (pulsing if imminent), countdown timer, date, type badge, title, subtitle. Events with source_ref link to DocumentViewer.
+   - **Command palette**: Added EVENT HORIZON to navigation commands.
+4. Build passes. Thread 002: DARK → BROKEN. Remaining gaps: catalysts not migrated to DB, FCC deadlines not captured, earnings dates not automated, navigation links sparse.
+
+- Conversation: `docs/gemini-conversations/thread-002-gap-1.md`
+
+---
+
+## 2026-02-12: Thread 002 GAP 1+4 — Catalysts + Navigation
+
+**Thread:** 002 (Event Horizon)
+**Status change:** BROKEN → FRAYED (core timeline works, remaining gaps are data-pipeline)
+
+**GAP 1 — Catalysts migrated to database:**
+1. Created `catalysts` table (migration 023) with schema: title, description, category, event_date (precise), estimated_period (fuzzy), status, completed_date, source_url.
+2. Seeded 22 upcoming + 35 completed catalysts from `lib/data/catalysts.ts`.
+3. Extended `/api/horizon` with catalysts query (#6). Added `estimateDateFromPeriod()` to convert fuzzy periods ("Q2 2026", "H1 2026", "FEB 2026") to approximate ISO dates for timeline ordering.
+4. Updated `/horizon` page: added CATALYSTS filter tab, purple CATALYST badge, fuzzy date indicator (~Q2 2026) for items without precise dates.
+
+**GAP 4 — Navigation discovery:**
+1. Added `/horizon` to landing page EXPLORE grid (now 5-column: SIGNALS, HORIZON, PATENTS, RESEARCH, ORBITAL).
+2. Added HORIZON cross-link in `/signals` page header.
+3. Added SIGNALS cross-link in `/horizon` page header.
+
+**Remaining GAPs (data-pipeline work):** FCC comment/reply deadlines (GAP 2), earnings date automation (GAP 3).
+
+---
+
+## 2026-02-12: Thread 003 Phase 1 — Thesis Builder
+
+**Thread:** 003 (Thesis Builder)
+**Status change:** DARK → BROKEN (first surface area created)
+
+**Trace → Weave → Fabricate → Proof:**
+1. Traced the "build a case" user journey — found powerful brain search infrastructure but zero structured output. Counter-thesis mode existed in config but had no UI.
+2. Gemini spec'd: new `/thesis` page with orchestrating API. Three sections: Supporting Evidence, Contradicting Evidence, Synthesis. Free tier gets FOR + Synthesis; counter-thesis requires full_spectrum.
+3. Claude simplified: skip new API endpoint, page makes 3 sequential calls to existing `/api/brain/query` directly. Created:
+   - **`useThesisQuery` hook** (`lib/hooks/useThesisQuery.ts`): Manages dual-stream state. Makes 3 sequential brain queries — supporting evidence (default mode), contradicting evidence (counter-thesis mode), synthesis. Handles abort, cancel, reset.
+   - **`/thesis` page**: Thesis input with 5 suggested theses. Three-section streaming layout. ReactMarkdown with citation badges. Sources grids with Citation components. DocumentViewer integration for source drill-down. Cross-links to SIGNALS, HORIZON, TERMINAL.
+   - **Command palette + landing page**: Added THESIS BUILDER to navigation. Landing page EXPLORE grid now 3x2 (6 items).
+4. Build passes. Thread 003: DARK → BROKEN. Remaining gaps: no persistence, no evidence scoring, 3 sequential API calls could be optimized.
+
+- Conversation: `docs/gemini-conversations/thread-003-gap-1.md`
+
+**Landing page EXPLORE grid update:** Now 6 items in 3-col grid: SIGNALS, HORIZON, THESIS, PATENTS, RESEARCH, ORBITAL.
+
+---
+
+## 2026-02-12: Cross-Thread Wiring — The Compound Loop
+
+**Objective:** Make all three threads reference each other so the platform feels like one connected system, not three disconnected pages.
+
+**Implemented:**
+1. **Signal → Thesis (T001→T003):** "BUILD THESIS" button in SignalDetail opens `/thesis?q={signal.title}`. User sees a signal, clicks to build a full bull/bear case from primary sources.
+2. **Signal → Horizon (T001→T002):** "VIEW HORIZON" button in SignalDetail opens `/horizon?type={mapped_type}`. Signal category maps to horizon event type (regulatory→regulatory, ip→patent, corporate→earnings).
+3. **Horizon → Thesis (T002→T003):** "ANALYZE" button on catalyst events opens `/thesis?q={catalyst.title}`. User sees an upcoming catalyst, clicks to test whether it's well-supported.
+4. **Query param support:** `/thesis` accepts `?q=` and auto-runs. `/horizon` accepts `?type=` and pre-filters.
+5. **Progress tracker:** Thesis page shows three-step indicator (SUPPORTING → CONTRADICTING → SYNTHESIS) with active/done/pending states.
+
+6. **Terminal widget links:** SignalFeed widget header links to `/signals`. LaunchCountdown widget header links to `/horizon?type=launch`.
+7. **IntelLink widget expanded:** Now shows three buttons (SIGNALS / HORIZON / THESIS) instead of single "INTELLIGENCE FEED" link.
+8. **Onboarding v2:** Updated WelcomeBriefing to include SIGNALS, HORIZON, THESIS descriptions. Bumped storage key to `sg-onboarding-v2` so returning users see the new briefing once.
+
+**Why this matters:** Features compound when they link. A user can now flow from "what happened?" (signals) → "what's coming?" (horizon) → "is my thesis right?" (thesis) → back to source documents (DocumentViewer) without leaving the platform. Each page deepens the others.
