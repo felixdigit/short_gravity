@@ -359,7 +359,7 @@ Threads compound when they link to each other. These are the active cross-thread
 
 ## Thread 006: The Orbital Logbook
 
-**Status:** BROKEN
+**Status:** GOLDEN
 **Priority:** P0
 **Intent:** "Are the satellites actually working? When did they fire thrusters? Is drag increasing?"
 **North Star:** User sees a per-satellite narrative — maneuvers, decay, space weather effects — all in one chronological view. Plus a fleet-wide vital signs dashboard.
@@ -391,16 +391,18 @@ Threads compound when they link to each other. These are the active cross-thread
 | Per-satellite page | ⚠️ | /satellite/[noradId] exists but lacks narrative |
 | Maneuver classification | ✅ | `orbital_maneuver` signal type with orbit_raise/orbit_lower/plane_change |
 | Satellite timeline | ❌ | No unified event log per satellite |
-| Fleet vital signs | ❌ | No at-a-glance health dashboard |
+| Fleet vital signs | ✅ | ConstellationHealthGrid enhanced with drag rate + last maneuver |
 
 ### Open GAPs
 
 1. ~~Maneuver Detection + Signals~~ → **CLOSED**
-2. **Satellite Timeline (Asset Logbook)** — Per-satellite chronological view merging maneuvers, anomalies, space weather events (Kp > 5), and signals. "BW3: Feb 3 re-boost (+2km), Feb 8 drag spike (Kp=7 storm), Feb 12 altitude nominal."
-3. **Fleet Vital Signs Dashboard** — High-density widget: one row per satellite with altitude sparkline (30-day), drag rate (km/day), last maneuver date. The constellation "heartbeat" panel.
+2. ~~Satellite Timeline (Asset Logbook)~~ → **CLOSED**
+3. ~~Fleet Vital Signs Dashboard~~ → **CLOSED**
 
 ### Completed Transitions
 
 - **GAP 1 → CLOSED (2026-02-13):** Server-side maneuver detection added to tle-refresh cron. Ported 2σ outlier algorithm from client-side `lib/orbital/maneuver-detection.ts` to run every 4h. Uses CelesTrak data (primary for positional accuracy per C5). Detects orbit_raise, orbit_lower, plane_change. Creates `orbital_maneuver` signals with category=constellation, delta metrics (mean_motion_delta, altitude_delta_km, inclination_delta_deg). 14-day expiry, daily fingerprint dedup. Tested: 8 maneuvers detected across constellation.
+- **GAP 2 → CLOSED (2026-02-13):** Asset Logbook component (`components/satellite/AssetLogbook.tsx`) — unified chronological timeline on `/satellite/[noradId]` merging orbital maneuvers, health anomalies, and space weather events (Kp >= 5 storms). Color-coded by event type with severity dots, inline metrics, time-ago display. Replaces static MANEUVER HISTORY panel.
+- **GAP 3 → CLOSED (2026-02-13):** Fleet Vital Signs — enhanced existing `ConstellationHealthGrid` with two new columns: DRAG (km/day altitude rate, color-coded: blue=raising, amber=dropping, white=stable) and LAST MNVR (days since last detected maneuver signal). Fetches `orbital_maneuver` signals to populate last maneuver dates. Drag rate computed from last 7 days of TLE altitude data.
 
 - Conversation: `docs/gemini-conversations/thread-discovery-002.md`
