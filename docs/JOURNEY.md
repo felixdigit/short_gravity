@@ -306,3 +306,22 @@ Gemini proposed Thread 004: transform the terminal from pull-only to push. Subsc
 
 **Thread 004: DARK → GOLDEN. All four threads now GOLDEN.**
 - Conversation: `docs/gemini-conversations/thread-discovery-001.md`
+
+## 2026-02-13: Thread Discovery + Thread 005/006 Seeded
+
+Consulted Gemini for next high-value threads after all 4 existing threads went GOLDEN. 2-turn dialogue in `docs/gemini-conversations/thread-discovery-002.md`. Gemini proposed Thread 005 (Regulatory Battlemap) and Thread 006 (Orbital Logbook/Forensics). Claude pushed back on the "forensics" framing — most orbital infrastructure already existed. Converged on Thread 006 as the "Constellation Narrative" thread (turn passive orbital data into active intelligence storytelling). Both threads seeded in THREADS.md.
+
+## 2026-02-13: Thread 006 — Orbital Logbook (GOLDEN in one session)
+
+Built all 3 GAPs for Thread 006 in a single session, turning passive orbital data into active intelligence narratives.
+
+**GAP 1 — Maneuver Detection Signals:**
+- Added server-side maneuver detection to `/api/cron/tle-refresh`. 2σ outlier detection on CelesTrak mean motion deltas over 30-day window, reports only maneuvers from last 7 days. Detects orbit_raise, orbit_lower, plane_change. Inclination threshold 0.02° (above GP fitting noise per C5). Creates `orbital_maneuver` signals with 14-day expiry and daily fingerprint dedup per satellite per maneuver type. First run: 8 maneuvers detected across constellation.
+
+**GAP 2 — Asset Logbook:**
+- Created `components/satellite/AssetLogbook.tsx` — unified chronological timeline on `/satellite/[noradId]`. Merges orbital maneuvers (from signals), health anomalies (from signals), and space weather events (Kp ≥ 5 storms). Color-coded by type: green=maneuver, red=anomaly, amber=weather. Shows severity dots, inline metrics, time-ago display. Replaced the empty "MANEUVER HISTORY" panel on satellite detail pages.
+
+**GAP 3 — Fleet Vital Signs:**
+- Enhanced `ConstellationHealthGrid` with two new columns: DRAG (km/day altitude rate from 7-day trend, color-coded blue for raising / amber for lowering) and LAST MNVR (days since last orbital_maneuver signal). Added `useManeuverSignals()` hook. Grid expanded from 6 to 8 columns.
+
+**Thread 006: DARK → GOLDEN. Five threads now GOLDEN, Thread 005 seeded as DARK.**
