@@ -514,3 +514,141 @@ Threads compound when they link to each other. These are the active cross-thread
 - **GAP 1 + GAP 2 + GAP 3 → CLOSED (2026-02-13):** 2-turn Gemini spec convergence. Built complete earnings intelligence page. Unified API (`/api/earnings/context`) returns earnings metadata (21 quarters from earnings_calls), transcript text (from inbox, source='earnings_call'), topic analysis (10 tracked topics × 17 quarters, same logic as earnings-diff), price reaction (5-day window from daily_prices, delta% + volume spike), and guidance items. Three-zone page layout: Zone A = quarter selector + SVG price sparkline + call summary + guidance ledger. Zone B = topic matrix heatmap (10 × 17, orange heat scaling, click → highlights transcript). Zone C = transcript viewer with client-side topic highlighting via regex + `<mark>` tags, auto-scrolls to first match. Guidance ledger: `lib/data/guidance.ts` with 10 seeded items (4 MET, 5 PENDING, 1 per category). Defaults to latest quarter with content (skips future scheduled). Command palette + landing page links (9 items, 3-col grid).
 
 - Conversation: `docs/gemini-conversations/thread-008-earnings.md`
+
+---
+
+## Thread 009: The Briefing
+
+**Status:** GOLDEN
+**Priority:** P0
+**Intent:** "What happened since I last looked? What do I need to know RIGHT NOW?"
+**North Star:** A classified morning report — cross-thread synthesis in a single page. No clicks required. The value is in the aggregation.
+**Undeniable Value:** Connects all 8 vertical threads into one horizontal view. The "Home" for returning users. Answers the question every investor asks first.
+
+### Current Trace
+
+```
+[User intent: "Give me the situation report"]
+  → /briefing page exists ✅
+  → Aggregation API queries 8+ tables in parallel ✅
+  → Price banner with $ASTS snapshot ✅
+  → Earnings countdown (17 days to Q4 2025) ✅
+  → High-priority signals section (48h window) ✅
+  → Upcoming events: launches, earnings, catalysts, conjunctions (30d) ✅
+  → Regulatory section: active dockets + critical threats ✅
+  → Fleet status: 7 satellites with altitude + TLE freshness ✅
+  → Competitor activity: non-AST filings from last 7d ✅
+  → Guidance tracker: PENDING/MET summary ✅
+  → SEC filings: recent 7d activity ✅
+  → Cross-thread deep links: signals→/signals, fleet→/satellite/[id], events→/horizon, etc. ✅
+  → Two-column layout: primary intel (left) + status panels (right) ✅
+  → Sidebar nav + command palette + landing page links ✅
+  → **STATUS: GOLDEN — cross-thread synthesis in a single page**
+```
+
+### Infrastructure Audit
+
+| Component | Exists? | Notes |
+|-----------|---------|-------|
+| Signals data | ✅ | signals table, 10 detectors |
+| Regulatory state | ✅ | fcc_dockets, adversarial matrix |
+| Earnings calendar | ✅ | earnings_calls table |
+| Competitor activity | ✅ | Entity registry, fcc_filings, patents |
+| Orbital status | ✅ | satellites, tle_history, health anomalies |
+| Price data | ✅ | daily_prices (daily OHLCV) |
+| Guidance tracking | ✅ | lib/data/guidance.ts |
+| Horizon events | ✅ | catalysts, launches, earnings |
+| Briefing page | ✅ | `/briefing` — two-column synthesis page |
+| Aggregation API | ✅ | `/api/briefing` — 8 parallel Supabase queries |
+| Sidebar nav | ✅ | Added as first nav item |
+| Command palette | ✅ | Added `nav-briefing` command |
+| Landing page | ✅ | Featured item above EXPLORE grid |
+
+### Open GAPs
+
+1. ~~Briefing API + Page~~ → **CLOSED**
+2. **Thesis Health Indicator** — One-line summary of current thesis state derived from recent signal categories and sentiment. (Deferred — not blocking GOLDEN)
+3. ~~Cross-thread navigation~~ → **CLOSED** (deep links in all sections)
+
+### Completed Transitions
+
+- **GAP 1 + GAP 3 → CLOSED (2026-02-13):** Built complete briefing system. API (`/api/briefing`) runs 8+ parallel Supabase queries via `getServiceClient()`: signals (48h, critical/high), upcoming events (launches + earnings + catalysts + conjunctions, 30d), regulatory (dockets + recent critical filings), fleet (7 ASTS satellites with TLE-derived altitude), competitor moves (non-AST filings 7d), earnings countdown, price snapshot (daily_prices), SEC filings (7d), guidance summary. Page (`/briefing`) has two-column layout: left column = signals + events + regulatory + SEC filings, right column = fleet + guidance + competitors. Top banner = price snapshot + earnings countdown. All sections have deep links into source threads: signals→/signals, satellites→/satellite/[id], events→/horizon, regulatory→/regulatory, competitors→/competitive, guidance→/earnings. Sidebar nav (first item, Newspaper icon), command palette, landing page (featured item above EXPLORE grid). Typography-driven, badge-heavy — no clicks required to get the picture.
+
+- Conversation: `docs/gemini-conversations/thread-discovery-004.md`
+
+---
+
+## Thread 010: The Broadcast
+
+**Status:** DARK
+**Priority:** P1
+**Intent:** "I want to share this analysis with my community."
+**North Star:** Every analysis the platform produces has a shareable URL with a rich preview. Turn intelligence into viral artifacts.
+**Undeniable Value:** Drives traffic and Patreon conversions. The community shares "alpha" — give them beautiful tools to do it.
+
+### Current Trace
+
+```
+[User intent: "Share this on X/Twitter"]
+  → Thesis results have /thesis/[id] shareable URLs ⚠️
+  → Most pages have no dynamic OG metadata ❌
+  → No "Share to X" buttons ❌
+  → No dynamic OG images ❌
+  → **STATUS: DARK — intelligence trapped behind the UI**
+```
+
+### Infrastructure Audit
+
+| Component | Exists? | Notes |
+|-----------|---------|-------|
+| Thesis permalinks | ✅ | /thesis/[id] with saved data |
+| Vercel OG | ❌ | @vercel/og not installed |
+| Dynamic OG metadata | ❌ | Static metadata only |
+| Share buttons | ❌ | No share UI anywhere |
+| Signal permalinks | ❌ | No /signals/[id] route |
+
+### Open GAPs
+
+1. **Dynamic OG metadata** — Per-page og:title, og:description, twitter:card based on route params. Earnings, thesis, signals, competitive.
+2. **OG Image Generation** — `@vercel/og` templates for key pages. Branded, data-rich preview images.
+3. **Share UI** — "Share to X" button on key insights (thesis results, earnings analysis, signals).
+
+### Completed Transitions
+
+(none yet)
+
+- Conversation: `docs/gemini-conversations/thread-discovery-004.md`
+
+---
+
+## Thread 011: The Live Wire
+
+**Status:** DARK
+**Priority:** P1
+**Intent:** "I want to be ready for the earnings call and know what changed immediately after."
+**North Star:** Operational readiness for March 2 Q4 2025 earnings. Pre-call preparation, post-call automatic analysis.
+**Undeniable Value:** The highest-traffic event on the ASTS calendar. Being ready = credibility. Automation = speed advantage.
+
+### Current Trace
+
+```
+[User intent: "What should I watch for on the earnings call?"]
+  → Earnings page (008) has transcript viewer + guidance ledger ✅
+  → Transcript worker fetches from roic.ai weekly ⚠️ (latency concern)
+  → Guidance items are static (lib/data/guidance.ts) ⚠️
+  → No pre-call briefing ("what to watch") ❌
+  → No post-call automation (auto-detect new transcript → generate signals) ❌
+  → **STATUS: DARK — earnings page exists but no event protocol**
+```
+
+### Open GAPs
+
+1. **Pre-call Briefing** — "What to Watch" section pulling from guidance ledger (PENDING items), recent signals, regulatory status. Could be a section on /earnings or a standalone page.
+2. **Post-call Automation** — Detect new transcript arrival, trigger earnings_language_shift signal, update guidance ledger prompts.
+3. **Transcript Worker Latency** — Verify roic.ai publish timing. If >1h post-call, consider alternative sources or manual trigger.
+
+### Completed Transitions
+
+(none yet)
+
+- Conversation: `docs/gemini-conversations/thread-discovery-004.md`
