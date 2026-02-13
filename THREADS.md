@@ -308,3 +308,99 @@ Threads compound when they link to each other. These are the active cross-thread
 - **GAP 2 → CLOSED (2026-02-13):** Signal alerts built. Decoupled alert cron (`/api/cron/signal-alerts`, every 15 min) polls for critical/high signals from the last hour, deduplicates via `signal_alert_log` table (migration 028), sends individual alert emails per signal to all active subscribers. HUD-styled alert template (`emails/SignalAlert.tsx`) with severity badge, category, description, source refs. Works with both signal_scanner.py and tle-refresh signal producers — no changes needed to producers.
 - **GAP 3 → CLOSED (2026-02-13):** Subscriber preferences + unsubscribe. Migration 029 adds `daily_brief`, `signal_alerts` boolean columns + `unsubscribe_token` + optional `user_id` FK to subscribers. Token-based `/api/email/unsubscribe` endpoint (supports type=all/daily_brief/signal_alerts) with HUD-styled confirmation page. `/api/email/preferences` GET/POST for managing preferences. Both crons updated to filter by preference columns and render per-subscriber unsubscribe URLs. Waitlist signup auto-creates subscriber with token. Tier gating deferred — preferences serve as the gate for now; `user_id` FK ready for profile linking when needed.
 - Conversation: `docs/gemini-conversations/thread-discovery-001.md`
+
+---
+
+## Thread 005: The Regulatory Battlemap
+
+**Status:** DARK
+**Priority:** P1
+**Intent:** "What stands between the company and commercial authority? Who's opposing them, and where does each license application stand?"
+**North Star:** User sees a living regulatory map — not a list of PDFs, but a state machine showing each license application's progress, who filed what, and which filings are threats.
+**Undeniable Value:** Turns 4,500+ FCC filings from a document dump into a risk dashboard. No other tool models regulatory state this way.
+
+### Current Trace
+
+```
+[User intent: "Is the regulatory path clear?"]
+  → Currently: /research-filings page lists FCC filings chronologically ❌
+  → fcc_filings has filing_type, filer_name from ECFS metadata ⚠️
+  → fcc_dockets table has 6 tracked dockets with deadline fields ⚠️
+  → No visualization of docket lifecycle ❌
+  → No adversarial mapping (who opposes whom) ❌
+  → No threat classification (Petition to Deny vs routine Ex Parte) ❌
+  → **STATUS: DARK — data exists but no regulatory state model**
+```
+
+### Infrastructure Audit
+
+| Component | Exists? | Notes |
+|-----------|---------|-------|
+| FCC filings data | ✅ | 4,500+ filings across ECFS/ICFS/ELS |
+| Docket metadata | ✅ | `fcc_dockets` table with 6 tracked dockets |
+| Filing type classification | ⚠️ | ECFS metadata has type but not surfaced |
+| Docket timeline view | ❌ | Need visualization |
+| Adversarial mapping | ❌ | Filer names exist in data but not surfaced |
+| Threat signal detection | ❌ | Petitions to Deny not flagged |
+
+### Open GAPs
+
+1. **Docket Timeline View** — Visualize filings-per-docket as a timeline, color-coded by filer. Transform the list into a lifecycle view of specific license applications. No NLP needed — ECFS metadata already has filer names.
+2. **Filing Type Classification** — Classify and surface filing types (Comment, Reply, Ex Parte, Petition to Deny) from existing metadata. Give objections and petitions distinct visual weight.
+3. **Opposition Signal** — Flag Petitions to Deny and Oppositions as critical signals in signal_scanner. Hook into existing signal infrastructure.
+
+### Completed Transitions
+
+(none yet)
+
+- Conversation: `docs/gemini-conversations/thread-discovery-002.md`
+
+---
+
+## Thread 006: The Orbital Logbook
+
+**Status:** BROKEN
+**Priority:** P0
+**Intent:** "Are the satellites actually working? When did they fire thrusters? Is drag increasing?"
+**North Star:** User sees a per-satellite narrative — maneuvers, decay, space weather effects — all in one chronological view. Plus a fleet-wide vital signs dashboard.
+**Undeniable Value:** Transforms 50,000+ TLE records from raw state vectors into operational intelligence. No retail investor tool does this. "Bloomberg for satellite health."
+
+### Current Trace
+
+```
+[User intent: "Is BW3 under active control?"]
+  → /orbital page exists with constellation health widgets ⚠️
+  → /satellite/[noradId] has per-satellite detail with TLE data ⚠️
+  → Health anomaly detection runs every 4h (altitude drops, drag spikes) ⚠️
+  → bstar_trends view computes 30-day drag analysis ⚠️
+  → Data is scattered across widgets — no unified narrative ❌
+  → Maneuvers not classified as distinct events ❌
+  → No space weather overlay on orbital data ❌
+  → No fleet vital signs dashboard ❌
+  → **STATUS: DARK — data exists but no narrative layer**
+```
+
+### Infrastructure Audit
+
+| Component | Exists? | Notes |
+|-----------|---------|-------|
+| TLE history | ✅ | 50,000+ records, dual-source (CelesTrak + Space-Track) |
+| Space weather | ✅ | 25,000+ records (Kp, Ap, F10.7, sunspots) |
+| Health anomaly detection | ✅ | tle-refresh creates constellation_health signals |
+| Altitude/drag charts | ⚠️ | bstar_trends view exists, not visualized as timeline |
+| Per-satellite page | ⚠️ | /satellite/[noradId] exists but lacks narrative |
+| Maneuver classification | ✅ | `orbital_maneuver` signal type with orbit_raise/orbit_lower/plane_change |
+| Satellite timeline | ❌ | No unified event log per satellite |
+| Fleet vital signs | ❌ | No at-a-glance health dashboard |
+
+### Open GAPs
+
+1. ~~Maneuver Detection + Signals~~ → **CLOSED**
+2. **Satellite Timeline (Asset Logbook)** — Per-satellite chronological view merging maneuvers, anomalies, space weather events (Kp > 5), and signals. "BW3: Feb 3 re-boost (+2km), Feb 8 drag spike (Kp=7 storm), Feb 12 altitude nominal."
+3. **Fleet Vital Signs Dashboard** — High-density widget: one row per satellite with altitude sparkline (30-day), drag rate (km/day), last maneuver date. The constellation "heartbeat" panel.
+
+### Completed Transitions
+
+- **GAP 1 → CLOSED (2026-02-13):** Server-side maneuver detection added to tle-refresh cron. Ported 2σ outlier algorithm from client-side `lib/orbital/maneuver-detection.ts` to run every 4h. Uses CelesTrak data (primary for positional accuracy per C5). Detects orbit_raise, orbit_lower, plane_change. Creates `orbital_maneuver` signals with category=constellation, delta metrics (mean_motion_delta, altitude_delta_km, inclination_delta_deg). 14-day expiry, daily fingerprint dedup. Tested: 8 maneuvers detected across constellation.
+
+- Conversation: `docs/gemini-conversations/thread-discovery-002.md`
