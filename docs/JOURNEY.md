@@ -371,3 +371,17 @@ Built all 3 GAPs for Thread 006 in a single session, turning passive orbital dat
 - SVG sparkline component renders 5-day price window centered on earnings date. Bars colored: gray (pre-earnings), orange (earnings day), green/red (post-earnings delta). Stats show delta percentage and volume spike factor. Data sourced from daily_prices table via the unified API endpoint.
 
 **Thread 008: DARK → GOLDEN. Eight threads now GOLDEN.**
+
+## 2026-02-13: Thread Discovery 004 + Thread 009 — The Briefing (GOLDEN in one session)
+
+2-turn Gemini discovery dialogue (`docs/gemini-conversations/thread-discovery-004.md`). Gemini proposed Flight Deck (Terminal 2.0), The Inquisitor (thesis monitoring), The Broadcast (shareability). Claude pushed back: Inquisitor overscoped for 17 days to earnings, Flight Deck should be a briefing page not terminal redesign, Broadcast framing correct but needs permalinks not just OG images. Converged: Thread 009 = The Briefing, Thread 010 = The Broadcast, Thread 011 = The Live Wire. All three seeded in THREADS.md.
+
+**Thread 009 — The Briefing:**
+- Aggregation API (`/api/briefing`) runs 8+ parallel Supabase queries via `getServiceClient()`: signals (48h, critical/high), upcoming events (launches + earnings + catalysts + conjunctions, 30d), regulatory (dockets + recent critical filings from 7d), fleet (7 ASTS satellites with TLE-derived altitude from tle_history), competitor moves (non-AST FCC filings 7d via entity registry pattern matching), earnings countdown (next call from earnings_calls), price snapshot (latest from daily_prices with day-over-day change), SEC filings (7d), guidance summary (from static lib/data/guidance.ts).
+- `/briefing` page with two-column layout. Left column: signals section (severity dots, badges, time-ago, deep links to /signals), upcoming events (countdown badges, type badges, 30d window), regulatory (active dockets count + critical threats with red highlight), SEC filings (form badges, summaries). Right column: fleet status (7 satellites with altitude + TLE freshness indicator), guidance tracker (PENDING/MET summary + pending items with category badges), competitor activity (grouped by entity, filing counts).
+- Top banner: $ASTS price with day change + earnings countdown (days until, quarter, date).
+- All sections deep-link into source threads: signals→/signals, satellites→/satellite/[id], events→/horizon, regulatory→/regulatory, competitors→/competitive, guidance→/earnings.
+- Navigation: sidebar (first item, Newspaper icon), command palette (`nav-briefing`), landing page (featured item above EXPLORE grid).
+- Key fix: `satellites` table requires `getServiceClient()` (not anon client) and doesn't have status/altitude columns directly — altitude derived from latest Space-Track TLE in tle_history. Display names (BW3, BB1-BB5, FM1) mapped from NORAD IDs.
+
+**Thread 009: DARK → GOLDEN. Nine threads now GOLDEN. Threads 010 (Broadcast) and 011 (Live Wire) seeded.**
