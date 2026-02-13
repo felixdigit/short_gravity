@@ -13,6 +13,7 @@ Detectors:
   5. Short Interest      — Significant changes in short positioning
   6. Patent-Deployment   — Patent technology referenced in recent filings/PRs
   9. Regulatory Threats  — Directional threat detection on FCC dockets (PTDs, oppositions, competitor activity)
+ 10. Competitor Milestones — Competitor FCC grants, patent grants (feeds /competitive)
 
 Run:
   cd scripts/data-fetchers && export $(grep -v '^#' .env | xargs) && python3 signal_scanner.py
@@ -61,6 +62,8 @@ SIGNAL_CATEGORY_MAP: Dict[str, Dict[str, Any]] = {
     "regulatory_threat":        {"category": "regulatory", "confidence_score": 0.95},
     "regulatory_defense":       {"category": "regulatory", "confidence_score": 0.80},
     "competitor_docket_activity": {"category": "regulatory", "confidence_score": 0.85},
+    "competitor_fcc_grant":      {"category": "competitive", "confidence_score": 0.90},
+    "competitor_patent_grant":   {"category": "competitive", "confidence_score": 0.80},
 }
 
 # Dockets owned by AST — filings against these by competitors are threats
@@ -1078,6 +1081,139 @@ def detect_regulatory_threats(dry_run: bool = False) -> List[Dict]:
     return signals
 
 
+# ── Detector 10: Competitor Milestones ─────────────────────────────
+
+# Competitor assignee patterns (lowercase, partial match)
+COMPETITOR_ASSIGNEES = [
+    "space exploration technologies",
+    "t-mobile",
+    "lynk global",
+    "globalstar",
+]
+
+
+def detect_competitor_milestones(dry_run: bool = False) -> List[Dict]:
+    """Detect competitor milestones: FCC grants and patent grants.
+
+    Detects:
+    1. FCC GRANT: Competitor receives an FCC grant/authorization in tracked dockets
+    2. PATENT GRANT: Competitor receives a D2C-relevant patent grant
+    """
+    log("Scanning: Competitor milestones...")
+    signals: List[Dict] = []
+
+    now = datetime.now(timezone.utc)
+    d14 = utc_iso(now - timedelta(days=14))
+
+    # 1. Check for competitor FCC grants (application_status changes)
+    try:
+        grant_filings = supabase_request(
+            "GET",
+            f"fcc_filings?select=title,file_number,filing_type,filer_name,docket,filed_date,source_url,application_status"
+            f"&filing_system=eq.ECFS&filed_date=gte.{d14[:10]}"
+            f"&application_status=ilike.*grant*"
+            f"&order=filed_date.desc&limit=50"
+        ) or []
+
+        for f in grant_filings:
+            filer = (f.get("filer_name") or "").strip()
+            filer_lower = filer.lower()
+
+            # Skip AST's own grants
+            if "ast spacemobile" in filer_lower or "ast & science" in filer_lower:
+                continue
+
+            # Only flag competitor grants
+            is_competitor = any(c in filer_lower for c in COMPETITOR_FILERS)
+            if not is_competitor:
+                continue
+
+            file_number = f.get("file_number", "")
+            docket = f.get("docket", "")
+            filing_type = f.get("filing_type", "")
+
+            sig = {
+                "signal_type": "competitor_fcc_grant",
+                "severity": "high",
+                "title": f"FCC GRANT: {filer[:35]} authorized — {filing_type[:40]}",
+                "description": f"{filer} received an FCC grant/authorization: {filing_type}. Docket {docket}. This may expand their D2C capabilities.",
+                "source_refs": [{
+                    "table": "fcc_filings",
+                    "id": file_number,
+                    "title": (f.get("title") or "")[:80],
+                    "date": f.get("filed_date", ""),
+                }],
+                "metrics": {
+                    "filer": filer,
+                    "filing_type": filing_type,
+                    "docket": docket,
+                    "milestone_type": "fcc_grant",
+                },
+                "fingerprint": fingerprint("comp_fcc_grant", file_number),
+                "detected_at": utc_iso(now),
+                "expires_at": utc_iso(now + timedelta(days=30)),
+            }
+            if store_signal(sig, dry_run):
+                signals.append(sig)
+                log(f"  SIGNAL [HIGH]: {sig['title']}")
+    except Exception as e:
+        log(f"  Error checking FCC grants: {e}")
+
+    # 2. Check for competitor patent grants (recent grants)
+    try:
+        recent_patents = supabase_request(
+            "GET",
+            f"patents?select=patent_number,title,assignee,grant_date,status,abstract"
+            f"&status=eq.granted&grant_date=gte.{d14[:10]}"
+            f"&order=grant_date.desc&limit=50"
+        ) or []
+
+        for p in recent_patents:
+            assignee = (p.get("assignee") or "").lower()
+
+            # Skip AST's own patents
+            if "ast & science" in assignee or "ast&defense" in assignee:
+                continue
+
+            # Only flag competitor patents
+            is_competitor_patent = any(a in assignee for a in COMPETITOR_ASSIGNEES)
+            if not is_competitor_patent:
+                continue
+
+            patent_number = p.get("patent_number", "")
+
+            sig = {
+                "signal_type": "competitor_patent_grant",
+                "severity": "medium",
+                "title": f"PATENT: {p.get('assignee', 'Unknown')[:30]} granted — {p.get('title', '')[:50]}",
+                "description": f"{p.get('assignee', 'Unknown')} received patent grant {patent_number}: {p.get('title', '')}.",
+                "source_refs": [{
+                    "table": "patents",
+                    "id": patent_number,
+                    "title": (p.get("title") or "")[:80],
+                    "date": p.get("grant_date", ""),
+                }],
+                "metrics": {
+                    "assignee": p.get("assignee", ""),
+                    "patent_number": patent_number,
+                    "milestone_type": "patent_grant",
+                },
+                "fingerprint": fingerprint("comp_patent_grant", patent_number),
+                "detected_at": utc_iso(now),
+                "expires_at": utc_iso(now + timedelta(days=14)),
+            }
+            if store_signal(sig, dry_run):
+                signals.append(sig)
+                log(f"  SIGNAL [MEDIUM]: {sig['title']}")
+    except Exception as e:
+        log(f"  Error checking patent grants: {e}")
+
+    if not signals:
+        log("  No competitor milestones detected")
+
+    return signals
+
+
 # ── Main ─────────────────────────────────────────────────────────────
 
 def run_scanner():
@@ -1104,6 +1240,7 @@ def run_scanner():
         "patent_crossref": detect_patent_crossrefs,
         "earnings": detect_earnings_shifts,
         "regulatory_threats": detect_regulatory_threats,
+        "competitor_milestones": detect_competitor_milestones,
     }
 
     if args.detector:

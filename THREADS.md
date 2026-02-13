@@ -409,3 +409,105 @@ Threads compound when they link to each other. These are the active cross-thread
 - **GAP 3 → CLOSED (2026-02-13):** Fleet Vital Signs — enhanced existing `ConstellationHealthGrid` with two new columns: DRAG (km/day altitude rate, color-coded: blue=raising, amber=dropping, white=stable) and LAST MNVR (days since last detected maneuver signal). Fetches `orbital_maneuver` signals to populate last maneuver dates. Drag rate computed from last 7 days of TLE altitude data.
 
 - Conversation: `docs/gemini-conversations/thread-discovery-002.md`
+
+---
+
+## Thread 007: The War Room
+
+**Status:** GOLDEN
+**Priority:** P0
+**Intent:** "Who else is doing direct-to-cell and are they winning? How does AST's position compare to SpaceX, Lynk, T-Mobile?"
+**North Star:** User sees ASTS competitive position at a glance — who has what authorization, who's filing where, and who's gaining ground.
+**Undeniable Value:** Contextualizes the ASTS thesis. No investor holds a stock in a vacuum. This is the "Know the Enemy" layer. Also: architectural bridge to $SPACE without building $SPACE prematurely.
+
+### Current Trace
+
+```
+[User intent: "Is AST winning the D2C race?"]
+  → /competitive page with Tale of the Tape + entity cards ✅
+  → Competitor config: 5 entities (AST, SpaceX, Lynk, T-Mobile, Globalstar) ✅
+  → Tale of the Tape: side-by-side comparison (sats, spectrum, auth, partners, status) ✅
+  → Filing activity per entity from fcc_filings ✅
+  → Patent activity per entity from patents ✅
+  → Entity filter + date range controls ✅
+  → Competitor signals panel (Detector 9 + Detector 10) ✅
+  → Competitor milestone detection: FCC grants + patent grants ✅
+  → **STATUS: GOLDEN — competitive intelligence from data to display to signals**
+```
+
+### Infrastructure Audit
+
+| Component | Exists? | Notes |
+|-----------|---------|-------|
+| Competitor FCC filings | ✅ | fcc_filings has filer_name for SpaceX, T-Mobile, Lynk etc. |
+| Competitor patents | ✅ | patents table has assignee field |
+| Competitor signals | ✅ | Detector 9 (regulatory threats) + Detector 10 (milestones) |
+| Adversarial matrix | ✅ | /regulatory shows entity × docket heatmap |
+| Competitor config | ✅ | `lib/data/competitors.ts` — 5 entities with filer/assignee patterns + tapeData |
+| Comparative view | ✅ | Tale of the Tape on `/competitive` |
+| Competitor page | ✅ | `/competitive` with entity cards, filing/patent tabs, signals |
+| Competitor activity API | ✅ | `/api/competitive/landscape` — queries fcc_filings + patents by entity patterns |
+| Milestone detection | ✅ | Detector 10: competitor_fcc_grant + competitor_patent_grant |
+
+### Open GAPs
+
+1. ~~Competitor Config + Tale of the Tape~~ → **CLOSED**
+2. ~~Competitor Activity Stream~~ → **CLOSED** (merged into GAP 1 — page has entity cards with filing/patent tabs)
+3. ~~Competitor Signals~~ → **CLOSED**
+
+### Completed Transitions
+
+- **GAP 1 + GAP 2 → CLOSED (2026-02-13):** Built complete competitive intelligence page. Entity registry (`lib/data/competitors.ts`) defines 5 D2C entities with typed fccFilerPatterns, patentAssigneePatterns, and static tapeData. API (`/api/competitive/landscape`) queries fcc_filings (ECFS) + patents broadly and filters in-memory using entity pattern matching. `/competitive` page has three bands: (1) Tale of the Tape — side-by-side comparison table with 6 data fields per entity, (2) Entity Activity Cards — per-competitor panels with filing/patent tabs showing recent activity, (3) Competitor Signals panel — displays regulatory_threat, competitor_docket_activity signals. Controls: entity filter, date range (30D/90D/6M/1Y). Command palette + landing page links. Data: AST 22 filings + 146 patents, SpaceX 15 filings, T-Mobile 3, Globalstar 3 (1Y range).
+- **GAP 3 → CLOSED (2026-02-13):** Detector 10 (`detect_competitor_milestones`) added to signal_scanner.py. Two new signal types: `competitor_fcc_grant` (high — competitor receives FCC authorization) and `competitor_patent_grant` (medium — competitor receives D2C patent). Uses COMPETITOR_FILERS + COMPETITOR_ASSIGNEES patterns. 14-day lookback. Feeds into `/competitive` signals panel + `/signals` intelligence feed. API updated to query both new signal types. Copied to parent repo.
+
+- Conversation: `docs/gemini-conversations/thread-discovery-003.md`
+
+---
+
+## Thread 008: Earnings Command Center
+
+**Status:** DARK
+**Priority:** P1
+**Intent:** "What did management promise? Did they deliver? What moved the stock during the call?"
+**North Star:** Dedicated earnings experience — transcript highlights, guidance tracking (promises vs reality), price reaction during calls. The "Quarterly Superbowl" lens.
+**Undeniable Value:** Earnings are the highest-traffic events. A dedicated experience converts free → Full Spectrum. Deadline: build before March 2, 2026 Q4 2025 earnings call.
+
+### Current Trace
+
+```
+[User intent: "What happened on the earnings call?"]
+  → earnings_transcripts table has historical transcripts ⚠️
+  → earnings_calls table has dates + automated via earnings_worker ⚠️
+  → Thesis builder can analyze transcripts via brain search ⚠️
+  → Signal scanner detects earnings language shifts ⚠️
+  → No dedicated earnings page ❌
+  → No guidance tracking (promises vs reality) ❌
+  → No transcript navigator with highlights ❌
+  → No price reaction overlay ❌
+  → **STATUS: DARK — data exists but no earnings-specific lens**
+```
+
+### Infrastructure Audit
+
+| Component | Exists? | Notes |
+|-----------|---------|-------|
+| Earnings transcripts | ✅ | earnings_transcripts table, transcript_worker |
+| Earnings dates | ✅ | earnings_calls table, earnings_worker (Finnhub) |
+| Transcript analysis | ✅ | Brain RAG can search/analyze transcripts |
+| Language shift detection | ✅ | signal_scanner Detector 8 compares consecutive transcripts |
+| Price data | ✅ | daily_prices (daily OHLCV). Intraday: TBD |
+| Guidance tracking | ❌ | No structured promise/delivery tracking |
+| Earnings page | ❌ | No /earnings page |
+| Transcript navigator | ❌ | No highlight/theme UI for transcripts |
+
+### Open GAPs
+
+1. **Earnings Page + Transcript Navigator** — `/earnings` page with quarter selector, transcript viewer with Brain RAG-powered smart highlights (key themes: funding, launch, regulation, guidance). Sortable by quarter.
+2. **Guidance Ledger** — Structured tracking of management promises vs outcomes. Table or JSONB: quarter, category, promise_text, status (Pending/Met/Missed), evidence_link. Seeds from historical transcripts.
+3. **Price Reaction** — Earnings-day price chart. At minimum: daily candle + volume for earnings dates. Stretch: intraday minute data if available from data provider.
+
+### Completed Transitions
+
+(none yet)
+
+- Conversation: `docs/gemini-conversations/thread-discovery-003.md`
