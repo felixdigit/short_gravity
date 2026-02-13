@@ -355,3 +355,19 @@ Built all 3 GAPs for Thread 006 in a single session, turning passive orbital dat
 - Detector 10 (`detect_competitor_milestones`) in `signal_scanner.py`. Two new signal types: `competitor_fcc_grant` (high — competitor receives FCC authorization, 14-day lookback, 30-day expiry) and `competitor_patent_grant` (medium — competitor receives D2C patent, 14-day lookback). Uses COMPETITOR_FILERS for FCC matching, COMPETITOR_ASSIGNEES for patent matching. Skips AST's own grants/patents. Feeds into `/competitive` signals panel + `/signals` intelligence feed.
 
 **Thread 007: DARK → GOLDEN. Seven threads now GOLDEN. Thread 008 (Earnings Command Center) seeded.**
+
+## 2026-02-13: Thread 008 — Earnings Command Center (GOLDEN in one session)
+
+2-turn Gemini spec convergence (`docs/gemini-conversations/thread-008-earnings.md`). Key decisions: transcript viewer uses full text + client-side topic highlighting (not RAG — latency is the enemy), topic matrix shows full 8Q history (context is king), guidance ledger is static typed data (`lib/data/guidance.ts` not JSON), price reaction via SVG micro-chart (not full canvas engine). Claude pushed back on stats-only price display; Gemini countered with SVG sparkline. Claude simplified transcript reader by eliminating left rail in favor of matrix-as-nav pattern.
+
+**GAP 1 — Earnings Page + Transcript Navigator:**
+- Unified API: `/api/earnings/context` returns transcript (from inbox, source='earnings_call'), topic analysis (10 topics × 17 quarters using earnings-diff extraction logic), price reaction (5-day window from daily_prices with delta% + volume spike factor), guidance items, and earnings metadata (21 quarters from earnings_calls). Defaults to latest quarter with content (skips future scheduled).
+- `/earnings` page with three zones. Zone A: quarter selector (dropdown, 21 quarters) + SVG price sparkline (5 bars, T-2 to T+2, orange for earnings day, green/red for post-earnings) + reaction stats (delta%, volume multiplier) + call summary panel. Zone B: topic matrix heatmap (10 topics × up to 8 quarters, orange heat scaling by mention count, click topic → highlights all mentions in transcript below). Zone C: transcript viewer with full text, client-side regex highlighting via `<mark>` tags, auto-scrolls to first match on topic selection.
+
+**GAP 2 — Guidance Ledger:**
+- `lib/data/guidance.ts` — 10 seeded guidance items tracking management promises. 4 MET (BW3 launch, BB1-5 launch, funded through commercial, 50+ MNO agreements), 5 PENDING (first commercial service, FM1 unfold, SCS license, AT&T partnership launch, Block 2 production, continuous coverage). Typed as GuidanceItem with quarter_promised, quarter_due, category (LAUNCH/FINANCIAL/COMMERCIAL/REGULATORY), status (MET/MISSED/PENDING/DELAYED/DROPPED). Rendered as vertical card list with status badges.
+
+**GAP 3 — Price Reaction:**
+- SVG sparkline component renders 5-day price window centered on earnings date. Bars colored: gray (pre-earnings), orange (earnings day), green/red (post-earnings delta). Stats show delta percentage and volume spike factor. Data sourced from daily_prices table via the unified API endpoint.
+
+**Thread 008: DARK → GOLDEN. Eight threads now GOLDEN.**
