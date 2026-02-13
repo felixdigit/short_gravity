@@ -190,7 +190,7 @@ Threads compound when they link to each other. These are the active cross-thread
 
 ## Thread 003: Thesis Builder
 
-**Status:** FRAYED
+**Status:** GOLDEN
 **Priority:** P2
 **Intent:** "I have a theory about ASTS. Is there evidence to support or refute it? Can I build a bull/bear case from primary sources?"
 **North Star:** User poses a thesis, gets a structured briefing with supporting/contradicting evidence from 13,000+ embedded documents.
@@ -215,10 +215,10 @@ Threads compound when they link to each other. These are the active cross-thread
     → brain search for verdict: supported? biggest risk? decisive catalyst? ✅
   → **PHASE 1 COMPLETE: Structured thesis analysis from primary sources** ✅
 
-[Gaps remaining]
-  → **GAP 2: No thesis persistence** — can't save, share, or revisit a thesis
-  → **GAP 3: No evidence scoring** — rerank scores exist but not surfaced
-  → **GAP 4: Single-prompt optimization** — currently 3 sequential API calls, could be 1
+[All functional gaps closed]
+  → ~~GAP 2: No thesis persistence~~ → CLOSED (auto-save, /thesis/[id], PREVIOUS ANALYSES) ✅
+  → ~~GAP 3: No evidence scoring~~ → CLOSED (STRONG/MODERATE/WEAK labels + bars) ✅
+  → GAP 6: 3 sequential API calls — perf optimization, not functional break
 
 [User discovers /thesis via]
   → Command palette (Cmd+K → "thesis") ✅
@@ -245,7 +245,7 @@ Threads compound when they link to each other. These are the active cross-thread
 | useThesisQuery hook | ✅ | Manages dual-stream state, sequential brain queries |
 | DocumentViewer integration | ✅ | Citation click → DocumentViewer via Thread 001 infrastructure |
 | Save/annotate | ✅ | Auto-save after analysis, /thesis/[id] shareable view, PREVIOUS ANALYSES list |
-| Evidence scoring | ❌ | Rerank scores available but not rendered |
+| Evidence scoring | ✅ | Rerank scores rendered as STRONG/MODERATE/WEAK labels + confidence bars in Citation |
 | Depends on Thread 001 | ✅ | Source linking for evidence citations reuses T001 infrastructure |
 
 ### Open GAPs
@@ -254,7 +254,7 @@ Threads compound when they link to each other. These are the active cross-thread
 2. ~~Counter-thesis mode not in UI~~ → **CLOSED** (CONTRADICTING EVIDENCE section uses counter-thesis mode)
 3. ~~No persistent briefings~~ → **CLOSED** (auto-save after analysis, /thesis/[id] shareable view, PREVIOUS ANALYSES list)
 4. ~~Depends on Thread 001~~ → **RESOLVED** (T001 is GOLDEN)
-5. **No evidence scoring** — Rerank scores exist but aren't displayed to user
+5. ~~No evidence scoring~~ → **CLOSED** (already implemented — STRONG/MODERATE/WEAK labels + confidence bars in Citation component)
 6. **Three sequential API calls** — Could be optimized to single prompt
 
 ### Completed Transitions
