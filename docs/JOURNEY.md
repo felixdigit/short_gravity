@@ -204,3 +204,27 @@ This document captures key decisions, ideas, and milestones in the collaboration
 8. **Onboarding v2:** Updated WelcomeBriefing to include SIGNALS, HORIZON, THESIS descriptions. Bumped storage key to `sg-onboarding-v2` so returning users see the new briefing once.
 
 **Why this matters:** Features compound when they link. A user can now flow from "what happened?" (signals) → "what's coming?" (horizon) → "is my thesis right?" (thesis) → back to source documents (DocumentViewer) without leaving the platform. Each page deepens the others.
+
+---
+
+## 2026-02-12: Telemetry Chart Overhaul + Space Weather Bands
+
+**Context:** The telemetry portal chart had a broken X-axis (integer index as time, showing "07:00 PM" repeating) and no normalization for multi-spacecraft comparison with different data spans.
+
+**Process:** 3-turn Gemini loop (`docs/gemini-conversations/telemetry-chart-axes.md`) converged on:
+- Date-aligned absolute values (not percentage or days-since-launch — "Time is Absolute" in orbital mechanics)
+- Time ranges: 30D/90D/1Y/ALL (default 90D — frames FM1's full lifespan)
+- Focus mode (single sat) vs Fleet mode (multi-sat: hero at full opacity, peers dimmed)
+- Statutory legend with deltas, export/share button
+- Space weather background bands (Kp geomagnetic storm index)
+
+**Implemented (3 phases):**
+1. Fixed X-axis (epoch→ms timestamps), fixed maneuver markers, updated time ranges, fleet mode auto-strips apogee/perigee bounds, hero/peer opacity model
+2. Statutory legend (HTML overlay with per-satellite values + deltas), share/export button using SGChart ref
+3. **Space weather bands** — new `bands` overlay type in SGChart engine. Fetches Kp index data matching chart time range. Geomagnetic storms (Kp≥4) render as colored background bands: G1 yellow, G2 orange, G3+ red. Toggleable via Kp button. Legend in WeatherStrip. Bands render in both live view and exported share images.
+
+**Also completed:**
+- Evidence scoring on thesis citations — `rerankScore` (0-10 LLM quality score) now surfaces as STRONG/MODERATE/WEAK labels with confidence bars on Citation components
+- THREADS.md updated: Thread 003 GAP 3 (persistence) closed, status upgraded from BROKEN to FRAYED
+
+**New chart engine infrastructure:** `BandsOverlay` type + `drawBands()` renderer. Bands render behind data series (background layer) in both engine render paths and export module. Reusable for any time-aligned colored region overlay.

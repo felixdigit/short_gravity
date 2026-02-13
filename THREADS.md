@@ -188,7 +188,7 @@ Threads compound when they link to each other. These are the active cross-thread
 
 ## Thread 003: Thesis Builder
 
-**Status:** BROKEN
+**Status:** FRAYED
 **Priority:** P2
 **Intent:** "I have a theory about ASTS. Is there evidence to support or refute it? Can I build a bull/bear case from primary sources?"
 **North Star:** User poses a thesis, gets a structured briefing with supporting/contradicting evidence from 13,000+ embedded documents.
@@ -242,7 +242,7 @@ Threads compound when they link to each other. These are the active cross-thread
 | Thesis page | ✅ | `/thesis` — input, suggestions, three-section results |
 | useThesisQuery hook | ✅ | Manages dual-stream state, sequential brain queries |
 | DocumentViewer integration | ✅ | Citation click → DocumentViewer via Thread 001 infrastructure |
-| Save/annotate | ❌ | No persistent user documents or annotations |
+| Save/annotate | ✅ | Auto-save after analysis, /thesis/[id] shareable view, PREVIOUS ANALYSES list |
 | Evidence scoring | ❌ | Rerank scores available but not rendered |
 | Depends on Thread 001 | ✅ | Source linking for evidence citations reuses T001 infrastructure |
 
@@ -250,7 +250,7 @@ Threads compound when they link to each other. These are the active cross-thread
 
 1. ~~No structured output format~~ → **CLOSED** (three-section layout with streaming)
 2. ~~Counter-thesis mode not in UI~~ → **CLOSED** (CONTRADICTING EVIDENCE section uses counter-thesis mode)
-3. **No persistent briefings** — User can't save or revisit a thesis
+3. ~~No persistent briefings~~ → **CLOSED** (auto-save after analysis, /thesis/[id] shareable view, PREVIOUS ANALYSES list)
 4. ~~Depends on Thread 001~~ → **RESOLVED** (T001 is GOLDEN)
 5. **No evidence scoring** — Rerank scores exist but aren't displayed to user
 6. **Three sequential API calls** — Could be optimized to single prompt
@@ -259,3 +259,4 @@ Threads compound when they link to each other. These are the active cross-thread
 
 - **Phase 1 → DONE (2026-02-12):** Built `/thesis` page with thesis input + 5 suggested theses. Created `useThesisQuery` hook that makes 3 sequential brain queries (supporting evidence with default mode, contradicting evidence with counter-thesis mode, synthesis). Three-section streaming layout with ReactMarkdown + citation badges. Sources grids with Citation components. DocumentViewer integration for source drill-down. Free tier gets FOR + SYNTHESIS; counter-thesis requires full_spectrum. Added to command palette + landing page EXPLORE grid. Cross-links to SIGNALS, HORIZON, TERMINAL.
 - **Cross-thread wiring → DONE (2026-02-12):** SignalDetail gets "BUILD THESIS" + "VIEW HORIZON" action buttons. Horizon catalyst events get "ANALYZE" button. Both use `?q=` param to pre-fill thesis builder. `/thesis` auto-runs on `?q=` param. `/horizon` accepts `?type=` param for pre-filtering. Progress tracker (SUPPORTING → CONTRADICTING → SYNTHESIS) with active/done/pending states.
+- **GAP 3 → CLOSED (2026-02-12):** Thesis persistence implemented. `useThesisQuery` auto-saves after all 3 phases complete via `/api/theses` POST. Saved theses listed as "PREVIOUS ANALYSES" on main page. Each thesis gets a shareable URL at `/thesis/[id]`. View page loads saved data via `/api/theses/[id]` GET. URL updated via `history.replaceState` after save. COPY LINK button for sharing. **NOTE: Migration 024 must be run in Supabase SQL Editor.**
