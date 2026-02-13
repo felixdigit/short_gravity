@@ -325,3 +325,18 @@ Built all 3 GAPs for Thread 006 in a single session, turning passive orbital dat
 - Enhanced `ConstellationHealthGrid` with two new columns: DRAG (km/day altitude rate from 7-day trend, color-coded blue for raising / amber for lowering) and LAST MNVR (days since last orbital_maneuver signal). Added `useManeuverSignals()` hook. Grid expanded from 6 to 8 columns.
 
 **Thread 006: DARK → GOLDEN. Five threads now GOLDEN, Thread 005 seeded as DARK.**
+
+## 2026-02-13: Thread 005 — Regulatory Battlemap (GOLDEN in one session)
+
+2-turn Gemini spec convergence (`docs/gemini-conversations/thread-005-gap-1.md`). Gemini proposed "The Situation Room" — single-page HUD with adversarial matrix, docket status tapes, and unified feed. Claude pushed back on two-column classification (ATTACK/DEFENSE enum) in favor of single `threat_level` column with UI-derived posture. Gemini accepted, added "The Swarm" pattern for aggregated minor filers. Built all 3 GAPs in one session.
+
+**GAP 1 — Regulatory Page + Docket Timeline:**
+- `/regulatory` page with three-band layout. Band 1: 6 docket status cards (23-65, 22-271, 25-201, 25-306, 25-340, 23-135) showing title, recent/total filing counts, last activity, threat indicators. Band 2: Adversarial matrix heatmap — Big 7 entities (AST, SpaceX, AT&T, Verizon, T-Mobile, DISH, Lynk) + aggregated "Other" × active dockets. Red cells for CRITICAL filings, opacity scales by volume, click cell → filters feed. Band 3: Unified filing feed with posture badges, filer names, docket tags, DocumentViewer integration. API: `/api/regulatory/battlemap` returns dockets, classified filings, matrix aggregation with filters (docket, threat, days range).
+
+**GAP 2 — Filing Type Classification:**
+- `threat_level` TEXT column on `fcc_filings` (migration 030). Four levels derived from `filing_type` pattern matching: CRITICAL (Petition to Deny, Opposition, Stay, Dismiss), SUBSTANTIVE (Comment, Reply, Ex Parte, Letter), PROCEDURAL (Extension, Notice, Report), ADMIN (everything else). Backfill runs on all 4,500+ existing rows. UI derives posture dynamically: ATTACK (critical + non-AST filer), DEFENSE (critical + AST filer), ENGAGEMENT (substantive), NOISE (procedural/admin). Works in-memory even before migration.
+
+**GAP 3 — Opposition Signal Detection:**
+- Detector 9 (`detect_regulatory_threats`) in `signal_scanner.py`. Directional threat logic: scans recent ECFS filings on tracked dockets, classifies by filer identity × filing type × docket ownership. Three signal types: `regulatory_threat` (critical — adversary files PTD/Opposition on AST docket), `regulatory_defense` (medium — AST files threat-type document), `competitor_docket_activity` (high/medium — known competitor files on tracked docket). Added to SIGNAL_CATEGORY_MAP.
+
+**Thread 005: DARK → GOLDEN. Six threads now GOLDEN.**
