@@ -259,3 +259,12 @@ This document captures key decisions, ideas, and milestones in the collaboration
 ## 2026-02-13: Data Integrity Rules Codified in CLAUDE.md
 
 Added new constitutional section **C5: Data Integrity** to CLAUDE.md, codifying lessons from the full-platform data integrity audit. Four rule categories: Source Provenance (never mix CelesTrak/Space-Track in calculations), Defensive Parsing (safe parsers for all external numerics), Display-Layer Correctness (unit validation before rendering), Signal Integrity (false signals are P0 bugs). Five known open items documented for future resolution.
+
+## 2026-02-13: Signal Purge/Backfill + WGS-72 μ Constant Fix
+
+**Context:** Post-audit cleanup. Pre-fix `constellation_health` signals may have been false positives from mixed CelesTrak/Space-Track data. Also, CelesTrak GP processing used WGS-84 μ (398600.4418) instead of WGS-72 μ (398600.8) — the standard for SGP4-derived TLEs.
+
+**Implemented:**
+1. **μ constant fix** (`api/cron/tle-refresh/route.ts`): Changed gravitational parameter from WGS-84 (398600.4418) to WGS-72 (398600.8) for CelesTrak-derived apoapsis/periapsis calculations. ~0.00009% difference — negligible for trends but aligns with TLE source model.
+2. **Maintenance endpoint** (`api/maintenance/signal-purge-backfill/route.ts`): One-time POST endpoint (cron-authed). Phase 1 purges all `constellation_health` signals before 2026-02-12. Phase 2 backfills 30 days using corrected Space-Track-only anomaly detection with identical thresholds as the live cron.
+3. **Execution result:** 0 pre-fix signals to purge (none existed), 31 days scanned with 0 anomalies — constellation nominal for the full period. 5 existing post-fix signals (all legitimate drag_spike detections from Feb 12-13) confirmed clean.
