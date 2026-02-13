@@ -35,6 +35,8 @@ Supabase PostgreSQL with pgvector extension. All tables have RLS (public SELECT,
 | brain_query_log | id BIGSERIAL | — | brain API |
 | worker_runs | id BIGSERIAL | — | GitHub Actions |
 | profiles | id UUID (FK auth.users) | patreon_id | auth system |
+| catalysts | id UUID | — | manual / future worker |
+| theses | id UUID | — | thesis API (session-based) |
 | widget_cache | — | — | widget_data_worker |
 
 ## Key Constraints

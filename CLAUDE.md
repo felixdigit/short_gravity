@@ -46,7 +46,7 @@ We don't build features. We pull **Threads**. A Thread is a durable, multi-sessi
 
 Claude has direct access to Gemini via the `gemini` CLI.
 
-**Model:** `gemini-2.5-pro` (default)
+**Model:** `gemini-3-pro-preview` (Gemini 3 Pro)
 
 **When to invoke Gemini:**
 - **WEAVE phase** — Send a thread trace with GAPs. Gemini critiques and specs the transition.
@@ -58,7 +58,13 @@ Claude has direct access to Gemini via the `gemini` CLI.
 Conversations live in `docs/gemini-conversations/`. Each loop is a structured dialogue, not a one-shot prompt. Claude and Gemini deliberate before code is written.
 
 1. Claude creates a conversation file with Turn 1 (context + question)
-2. Claude sends the conversation to Gemini: `cat docs/gemini-conversations/file.md | gemini -m gemini-2.5-pro -o text`
+2. Claude sends the conversation to Gemini using the **headless prompt pattern**:
+   ```bash
+   gemini -m gemini-3-pro-preview \
+     -p "Respond to this conversation as the Gemini spec architect. Provide your response for the next GEMINI turn. Do not use tools — write your spec response as text only." \
+     -o text < docs/gemini-conversations/file.md
+   ```
+   **CRITICAL:** Always use `-p "..."` with `< file.md` (stdin redirect). Do NOT use bare `cat file | gemini` — Gemini 3 Pro will interpret it as an agentic task and try to use tools instead of providing a spec response.
 3. Claude appends Gemini's response as `## GEMINI (turn N)`
 4. Claude responds with pushback, refinements, or follow-up questions as `## CLAUDE (turn N+1)`
 5. Repeat steps 2-4 for 2-4 turns until the spec converges
