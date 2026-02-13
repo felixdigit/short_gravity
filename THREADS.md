@@ -466,7 +466,7 @@ Threads compound when they link to each other. These are the active cross-thread
 
 ## Thread 008: Earnings Command Center
 
-**Status:** DARK
+**Status:** GOLDEN
 **Priority:** P1
 **Intent:** "What did management promise? Did they deliver? What moved the stock during the call?"
 **North Star:** Dedicated earnings experience — transcript highlights, guidance tracking (promises vs reality), price reaction during calls. The "Quarterly Superbowl" lens.
@@ -476,38 +476,41 @@ Threads compound when they link to each other. These are the active cross-thread
 
 ```
 [User intent: "What happened on the earnings call?"]
-  → earnings_transcripts table has historical transcripts ⚠️
-  → earnings_calls table has dates + automated via earnings_worker ⚠️
-  → Thesis builder can analyze transcripts via brain search ⚠️
-  → Signal scanner detects earnings language shifts ⚠️
-  → No dedicated earnings page ❌
-  → No guidance tracking (promises vs reality) ❌
-  → No transcript navigator with highlights ❌
-  → No price reaction overlay ❌
-  → **STATUS: DARK — data exists but no earnings-specific lens**
+  → /earnings page with three-zone layout ✅
+  → Quarter selector: 21 quarters from earnings_calls ✅
+  → Transcript viewer with topic highlighting (client-side mark) ✅
+  → Topic matrix: 10 topics × 17 quarters, click → highlights transcript ✅
+  → Price reaction: SVG sparkline + delta% + volume spike ✅
+  → Guidance ledger: 10 seeded items (MET/PENDING/MISSED tracking) ✅
+  → Summary panel from AI-generated transcript summaries ✅
+  → Defaults to latest quarter with transcript (not future scheduled) ✅
+  → **STATUS: GOLDEN — complete earnings intelligence experience**
 ```
 
 ### Infrastructure Audit
 
 | Component | Exists? | Notes |
 |-----------|---------|-------|
-| Earnings transcripts | ✅ | earnings_transcripts table, transcript_worker |
+| Earnings transcripts | ✅ | inbox table (source='earnings_call'), transcript_worker |
 | Earnings dates | ✅ | earnings_calls table, earnings_worker (Finnhub) |
-| Transcript analysis | ✅ | Brain RAG can search/analyze transcripts |
+| Transcript analysis | ✅ | Brain RAG + earnings-diff topic extraction |
 | Language shift detection | ✅ | signal_scanner Detector 8 compares consecutive transcripts |
-| Price data | ✅ | daily_prices (daily OHLCV). Intraday: TBD |
-| Guidance tracking | ❌ | No structured promise/delivery tracking |
-| Earnings page | ❌ | No /earnings page |
-| Transcript navigator | ❌ | No highlight/theme UI for transcripts |
+| Price data | ✅ | daily_prices (daily OHLCV) |
+| Guidance tracking | ✅ | `lib/data/guidance.ts` — 10 static items, typed |
+| Earnings page | ✅ | `/earnings` — three-zone layout |
+| Transcript navigator | ✅ | Full text + client-side topic highlighting |
+| Price reaction | ✅ | SVG sparkline (5-day window) + delta stats |
+| Topic matrix | ✅ | 10 topics × 17 quarters heatmap, interactive |
+| Earnings API | ✅ | `/api/earnings/context` — unified endpoint |
 
 ### Open GAPs
 
-1. **Earnings Page + Transcript Navigator** — `/earnings` page with quarter selector, transcript viewer with Brain RAG-powered smart highlights (key themes: funding, launch, regulation, guidance). Sortable by quarter.
-2. **Guidance Ledger** — Structured tracking of management promises vs outcomes. Table or JSONB: quarter, category, promise_text, status (Pending/Met/Missed), evidence_link. Seeds from historical transcripts.
-3. **Price Reaction** — Earnings-day price chart. At minimum: daily candle + volume for earnings dates. Stretch: intraday minute data if available from data provider.
+1. ~~Earnings Page + Transcript Navigator~~ → **CLOSED**
+2. ~~Guidance Ledger~~ → **CLOSED**
+3. ~~Price Reaction~~ → **CLOSED**
 
 ### Completed Transitions
 
-(none yet)
+- **GAP 1 + GAP 2 + GAP 3 → CLOSED (2026-02-13):** 2-turn Gemini spec convergence. Built complete earnings intelligence page. Unified API (`/api/earnings/context`) returns earnings metadata (21 quarters from earnings_calls), transcript text (from inbox, source='earnings_call'), topic analysis (10 tracked topics × 17 quarters, same logic as earnings-diff), price reaction (5-day window from daily_prices, delta% + volume spike), and guidance items. Three-zone page layout: Zone A = quarter selector + SVG price sparkline + call summary + guidance ledger. Zone B = topic matrix heatmap (10 × 17, orange heat scaling, click → highlights transcript). Zone C = transcript viewer with client-side topic highlighting via regex + `<mark>` tags, auto-scrolls to first match. Guidance ledger: `lib/data/guidance.ts` with 10 seeded items (4 MET, 5 PENDING, 1 per category). Defaults to latest quarter with content (skips future scheduled). Command palette + landing page links (9 items, 3-col grid).
 
-- Conversation: `docs/gemini-conversations/thread-discovery-003.md`
+- Conversation: `docs/gemini-conversations/thread-008-earnings.md`
