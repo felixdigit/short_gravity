@@ -290,3 +290,19 @@ Closed all remaining open GAPs across Threads 002 and 003 in a single session. E
 - **Thread 003: FRAYED → GOLDEN**
 
 **All threads GOLDEN. No open functional gaps remain.**
+
+## 2026-02-13: Thread 004 — The Watchtower (Push Intelligence)
+
+Gemini proposed Thread 004: transform the terminal from pull-only to push. Subscribed users receive daily intelligence briefs and real-time alerts. Entire thread — 3 GAPs — built and closed in a single session.
+
+**GAP 1 — The Daily Brief:**
+- Installed `resend` + `@react-email/components`. Created `subscribers` table (migration 027). Built `emails/DailyBrief.tsx` — HUD-styled React Email template (black bg, JetBrains Mono, severity dots, countdown badges, price snapshot). Created `/api/cron/daily-brief` (12:00 UTC) that queries 24h signals, 48h horizon events (launches, earnings, catalysts, docket deadlines), ASTS price, filing count. Batch sends via Resend.
+
+**GAP 2 — Signal Alerts:**
+- Decoupled architecture: rather than modifying signal producers (Python `signal_scanner.py` + TypeScript `tle-refresh`), built a separate `/api/cron/signal-alerts` that polls every 15 min for un-alerted critical/high signals. Deduplicates via `signal_alert_log` table (migration 028). Built `emails/SignalAlert.tsx` with severity badge, category label, description, source refs.
+
+**GAP 3 — Preferences + Unsubscribe:**
+- Migration 029 adds `daily_brief`, `signal_alerts` boolean columns + `unsubscribe_token` + optional `user_id` FK to subscribers. Token-based `/api/email/unsubscribe` endpoint with HUD-styled confirmation page. `/api/email/preferences` GET/POST API. Both crons updated to filter by preference columns and render per-subscriber unsubscribe URLs. Waitlist signup auto-creates subscriber entry with token.
+
+**Thread 004: DARK → GOLDEN. All four threads now GOLDEN.**
+- Conversation: `docs/gemini-conversations/thread-discovery-001.md`
