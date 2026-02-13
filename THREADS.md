@@ -262,3 +262,47 @@ Threads compound when they link to each other. These are the active cross-thread
 - **Phase 1 → DONE (2026-02-12):** Built `/thesis` page with thesis input + 5 suggested theses. Created `useThesisQuery` hook that makes 3 sequential brain queries (supporting evidence with default mode, contradicting evidence with counter-thesis mode, synthesis). Three-section streaming layout with ReactMarkdown + citation badges. Sources grids with Citation components. DocumentViewer integration for source drill-down. Free tier gets FOR + SYNTHESIS; counter-thesis requires full_spectrum. Added to command palette + landing page EXPLORE grid. Cross-links to SIGNALS, HORIZON, TERMINAL.
 - **Cross-thread wiring → DONE (2026-02-12):** SignalDetail gets "BUILD THESIS" + "VIEW HORIZON" action buttons. Horizon catalyst events get "ANALYZE" button. Both use `?q=` param to pre-fill thesis builder. `/thesis` auto-runs on `?q=` param. `/horizon` accepts `?type=` param for pre-filtering. Progress tracker (SUPPORTING → CONTRADICTING → SYNTHESIS) with active/done/pending states.
 - **GAP 3 → CLOSED (2026-02-12):** Thesis persistence implemented. `useThesisQuery` auto-saves after all 3 phases complete via `/api/theses` POST. Saved theses listed as "PREVIOUS ANALYSES" on main page. Each thesis gets a shareable URL at `/thesis/[id]`. View page loads saved data via `/api/theses/[id]` GET. URL updated via `history.replaceState` after save. COPY LINK button for sharing. **NOTE: Migration 024 must be run in Supabase SQL Editor.**
+
+---
+
+## Thread 004: The Watchtower
+
+**Status:** DARK
+**Priority:** P0
+**Intent:** "Don't make me stare at the screen. Tell me when the thesis changes."
+**North Star:** User subscribes once and receives daily intelligence briefs + real-time alerts on high-impact events. The platform becomes proactive — push, not just pull.
+**Undeniable Value:** Transforms the terminal from a tool you visit into a service that works for you. The bridge to paid subscriptions.
+
+### Current Trace
+
+```
+[User intent: "Keep me informed without me checking the site"]
+  → Currently: zero push capability ❌
+  → No email service ❌
+  → No subscriber list ❌
+  → No notification infrastructure ❌
+  → **STATUS: DARK — zero surface area**
+```
+
+### Infrastructure Audit
+
+| Component | Exists? | Notes |
+|-----------|---------|-------|
+| Email service (Resend) | ❌ | Not installed |
+| React Email templates | ❌ | Not installed |
+| Subscriber table | ❌ | Need migration |
+| Daily brief cron | ❌ | Need Vercel cron route |
+| Signal alert triggers | ❌ | Future (GAP 2) |
+| User preferences | ❌ | Future (GAP 3) |
+
+### Open GAPs
+
+1. **The Daily Brief** — Morning email at 7 AM ET. Top signals (24h), upcoming horizon events (48h), filing count, price snapshot. Resend + React Email via Vercel cron. `subscribers` table. Black/white/orange HUD aesthetic.
+2. **Alert Triggers** — Real-time email on high-severity signals. Extend signal_scanner to fire alerts. Same Resend channel.
+3. **Preferences + Tier Gating** — User controls: categories, severity threshold, frequency. Full Spectrum gets real-time; free gets daily brief only.
+
+### Completed Transitions
+
+(none yet)
+
+- Conversation: `docs/gemini-conversations/thread-discovery-001.md`
