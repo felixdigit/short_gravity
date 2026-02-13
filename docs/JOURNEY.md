@@ -268,3 +268,25 @@ Added new constitutional section **C5: Data Integrity** to CLAUDE.md, codifying 
 1. **μ constant fix** (`api/cron/tle-refresh/route.ts`): Changed gravitational parameter from WGS-84 (398600.4418) to WGS-72 (398600.8) for CelesTrak-derived apoapsis/periapsis calculations. ~0.00009% difference — negligible for trends but aligns with TLE source model.
 2. **Maintenance endpoint** (`api/maintenance/signal-purge-backfill/route.ts`): One-time POST endpoint (cron-authed). Phase 1 purges all `constellation_health` signals before 2026-02-12. Phase 2 backfills 30 days using corrected Space-Track-only anomaly detection with identical thresholds as the live cron.
 3. **Execution result:** 0 pre-fix signals to purge (none existed), 31 days scanned with 0 anomalies — constellation nominal for the full period. 5 existing post-fix signals (all legitimate drag_spike detections from Feb 12-13) confirmed clean.
+
+## 2026-02-13: All Three Threads GOLDEN
+
+Closed all remaining open GAPs across Threads 002 and 003 in a single session. Every thread now works end-to-end without friction.
+
+**Thread 002 GAP 2 — FCC Docket Metadata:**
+- Investigated FCC ECFS proceedings API. Fields for `comment_deadline`, `reply_deadline` exist but are unpopulated for all 6 tracked dockets. Gemini spec'd: build the table anyway, poll API + manual seed, never overwrite non-null DB values with null.
+- Created `fcc_dockets` table (migration 026) with deadline fields, bureau, tags, filing activity. Seeded 6 key dockets. ECFS worker gets `sync_docket_metadata()` that runs before filing fetch. Horizon API queries docket deadlines as 7th event source.
+- Conversation: `docs/gemini-conversations/thread-002-gap-2.md`
+
+**Thread 002 GAP 3 — Earnings Date Automation:**
+- `earnings_calls` table had 20 hardcoded entries through Q3 2025 from an archived seed script. No worker maintained it. Horizon timeline was 4+ months stale for earnings.
+- Tested Finnhub `/calendar/earnings` endpoint — returns future dates with quarter/year mapping. Gemini spec'd: dates only (EPS/revenue is Thread 003 concern), respect immutable history (never overwrite `complete` records).
+- New `earnings_worker.py` fetches Finnhub calendar, upserts into `earnings_calls`. 3 future dates populated: Q4 2025 (Mar 2), Q1 2026 (May 11), Q2 2026 (Aug 10). GH Actions workflow created (Wed 14:30 UTC).
+- Conversation: `docs/gemini-conversations/thread-002-gap-3.md`
+- **Thread 002: FRAYED → GOLDEN**
+
+**Thread 003 GAP 5 — Evidence Scoring:**
+- Traced the full pipeline: rerank scores (0-10) flow from `rerankResults()` through brain API → useThesisQuery → Citation component. `confidenceLabel()` already renders STRONG/MODERATE/WEAK labels with color-coded progress bars. GAP was already closed — THREADS.md was stale.
+- **Thread 003: FRAYED → GOLDEN**
+
+**All threads GOLDEN. No open functional gaps remain.**
