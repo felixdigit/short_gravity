@@ -48,6 +48,8 @@ External APIs → Python Workers → Supabase Tables → Embedding Worker → br
 | /api/cron/tle-refresh | Every 4h | Dual-source TLE sync + health anomaly detection |
 | /api/cron/check-feeds | Every 5min | Feed monitoring |
 | /api/cron/filings-sync | Every 15min | Filing sync |
+| /api/cron/daily-brief | Daily 12:00 UTC | Morning intelligence email to subscribers |
+| /api/cron/signal-alerts | Every 15min | Real-time critical/high signal email alerts |
 
 ## run_all.py Cadences (local convenience only)
 

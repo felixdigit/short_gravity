@@ -38,6 +38,8 @@ Supabase PostgreSQL with pgvector extension. All tables have RLS (public SELECT,
 | profiles | id UUID (FK auth.users) | patreon_id | auth system |
 | catalysts | id UUID | — | manual / future worker |
 | theses | id UUID | — | thesis API (session-based) |
+| subscribers | id UUID | email | waitlist API |
+| signal_alert_log | id BIGSERIAL | signal_fingerprint | signal-alerts cron |
 | widget_cache | — | — | widget_data_worker |
 
 ## Key Constraints

@@ -267,7 +267,7 @@ Threads compound when they link to each other. These are the active cross-thread
 
 ## Thread 004: The Watchtower
 
-**Status:** DARK
+**Status:** GOLDEN
 **Priority:** P0
 **Intent:** "Don't make me stare at the screen. Tell me when the thesis changes."
 **North Star:** User subscribes once and receives daily intelligence briefs + real-time alerts on high-impact events. The platform becomes proactive — push, not just pull.
@@ -288,21 +288,23 @@ Threads compound when they link to each other. These are the active cross-thread
 
 | Component | Exists? | Notes |
 |-----------|---------|-------|
-| Email service (Resend) | ❌ | Not installed |
-| React Email templates | ❌ | Not installed |
-| Subscriber table | ❌ | Need migration |
-| Daily brief cron | ❌ | Need Vercel cron route |
-| Signal alert triggers | ❌ | Future (GAP 2) |
-| User preferences | ❌ | Future (GAP 3) |
+| Email service (Resend) | ✅ | `resend` + `@react-email/components` installed |
+| React Email templates | ✅ | `emails/DailyBrief.tsx` + `emails/SignalAlert.tsx` — HUD aesthetic |
+| Subscriber table | ✅ | `subscribers` table with preferences (migrations 027 + 029) |
+| Daily brief cron | ✅ | `/api/cron/daily-brief` — 12:00 UTC, filters by `daily_brief=true` |
+| Signal alert triggers | ✅ | `/api/cron/signal-alerts` — every 15 min, filters by `signal_alerts=true` |
+| User preferences | ✅ | Token-based unsubscribe + preferences API |
+| Waitlist→Subscriber bridge | ✅ | Waitlist signup auto-creates subscriber with token |
 
 ### Open GAPs
 
-1. **The Daily Brief** — Morning email at 7 AM ET. Top signals (24h), upcoming horizon events (48h), filing count, price snapshot. Resend + React Email via Vercel cron. `subscribers` table. Black/white/orange HUD aesthetic.
-2. **Alert Triggers** — Real-time email on high-severity signals. Extend signal_scanner to fire alerts. Same Resend channel.
-3. **Preferences + Tier Gating** — User controls: categories, severity threshold, frequency. Full Spectrum gets real-time; free gets daily brief only.
+1. ~~The Daily Brief~~ → **CLOSED**
+2. ~~Alert Triggers~~ → **CLOSED**
+3. ~~Preferences + Tier Gating~~ → **CLOSED**
 
 ### Completed Transitions
 
-(none yet)
-
+- **GAP 1 → CLOSED (2026-02-13):** Daily Brief built. Resend + React Email pipeline: Vercel cron at 12:00 UTC queries 24h signals, 48h horizon events (launches, earnings, catalysts, docket deadlines), ASTS price, filings count. HUD-styled email template (`emails/DailyBrief.tsx`) with severity dots, countdown badges, price snapshot. Batch sends to active subscribers via Resend. `subscribers` table (migration 027). **Needs: RESEND_API_KEY + domain verification to go live.**
+- **GAP 2 → CLOSED (2026-02-13):** Signal alerts built. Decoupled alert cron (`/api/cron/signal-alerts`, every 15 min) polls for critical/high signals from the last hour, deduplicates via `signal_alert_log` table (migration 028), sends individual alert emails per signal to all active subscribers. HUD-styled alert template (`emails/SignalAlert.tsx`) with severity badge, category, description, source refs. Works with both signal_scanner.py and tle-refresh signal producers — no changes needed to producers.
+- **GAP 3 → CLOSED (2026-02-13):** Subscriber preferences + unsubscribe. Migration 029 adds `daily_brief`, `signal_alerts` boolean columns + `unsubscribe_token` + optional `user_id` FK to subscribers. Token-based `/api/email/unsubscribe` endpoint (supports type=all/daily_brief/signal_alerts) with HUD-styled confirmation page. `/api/email/preferences` GET/POST for managing preferences. Both crons updated to filter by preference columns and render per-subscriber unsubscribe URLs. Waitlist signup auto-creates subscriber with token. Tier gating deferred — preferences serve as the gate for now; `user_id` FK ready for profile linking when needed.
 - Conversation: `docs/gemini-conversations/thread-discovery-001.md`
