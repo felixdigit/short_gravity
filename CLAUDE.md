@@ -180,7 +180,39 @@ Every worker MUST implement a completeness check that answers: **"Source has X r
 9. **Code conventions** — Read before modifying. Follow existing patterns exactly. TypeScript strict mode. No over-engineering. No unnecessary comments.
 10. **Log significant work** — After completing a significant implementation task (e.g., creating a new component, modifying a worker, or fixing a bug), append a brief, factual log entry to `docs/JOURNEY.md`. The entry must include the date and a summary of the task completed.
 
-## C5: Access Tiers
+## C5: Data Integrity
+
+Data displayed to users must be correct. Wrong data is worse than missing data — it erodes trust silently. These rules emerged from a full-platform audit that found 13 issues caused by implicit assumptions.
+
+### Source Provenance
+- **Never mix data sources in the same calculation.** CelesTrak and Space-Track write to the same `tle_history` table but produce different values for the same fields (B*, inclination, mean motion). Mixing them creates false anomalies.
+- **Every orbital data query MUST filter by `source`.** No exceptions. Default sources by use case:
+  - Positional accuracy & maneuver detection → `celestrak`
+  - Trend analysis (B*, drag, altitude) → `spacetrack`
+  - Health anomaly detection & constellation health → `spacetrack`
+- **API endpoints accept `?source=` override** but must never return mixed-source data by default.
+
+### Defensive Parsing
+- **All external numeric data goes through safe parsers.** `parseFloat(null)` → NaN propagates silently through calculations. Every value from Supabase or external APIs must be validated before math.
+- **Workers validate data at ingestion.** If a computed field doesn't match its components (e.g., `kp_sum ≠ sum(kp1..kp8)`), log the discrepancy and discard the corrupt entry.
+
+### Display-Layer Correctness
+- **Units must be correct before rendering.** CelesTrak stores Kp in tenths (0-720 range). Display as average Kp index (divide by 80). A wrong divisor turns valid data into nonsense.
+- **Don't filter out valid data.** Zero values, negative values, and edge cases may be legitimate. Understand the domain before adding filters. Document why a filter exists.
+
+### Signal Integrity
+- **False signals are P0 bugs.** The `signals` table feeds the intelligence feed that users see. An anomaly detection pipeline that produces false positives from source mixing or math errors damages credibility.
+- **Anomaly thresholds must account for data noise.** GP fitting introduces inclination noise of 0.003-0.01°. Set detection thresholds above the noise floor (currently 0.02° for plane changes). Document threshold rationale.
+
+### Known Open Items (from 2025 audit)
+These are documented risks that haven't been fully resolved:
+1. Historical false signals may still exist in `signals` table from before source-filtering fixes
+2. `safe_float()` in space weather worker silently drops negative values — may be too aggressive
+3. GP-to-Keplerian orbit math (apoapsis/periapsis from mean elements) introduces ~1-2km error vs osculating elements
+4. B* negativity filter may be overly aggressive — legitimate for very low ballistic coefficient objects
+5. Maneuver detection 0.02° inclination threshold not validated against known ASTS maneuver history
+
+## C6: Access Tiers
 
 Patreon-based gating via `lib/auth/tier.ts`. Two tiers:
 

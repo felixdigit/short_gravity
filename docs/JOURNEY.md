@@ -255,3 +255,7 @@ This document captures key decisions, ideas, and milestones in the collaboration
 7. **Space weather worker** (`space_weather_worker.py`): Added kp_sum validation — verifies kp_sum equals sum of KP1..KP8 individual values. Discards corrupt entries.
 
 **Systemic fix:** Every pipeline that queries `tle_history` for trend analysis now filters to a single source. CelesTrak for positional accuracy, Space-Track for drag/altitude trends. No more silent source mixing.
+
+## 2026-02-13: Data Integrity Rules Codified in CLAUDE.md
+
+Added new constitutional section **C5: Data Integrity** to CLAUDE.md, codifying lessons from the full-platform data integrity audit. Four rule categories: Source Provenance (never mix CelesTrak/Space-Track in calculations), Defensive Parsing (safe parsers for all external numerics), Display-Layer Correctness (unit validation before rendering), Signal Integrity (false signals are P0 bugs). Five known open items documented for future resolution.
