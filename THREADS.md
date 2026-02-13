@@ -313,7 +313,7 @@ Threads compound when they link to each other. These are the active cross-thread
 
 ## Thread 005: The Regulatory Battlemap
 
-**Status:** DARK
+**Status:** GOLDEN
 **Priority:** P1
 **Intent:** "What stands between the company and commercial authority? Who's opposing them, and where does each license application stand?"
 **North Star:** User sees a living regulatory map — not a list of PDFs, but a state machine showing each license application's progress, who filed what, and which filings are threats.
@@ -323,13 +323,14 @@ Threads compound when they link to each other. These are the active cross-thread
 
 ```
 [User intent: "Is the regulatory path clear?"]
-  → Currently: /research-filings page lists FCC filings chronologically ❌
-  → fcc_filings has filing_type, filer_name from ECFS metadata ⚠️
-  → fcc_dockets table has 6 tracked dockets with deadline fields ⚠️
-  → No visualization of docket lifecycle ❌
-  → No adversarial mapping (who opposes whom) ❌
-  → No threat classification (Petition to Deny vs routine Ex Parte) ❌
-  → **STATUS: DARK — data exists but no regulatory state model**
+  → /regulatory page with three-band layout ✅
+  → Docket cards: 6 tracked dockets with filing counts, activity timestamps ✅
+  → Adversarial matrix: entity × docket heatmap, interactive filtering ✅
+  → Filing feed: posture badges (ATTACK/DEFENSE/ENGAGEMENT/NOISE), filer names ✅
+  → Threat classification: CRITICAL/SUBSTANTIVE/PROCEDURAL/ADMIN from filing_type ✅
+  → signal_scanner: directional threat detection (PTDs, oppositions, competitor activity) ✅
+  → Command palette + landing page links ✅
+  → **STATUS: GOLDEN**
 ```
 
 ### Infrastructure Audit
@@ -337,23 +338,25 @@ Threads compound when they link to each other. These are the active cross-thread
 | Component | Exists? | Notes |
 |-----------|---------|-------|
 | FCC filings data | ✅ | 4,500+ filings across ECFS/ICFS/ELS |
-| Docket metadata | ✅ | `fcc_dockets` table with 6 tracked dockets |
-| Filing type classification | ⚠️ | ECFS metadata has type but not surfaced |
-| Docket timeline view | ❌ | Need visualization |
-| Adversarial mapping | ❌ | Filer names exist in data but not surfaced |
-| Threat signal detection | ❌ | Petitions to Deny not flagged |
+| Docket metadata | ✅ | `fcc_dockets` table with 6 tracked dockets + owner |
+| Filing type classification | ✅ | `threat_level` column + in-memory classification from `filing_type` |
+| Docket timeline view | ✅ | `/regulatory` page with docket cards + filtered feed |
+| Adversarial mapping | ✅ | Matrix heatmap: Big 7 entities + "Other" × active dockets |
+| Threat signal detection | ✅ | Detector 9 in `signal_scanner.py`: regulatory_threat, regulatory_defense, competitor_docket_activity |
 
 ### Open GAPs
 
-1. **Docket Timeline View** — Visualize filings-per-docket as a timeline, color-coded by filer. Transform the list into a lifecycle view of specific license applications. No NLP needed — ECFS metadata already has filer names.
-2. **Filing Type Classification** — Classify and surface filing types (Comment, Reply, Ex Parte, Petition to Deny) from existing metadata. Give objections and petitions distinct visual weight.
-3. **Opposition Signal** — Flag Petitions to Deny and Oppositions as critical signals in signal_scanner. Hook into existing signal infrastructure.
+1. ~~Docket Timeline View~~ → **CLOSED**
+2. ~~Filing Type Classification~~ → **CLOSED**
+3. ~~Opposition Signal~~ → **CLOSED**
 
 ### Completed Transitions
 
-(none yet)
+- **GAP 1 → CLOSED (2026-02-13):** Built `/regulatory` page with three-band layout. Band 1: 6 docket status cards (title, filing count, last activity, threat indicators). Band 2: Adversarial matrix heatmap — Big 7 entities (AST, SpaceX, AT&T, Verizon, T-Mobile, DISH, Lynk) + aggregated "Other" × active dockets. Cells show filing volume with opacity scaling; red highlight for cells with CRITICAL filings. Interactive: click cell → filters feed. Band 3: Unified filing feed with posture badges (ATTACK/DEFENSE/ENGAGEMENT/NOISE), threat level badges, filer names, docket tags. Click filing → DocumentViewer. API: `/api/regulatory/battlemap` returns dockets, classified filings, matrix aggregation. Filters: docket, threat level, date range (30D/90D/6M/1Y). Command palette + landing page EXPLORE grid links.
+- **GAP 2 → CLOSED (2026-02-13):** Filing type classification via `threat_level` derived column (migration 030) + in-memory fallback from `filing_type` pattern matching. Four levels: CRITICAL (PTD, Opposition, Stay, Dismiss), SUBSTANTIVE (Comment, Reply, Ex Parte, Letter), PROCEDURAL (Extension, Notice, Report), ADMIN (everything else). UI derives posture from threat_level + filer identity: ATTACK (critical + non-AST), DEFENSE (critical + AST), ENGAGEMENT (substantive), NOISE (procedural/admin).
+- **GAP 3 → CLOSED (2026-02-13):** Directional threat detection in `signal_scanner.py` (Detector 9). Three signal types: `regulatory_threat` (critical — non-AST files PTD/Opposition on AST docket), `regulatory_defense` (medium — AST files threat-type document), `competitor_docket_activity` (high/medium — known competitor files on tracked docket). Uses directional logic: AST_DOCKETS defines ownership, COMPETITOR_FILERS defines adversaries. 30-day expiry for threats, 7-day for competitor activity. Added to SIGNAL_CATEGORY_MAP.
 
-- Conversation: `docs/gemini-conversations/thread-discovery-002.md`
+- Conversation: `docs/gemini-conversations/thread-005-gap-1.md`
 
 ---
 

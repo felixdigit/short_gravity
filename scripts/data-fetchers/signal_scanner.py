@@ -12,6 +12,7 @@ Detectors:
   4. Cross-Source        — Filing drops while X sentiment spikes (correlated events)
   5. Short Interest      — Significant changes in short positioning
   6. Patent-Deployment   — Patent technology referenced in recent filings/PRs
+  9. Regulatory Threats  — Directional threat detection on FCC dockets (PTDs, oppositions, competitor activity)
 
 Run:
   cd scripts/data-fetchers && export $(grep -v '^#' .env | xargs) && python3 signal_scanner.py
@@ -57,7 +58,22 @@ SIGNAL_CATEGORY_MAP: Dict[str, Dict[str, Any]] = {
     "new_content":              {"category": "corporate",  "confidence_score": 0.50},
     "patent_regulatory_crossref": {"category": "ip",       "confidence_score": 0.85},
     "earnings_language_shift":  {"category": "corporate",  "confidence_score": 0.75},
+    "regulatory_threat":        {"category": "regulatory", "confidence_score": 0.95},
+    "regulatory_defense":       {"category": "regulatory", "confidence_score": 0.80},
+    "competitor_docket_activity": {"category": "regulatory", "confidence_score": 0.85},
 }
+
+# Dockets owned by AST — filings against these by competitors are threats
+AST_DOCKETS = {"25-201", "25-306"}
+# Key FCC dockets to monitor
+TRACKED_DOCKETS = {"23-65", "22-271", "25-201", "25-306", "25-340", "23-135"}
+# Filing types that constitute threats (case-insensitive match)
+THREAT_TYPES = ["petition to deny", "opposition", "request for stay", "motion to dismiss", "objection"]
+# Known competitor filers
+COMPETITOR_FILERS = [
+    "spacex", "space exploration", "t-mobile", "lynk", "ligado",
+    "globalstar", "iridium", "dish", "rivada",
+]
 
 
 def utc_iso(dt: datetime) -> str:
@@ -932,6 +948,136 @@ Write a 2-sentence intelligence briefing about what these language changes signa
     return signals
 
 
+# ── Detector 9: Regulatory Threats ─────────────────────────────────
+
+def detect_regulatory_threats(dry_run: bool = False) -> List[Dict]:
+    """Directional threat detection on FCC dockets.
+
+    Detects:
+    1. ATTACK: Non-AST entity files a Petition to Deny / Opposition on an AST docket → critical
+    2. DEFENSE: AST files a Petition to Deny / Opposition (response to threat) → info
+    3. COMPETITOR ACTIVITY: Known competitor files anything on a tracked docket → medium
+    """
+    log("Scanning: Regulatory threats...")
+    signals: List[Dict] = []
+
+    now = datetime.now(timezone.utc)
+    d7 = utc_iso(now - timedelta(days=7))
+
+    # Get recent FCC filings on tracked dockets
+    filings = supabase_request(
+        "GET",
+        f"fcc_filings?select=title,file_number,filing_type,filer_name,docket,filed_date,source_url"
+        f"&filing_system=eq.ECFS&filed_date=gte.{d7[:10]}&order=filed_date.desc&limit=100"
+    ) or []
+
+    if not filings:
+        log("  No recent ECFS filings")
+        return signals
+
+    for f in filings:
+        filer = (f.get("filer_name") or "").strip()
+        filer_lower = filer.lower()
+        filing_type = (f.get("filing_type") or "").lower()
+        docket = f.get("docket") or ""
+        file_number = f.get("file_number", "")
+        title = f.get("title", "")
+
+        is_ast = "ast spacemobile" in filer_lower or "ast & science" in filer_lower
+
+        # Check if this is a threat filing type
+        is_threat_type = any(t in filing_type for t in THREAT_TYPES)
+
+        # Check if filer is a known competitor
+        is_competitor = any(c in filer_lower for c in COMPETITOR_FILERS)
+
+        # 1. ATTACK: Non-AST threat filing on AST-owned docket
+        if is_threat_type and not is_ast and docket in AST_DOCKETS:
+            sig = {
+                "signal_type": "regulatory_threat",
+                "severity": "critical",
+                "title": f"THREAT: {filer[:40]} filed {filing_type} on Docket {docket}",
+                "description": f"{filer} filed a {filing_type} on AST docket {docket}. This is an adversarial action that could delay or block AST's application.",
+                "source_refs": [{
+                    "table": "fcc_filings",
+                    "id": file_number,
+                    "title": title[:80],
+                    "date": f.get("filed_date", ""),
+                }],
+                "metrics": {
+                    "filer": filer,
+                    "filing_type": f.get("filing_type", ""),
+                    "docket": docket,
+                    "posture": "ATTACK",
+                },
+                "fingerprint": fingerprint("reg_threat", file_number),
+                "detected_at": utc_iso(now),
+                "expires_at": utc_iso(now + timedelta(days=30)),
+            }
+            if store_signal(sig, dry_run):
+                signals.append(sig)
+                log(f"  SIGNAL [CRITICAL]: {sig['title']}")
+
+        # 2. DEFENSE: AST files threat-type document (responding to opposition)
+        elif is_threat_type and is_ast:
+            sig = {
+                "signal_type": "regulatory_defense",
+                "severity": "medium",
+                "title": f"DEFENSE: AST filed {filing_type} on Docket {docket}",
+                "description": f"AST SpaceMobile filed a {filing_type} on docket {docket}. This is a defensive regulatory maneuver.",
+                "source_refs": [{
+                    "table": "fcc_filings",
+                    "id": file_number,
+                    "title": title[:80],
+                    "date": f.get("filed_date", ""),
+                }],
+                "metrics": {
+                    "filer": filer,
+                    "filing_type": f.get("filing_type", ""),
+                    "docket": docket,
+                    "posture": "DEFENSE",
+                },
+                "fingerprint": fingerprint("reg_defense", file_number),
+                "detected_at": utc_iso(now),
+                "expires_at": utc_iso(now + timedelta(days=14)),
+            }
+            if store_signal(sig, dry_run):
+                signals.append(sig)
+                log(f"  SIGNAL [MEDIUM]: {sig['title']}")
+
+        # 3. COMPETITOR ACTIVITY: Known competitor files on tracked docket
+        elif is_competitor and docket in TRACKED_DOCKETS and not is_threat_type:
+            sig = {
+                "signal_type": "competitor_docket_activity",
+                "severity": "high" if docket in AST_DOCKETS else "medium",
+                "title": f"{filer[:30]} filed on Docket {docket}: {filing_type}",
+                "description": f"Competitor {filer} filed a {filing_type} on tracked docket {docket}.",
+                "source_refs": [{
+                    "table": "fcc_filings",
+                    "id": file_number,
+                    "title": title[:80],
+                    "date": f.get("filed_date", ""),
+                }],
+                "metrics": {
+                    "filer": filer,
+                    "filing_type": f.get("filing_type", ""),
+                    "docket": docket,
+                    "posture": "COMPETITOR",
+                },
+                "fingerprint": fingerprint("competitor_docket", file_number),
+                "detected_at": utc_iso(now),
+                "expires_at": utc_iso(now + timedelta(days=7)),
+            }
+            if store_signal(sig, dry_run):
+                signals.append(sig)
+                log(f"  SIGNAL [{sig['severity'].upper()}]: {sig['title']}")
+
+    if not signals:
+        log(f"  No regulatory threats detected in {len(filings)} recent filings")
+
+    return signals
+
+
 # ── Main ─────────────────────────────────────────────────────────────
 
 def run_scanner():
@@ -957,6 +1103,7 @@ def run_scanner():
         "content": detect_new_content,
         "patent_crossref": detect_patent_crossrefs,
         "earnings": detect_earnings_shifts,
+        "regulatory_threats": detect_regulatory_threats,
     }
 
     if args.detector:
