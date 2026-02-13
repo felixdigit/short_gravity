@@ -340,3 +340,18 @@ Built all 3 GAPs for Thread 006 in a single session, turning passive orbital dat
 - Detector 9 (`detect_regulatory_threats`) in `signal_scanner.py`. Directional threat logic: scans recent ECFS filings on tracked dockets, classifies by filer identity × filing type × docket ownership. Three signal types: `regulatory_threat` (critical — adversary files PTD/Opposition on AST docket), `regulatory_defense` (medium — AST files threat-type document), `competitor_docket_activity` (high/medium — known competitor files on tracked docket). Added to SIGNAL_CATEGORY_MAP.
 
 **Thread 005: DARK → GOLDEN. Six threads now GOLDEN.**
+
+## 2026-02-13: Thread Discovery 003 + Thread 007 — The War Room (GOLDEN in one session)
+
+2-turn Gemini discovery dialogue (`docs/gemini-conversations/thread-discovery-003.md`). Gemini proposed three threads: Mobile Command (access), The War Room (competitive context), Earnings Command Center (event). Claude pushed back: mobile is hygiene not a thread, War Room should be tighter scope using existing data, Earnings should sequence second (before March 2 call). Converged: Thread 007 = War Room, Thread 008 = Earnings Command Center, mobile = non-thread infrastructure work.
+
+**GAP 1 + GAP 2 — Competitor Config + Tale of the Tape + Activity Stream:**
+- Created `lib/data/competitors.ts` — typed entity registry for 5 D2C competitors (AST SpaceMobile, SpaceX/T-Mobile, Lynk Global, T-Mobile, Globalstar). Each entity has `fccFilerPatterns`, `patentAssigneePatterns`, static `tapeData` (satellites, spectrum, authorization, partners, status, launch date), role classification (subject/competitor/carrier). Helper functions: `getEntity()`, `getCompetitors()`, `matchFiler()`.
+- API: `/api/competitive/landscape` queries fcc_filings (ECFS) + patents broadly, filters in-memory using entity pattern matching from the registry. Returns entity summaries with activity counts, filings/patents grouped by entity, and competitor signals.
+- `/competitive` page with three bands. Band 1: Tale of the Tape — side-by-side comparison table (6 fields × 5 entities, subject first then competitors then carriers). Band 2: Entity Activity Cards — per-competitor panels with filing/patent tabs showing recent activity, click filing → DocumentViewer. Band 3: Competitor Signals panel — displays regulatory_threat, competitor_docket_activity, competitor_fcc_grant, competitor_patent_grant signals. Controls: entity filter buttons, date range (30D/90D/6M/1Y). Command palette + landing page links (grid now 4-col × 2 rows, 8 items).
+- Live data: AST 22 filings + 146 patents, SpaceX 15 filings, T-Mobile 3, Globalstar 3 (1Y range).
+
+**GAP 3 — Competitor Milestone Signals:**
+- Detector 10 (`detect_competitor_milestones`) in `signal_scanner.py`. Two new signal types: `competitor_fcc_grant` (high — competitor receives FCC authorization, 14-day lookback, 30-day expiry) and `competitor_patent_grant` (medium — competitor receives D2C patent, 14-day lookback). Uses COMPETITOR_FILERS for FCC matching, COMPETITOR_ASSIGNEES for patent matching. Skips AST's own grants/patents. Feeds into `/competitive` signals panel + `/signals` intelligence feed.
+
+**Thread 007: DARK → GOLDEN. Seven threads now GOLDEN. Thread 008 (Earnings Command Center) seeded.**
