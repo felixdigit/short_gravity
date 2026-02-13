@@ -94,10 +94,11 @@ Single pipeline via Vercel cron (`/api/cron/tle-refresh`, every 4h):
 - **CelesTrak** (PRIMARY for position) — Supplemental GP data. CelesTrak is a third-party platform that receives operator-informed positions and fits its own GP elements. Better positional accuracy than radar, but GP fitting introduces BSTAR volatility artifacts.
 - **Space-Track** (PRIMARY for BSTAR) — US Space Force SSN radar tracking. Independent source. Smoother BSTAR output — preferred for drag trend analysis.
 - CelesTrak preferred for `satellites` table (positional state). Both always write to `tle_history` with source tag.
-- **Source trust by use case:** Positional accuracy → CelesTrak. BSTAR/drag trends → Space-Track. Long-term baselines → both converge.
-- Includes health anomaly detection (altitude drops, drag spikes, stale TLEs) → creates `signals`
+- **Source trust by use case:** Positional accuracy & maneuver detection → CelesTrak. BSTAR/drag/altitude trends → Space-Track. Long-term baselines → both converge.
+- **SOURCE-AWARE MANDATE:** All queries to `tle_history` for trend analysis MUST filter by `source`. Never mix CelesTrak and Space-Track in the same calculation — CelesTrak GP fitting noise creates false anomaly detections. Health anomaly detection and constellation health widgets use Space-Track exclusively. Maneuver detection uses CelesTrak exclusively.
+- Health anomaly detection (altitude drops, drag spikes, stale TLEs) uses Space-Track data only → creates `signals`
 - Frontend also uses `lib/celestrak.ts` for on-demand lookups with 6h in-memory cache
-- `source_divergence` view compares latest CelesTrak vs Space-Track BSTAR per satellite (threshold: delta > 0.0001)
+- `source_divergence` view compares latest CelesTrak vs Space-Track BSTAR per satellite (threshold: delta > 0.0001, requires epochs within 6 hours)
 
 This is the ONE pipeline that runs via Vercel cron instead of GH Actions because it needs the TypeScript/Supabase client for health monitoring. The Python `tle_worker.py` in the parent repo is a local dev/backfill tool only.
 

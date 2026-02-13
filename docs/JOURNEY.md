@@ -228,3 +228,30 @@ This document captures key decisions, ideas, and milestones in the collaboration
 - THREADS.md updated: Thread 003 GAP 3 (persistence) closed, status upgraded from BROKEN to FRAYED
 
 **New chart engine infrastructure:** `BandsOverlay` type + `drawBands()` renderer. Bands render behind data series (background layer) in both engine render paths and export module. Reusable for any time-aligned colored region overlay.
+
+---
+
+## 2026-02-12: Data Integrity Audit — Source Mixing & Math Errors
+
+**Context:** Gabriel identified B* chart showing negative values and Kp bands covering the entire chart as G4. Root causes: CelesTrak/Space-Track source mixing and Kp divided by 8 instead of 80. Gabriel demanded a full audit: "every line of code is audited... the math must be perfect."
+
+**Gemini loop:** `docs/gemini-conversations/data-integrity-audit.md` — 2-turn convergence on fix spec. Gemini specified API-layer source enforcement, priority ordering, and specific file-level fixes.
+
+**Issues found and fixed (5 critical + 8 medium):**
+
+**P0 — Active Misinformation:**
+1. **Health anomaly detection** (`api/cron/tle-refresh/route.ts`): 7-day history query now filters to `source='spacetrack'` exclusively. Health detection uses Space-Track data (smoother trends) instead of CelesTrak (GP fitting artifacts). Null safety added to all parseFloat calls.
+2. **Maneuver detection** (`lib/orbital/maneuver-detection.ts`): Now accepts `source` parameter (default 'celestrak'), filters internally. Inclination threshold increased from 0.005° to 0.02° (safely above CelesTrak GP fitting noise of 0.003-0.01°).
+
+**P1 — User-Facing Data Errors:**
+3. **Orbital page Kp display** (`app/orbital/page.tsx`): kp_sum now divided by 80 (was raw value). Label changed to "AVG Kp INDEX". Zero values no longer filtered (valid quiet days). Chart y-axis shows 0-9 scale.
+4. **Drag history API** (`api/satellites/[noradId]/drag-history/route.ts`): Now computes and returns `initialAltitude`, `latestAltitude`, `altitudeChange`. Prefers Space-Track data for altitude trends. Safe float parser replaces all parseFloat calls.
+
+**P2 — Foundational Logic:**
+5. **Source divergence view** (migration 025): Now requires CelesTrak and Space-Track epochs within 6 hours. Exposes `epoch_gap_hours` field. Old view compared across multi-day gaps.
+6. **Constellation health widget** (`api/widgets/constellation-health/route.ts`): TLE history for trend analysis now filters to Space-Track source. Null safety added.
+
+**P3 — Data Pipeline Hardening:**
+7. **Space weather worker** (`space_weather_worker.py`): Added kp_sum validation — verifies kp_sum equals sum of KP1..KP8 individual values. Discards corrupt entries.
+
+**Systemic fix:** Every pipeline that queries `tle_history` for trend analysis now filters to a single source. CelesTrak for positional accuracy, Space-Track for drag/altitude trends. No more silent source mixing.

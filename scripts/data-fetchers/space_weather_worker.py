@@ -115,6 +115,17 @@ def parse_sw_csv(csv_text):
         sunspot = safe_int(row.get("ISN"))
         data_type = row.get("F10.7_DATA_TYPE", "").strip() or None
 
+        # Validate kp_sum against individual 3-hourly Kp values (KP1..KP8)
+        # CelesTrak stores Kp in tenths — kp_sum should equal sum of KP1..KP8
+        if kp_sum is not None:
+            kp_parts = [safe_float(row.get(f"KP{i}")) for i in range(1, 9)]
+            kp_parts_valid = [v for v in kp_parts if v is not None]
+            if len(kp_parts_valid) == 8:
+                computed_sum = sum(kp_parts_valid)
+                if abs(computed_sum - kp_sum) > 1:  # Allow rounding tolerance of 1 tenth
+                    print(f"  WARNING: {date_str} kp_sum mismatch: reported={kp_sum}, computed={computed_sum}, skipping")
+                    continue
+
         record = {
             "date": date_str,
             "kp_sum": kp_sum,
