@@ -1,4 +1,5 @@
+_ARCHIVE_V1/
 _VAULT/
 node_modules/
-.env
+.git/
 .next/

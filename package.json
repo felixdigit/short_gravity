@@ -1,5 +1,8 @@
 {
-  "dependencies": {
-    "@fontsource/jetbrains-mono": "^5.2.8"
+  "name": "short-gravity",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build"
   }
 }

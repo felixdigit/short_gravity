@@ -1,0 +1,203 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* ═══════════════════════════════════════════════════════════════
+     SHORT GRAVITY DESIGN SYSTEM V4
+     Mission Control Aesthetic — NASA Eyes + Bloomberg Terminal
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* === BACKGROUNDS === */
+  --void-black: #030305;           /* Deepest black - page bg */
+  --space-dark: #0A0A0F;           /* Primary surface */
+  --nebula-depth: #0D1117;         /* Card backgrounds */
+  --cosmic-gray: #161B22;          /* Elevated surfaces */
+  --stellar-mist: #21262D;         /* Hover states */
+
+  /* === BRAND ACCENTS === */
+  --asts-orange: #FF6B35;
+  --asts-orange-dim: rgba(255, 107, 53, 0.2);
+  --asts-orange-muted: rgba(255, 107, 53, 0.6);
+
+  --origin-blue: #0077C8;
+  --origin-blue-dim: rgba(0, 119, 200, 0.2);
+  --origin-blue-muted: rgba(0, 119, 200, 0.6);
+
+  /* === STATUS COLORS === */
+  --status-nominal: #22C55E;
+  --status-nominal-dim: rgba(34, 197, 94, 0.2);
+  --status-warning: #EAB308;
+  --status-warning-dim: rgba(234, 179, 8, 0.2);
+  --status-critical: #EF4444;
+  --status-critical-dim: rgba(239, 68, 68, 0.2);
+
+  /* === LEGACY ALIASES === */
+  --signal-green: var(--status-nominal);
+  --signal-green-dim: var(--status-nominal-dim);
+  --alert-critical: var(--status-critical);
+  --alert-warning: var(--status-warning);
+  --alert-info: var(--origin-blue);
+  --alert-neutral: #8B949E;
+  --orbit-blue: var(--origin-blue);
+  --orbit-blue-glow: var(--origin-blue-dim);
+  --amber-primary: var(--asts-orange);
+
+  /* === TEXT HIERARCHY === */
+  --text-primary: #FFFFFF;
+  --text-secondary: #E5E7EB;
+  --text-tertiary: #A1A1AA;
+  --text-muted: #71717A;
+  --text-dim: #52525B;
+
+  /* === BORDERS === */
+  --border-default: #3F3F46;
+  --border-muted: #27272A;
+  --border-active: #0077C8;
+  --border-bright: rgba(255, 255, 255, 0.15);
+
+  /* === SHADOWS === */
+  --shadow-glow-green: 0 0 20px rgba(0, 255, 136, 0.15);
+  --shadow-glow-blue: 0 0 20px rgba(9, 105, 218, 0.15);
+  --shadow-glow-white: 0 0 10px rgba(255, 255, 255, 0.1);
+
+  /* === HUD CHROME === */
+  --hud-white: #FFFFFF;
+  --hud-bright: #F4F4F5;
+  --hud-medium: #D4D4D8;
+  --hud-line: rgba(255, 255, 255, 0.25);
+  --hud-fill: rgba(255, 255, 255, 0.08);
+
+  /* Legacy aliases */
+  --background: var(--space-dark);
+  --foreground: var(--text-primary);
+}
+
+body {
+  background: var(--void-black);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+.font-data {
+  font-family: var(--font-jetbrains-mono), monospace;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--void-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 3px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot--live {
+  background: var(--signal-green);
+  box-shadow: 0 0 8px var(--signal-green);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENT CLASSES
+   ═══════════════════════════════════════════════════════════════ */
+
+.card {
+  background: var(--nebula-depth);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+}
+
+.card:hover {
+  border-color: var(--border-active);
+}
+
+.card--live {
+  border-color: var(--signal-green);
+  box-shadow: var(--shadow-glow-green);
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.btn--primary {
+  background: var(--signal-green);
+  color: var(--void-black);
+}
+
+.btn--primary:hover {
+  box-shadow: var(--shadow-glow-green);
+}
+
+.btn--secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+.btn--secondary:hover {
+  background: var(--stellar-mist);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════ */
+
+.duration-fast { transition-duration: 100ms; }
+.duration-normal { transition-duration: 200ms; }
+.duration-slow { transition-duration: 300ms; }
+
+.ease-out-custom { transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }

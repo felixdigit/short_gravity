@@ -1,0 +1,13 @@
+{
+  "name": "@shortgravity/database",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
+    "drizzle-orm": "^0.45.1"
+  }
+}

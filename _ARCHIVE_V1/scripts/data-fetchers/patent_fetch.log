@@ -1,0 +1,328 @@
+[15:11:42] ======================================================================
+[15:11:42] COMPLETE PATENT FETCHER - AST SpaceMobile
+[15:11:42] ======================================================================
+[15:11:42] Target: 36 families, ~3,800 claims
+[15:11:42] 
+[15:11:43] 
+======================================================================
+[15:11:43] STEP 1: SEARCH ALL PATENTS
+[15:11:43] ======================================================================
+[15:11:43] Searching: pa=AST and ta=satellite
+[15:11:43] Got EPO access token (expires in 1199s)
+[15:11:46]   -> 72 total results
+[15:11:46] Searching: pa=AST and ta=cellular
+[15:11:49]   -> 3 total results
+[15:11:49] Searching: pa=AST and ta=mobile
+[15:11:53]   -> 16 total results
+[15:11:53] Searching: pa=AST and ta=space
+[15:11:56]   -> 96 total results
+[15:11:56] Searching: pa=AST and ta=antenna
+[15:11:59]   -> 55 total results
+[15:11:59] Searching: pa=AST and ta=communication
+[15:12:03]   -> 69 total results
+[15:12:03] Searching: in=Avellan and ta=satellite
+[15:12:06]   -> 67 total results
+[15:12:06] Searching: in=Avellan and ta=cellular
+[15:12:09] Searching: in=Avellan and ta=space
+[15:12:12]   -> 42 total results
+[15:12:12] 
+Total unique publications found: 237
+[15:12:12] 
+======================================================================
+[15:12:12] STEP 2: GROUP INTO FAMILIES
+[15:12:12] ======================================================================
+[15:12:41]   Processing 10/237...
+[15:13:13]   Processing 20/237...
+[15:13:46]   Processing 30/237...
+[15:14:17]   Processing 40/237...
+[15:14:49]   Processing 50/237...
+[15:15:21]   Processing 60/237...
+[15:15:53]   Processing 70/237...
+[15:16:25]   Processing 80/237...
+[15:16:57]   Processing 90/237...
+[15:17:29]   Processing 100/237...
+[15:18:01]   Processing 110/237...
+[15:18:33]   Processing 120/237...
+[15:19:06]   Processing 130/237...
+[15:19:37]   Processing 140/237...
+[15:20:10]   Processing 150/237...
+[15:20:41]   Processing 160/237...
+[15:21:13]   Processing 170/237...
+[15:21:45]   Processing 180/237...
+[15:22:17]   Processing 190/237...
+[15:22:49]   Processing 200/237...
+[15:23:22]   Processing 210/237...
+[15:23:53]   Processing 220/237...
+[15:24:26]   Processing 230/237...
+[15:24:51] 
+Families found: 125
+[15:24:51] 
+======================================================================
+[15:24:51] STEP 3: FETCH CLAIMS FOR EACH FAMILY
+[15:24:51] ======================================================================
+[15:24:51]   [1/125] Family 86896326 (12 members)
+[15:24:51]   [2/125] Family 73198504 (16 members)
+[15:24:52]   [3/125] Family 96300952 (1 members)
+[15:24:52]   [4/125] Family 84891771 (13 members)
+[15:24:52]   [5/125] Family 82704788 (14 members)
+[15:24:52]   [6/125] Family 62091531 (45 members)
+[15:24:53]   [7/125] Family 73839097 (12 members)
+[15:24:53]   [8/125] Family 74498786 (15 members)
+[15:24:53]   [9/125] Family 74042797 (6 members)
+[15:24:54]   [10/125] Family 86609446 (5 members)
+[15:24:54]   [11/125] Family 67393806 (45 members)
+[15:24:55]   [12/125] Family 91959735 (1 members)
+[15:24:55]   [13/125] Family 90362977 (1 members)
+[15:24:56]   [14/125] Family 89509327 (1 members)
+[15:24:56]   [15/125] Family 88791103 (2 members)
+[15:24:57]   [16/125] Family 88648394 (1 members)
+[15:24:57]   [17/125] Family 72520365 (45 members)
+[15:24:57]   [18/125] Family 79023328 (55 members)
+[15:24:57]   [19/125] Family 82496090 (7 members)
+[15:24:58]   [20/125] Family 78007906 (1 members)
+[15:24:58]   [21/125] Family 77272167 (3 members)
+[15:24:58]   [22/125] Family 77428603 (1 members)
+[15:24:58]   [23/125] Family 46022216 (167 members)
+[15:24:59]   [24/125] Family 65482641 (1 members)
+[15:25:02]   [25/125] Family 64449744 (1 members)
+[15:25:05]   [26/125] Family 63140804 (1 members)
+[15:25:08]   [27/125] Family 60705458 (1 members)
+[15:25:11]   [28/125] Family 60705385 (1 members)
+[15:25:15]   [29/125] Family 59433338 (2 members)
+[15:25:18]   [30/125] Family 57024915 (1 members)
+[15:25:21]   [31/125] Family 43055234 (2 members)
+[15:25:24]   [32/125] Family 42592707 (1 members)
+[15:25:27]   [33/125] Family 11385807 (12 members)
+[15:25:28]   [34/125] Family 37933709 (2 members)
+[15:25:30]   [35/125] Family 9305145 (2 members)
+[15:25:34]     -> 1 claims (1 independent)
+[15:25:34]   [36/125] Family 8259567 (1 members)
+[15:25:38]     -> 1 claims (1 independent)
+[15:25:38]   [37/125] Family 39739724 (4 members)
+[15:25:41]     -> 1 claims (0 independent)
+[15:25:41]   [38/125] Family 37547713 (4 members)
+[15:25:44]     -> 1 claims (0 independent)
+[15:25:44]   [39/125] Family 97488274 (1 members)
+[15:25:46]   [40/125] Family 73231053 (44 members)
+[15:25:47]   [41/125] Family 87522446 (2 members)
+[15:25:47]   [42/125] Family 91912825 (1 members)
+[15:25:50]   [43/125] Family 83285663 (10 members)
+[15:25:50]   [44/125] Family 89108302 (1 members)
+[15:25:53]   [45/125] Family 89020605 (1 members)
+[15:25:56]   [46/125] Family 81580550 (3 members)
+[15:25:56]   [47/125] Family 78838626 (1 members)
+[15:25:59]   [48/125] Family 77995120 (1 members)
+[15:26:02]   [49/125] Family 77791848 (1 members)
+[15:26:06]   [50/125] Family 77725951 (1 members)
+[15:26:09]   [51/125] Family 76999971 (1 members)
+[15:26:12]   [52/125] Family 75655859 (1 members)
+[15:26:15]   [53/125] Family 80248768 (44 members)
+[15:26:16]   [54/125] Family 67963225 (2 members)
+[15:26:19]   [55/125] Family 67442925 (1 members)
+[15:26:22]   [56/125] Family 66020976 (1 members)
+[15:26:25]   [57/125] Family 65680414 (1 members)
+[15:26:28]   [58/125] Family 65016861 (1 members)
+[15:26:31]   [59/125] Family 62856078 (1 members)
+[15:26:34]   [60/125] Family 62650900 (1 members)
+[15:26:38]   [61/125] Family 62603515 (1 members)
+[15:26:41]   [62/125] Family 61753886 (1 members)
+[15:26:44]   [63/125] Family 61513233 (1 members)
+[15:26:47]   [64/125] Family 60705396 (1 members)
+[15:26:50]   [65/125] Family 59873577 (2 members)
+[15:26:54]   [66/125] Family 58515848 (1 members)
+[15:26:57]   [67/125] Family 52057217 (1 members)
+[15:27:00]   [68/125] Family 50841808 (3 members)
+[15:27:04]     -> 1 claims (1 independent)
+[15:27:04]   [69/125] Family 50884904 (3 members)
+[15:27:08]     -> 1 claims (1 independent)
+[15:27:08]   [70/125] Family 43217308 (21 members)
+[15:27:08]   [71/125] Family 43366906 (2 members)
+[15:27:10]   [72/125] Family 25030476 (1 members)
+[15:27:10]   [73/125] Family 24581407 (1 members)
+[15:27:10]   [74/125] Family 24577150 (1 members)
+[15:27:11]   [75/125] Family 25166107 (1 members)
+[15:27:11]   [76/125] Family 26666293 (7 members)
+[15:27:11]   [77/125] Family 22874244 (1 members)
+[15:27:11]   [78/125] Family 20244794 (1 members)
+[15:27:13]   [79/125] Family 20241240 (1 members)
+[15:27:16]   [80/125] Family 20238740 (1 members)
+[15:27:19]   [81/125] Family 38498727 (1 members)
+[15:27:22]   [82/125] Family 39781399 (1 members)
+[15:27:26]   [83/125] Family 26705329 (49 members)
+[15:27:26]   [84/125] Family 8023705 (5 members)
+[15:27:29]     -> 1 claims (1 independent)
+[15:27:29]   [85/125] Family 7840632 (1 members)
+[15:27:32]   [86/125] Family 74845122 (11 members)
+[15:27:33]   [87/125] Family 91855965 (2 members)
+[15:27:34]   [88/125] Family 77272041 (12 members)
+[15:27:34]   [89/125] Family 83284577 (12 members)
+[15:27:35]   [90/125] Family 75275699 (1 members)
+[15:27:36]   [91/125] Family 3772080 (2 members)
+[15:27:36]   [92/125] Family 86333969 (4 members)
+[15:27:36]   [93/125] Family 89193555 (1 members)
+[15:27:40]   [94/125] Family 89187369 (1 members)
+[15:27:43]   [95/125] Family 89017742 (1 members)
+[15:27:46]   [96/125] Family 89015363 (1 members)
+[15:27:49]   [97/125] Family 89009167 (1 members)
+[15:27:52]   [98/125] Family 54959859 (1 members)
+[15:27:55]   [99/125] Family 24439651 (18 members)
+[15:27:56]   [100/125] Family 46049272 (5 members)
+[15:27:56]   [101/125] Family 45999696 (3 members)
+[15:27:56]   [102/125] Family 44504243 (6 members)
+[15:27:57]   [103/125] Family 42592706 (1 members)
+[15:27:59]   [104/125] Family 36992010 (18 members)
+[15:27:59]   [105/125] Family 35756347 (10 members)
+[15:28:00]   [106/125] Family 23888147 (2 members)
+[15:28:00]   [107/125] Family 24276284 (1 members)
+[15:28:00]   [108/125] Family 23722345 (2 members)
+[15:28:01]   [109/125] Family 23293346 (6 members)
+[15:28:01]   [110/125] Family 22783689 (2 members)
+[15:28:02]     -> 1 claims (1 independent)
+[15:28:02]   [111/125] Family 21724623 (1 members)
+[15:28:03]   [112/125] Family 38010713 (2 members)
+[15:28:05]   [113/125] Family 37600235 (1 members)
+[15:28:08]   [114/125] Family 29422749 (6 members)
+[15:28:09]   [115/125] Family 45495799 (9 members)
+[15:28:09]   [116/125] Family 57714481 (5 members)
+[15:28:09]   [117/125] Family 58701373 (5 members)
+[15:28:09]   [118/125] Family 48914132 (5 members)
+[15:28:10]   [119/125] Family 46466089 (5 members)
+[15:28:10]   [120/125] Family 46583287 (2 members)
+[15:28:10]   [121/125] Family 42670700 (10 members)
+[15:28:10]   [122/125] Family 43530155 (10 members)
+[15:28:11]   [123/125] Family 43527477 (10 members)
+[15:28:11]   [124/125] Family 42200245 (2 members)
+[15:28:11]   [125/125] Family 40550453 (1 members)
+[15:28:11] 
+Families with claims: 8
+[15:28:11] Total claims: 8
+[15:28:11] 
+======================================================================
+[15:28:11] STEP 4: FILTER TO AST SPACEMOBILE
+[15:28:11] ======================================================================
+[15:29:06]   Filtered out family 79023328: ['AST NAVIGATION INC', '阿斯特导航公司']
+[15:29:13]   Filtered out family 78007906: ['AST&DEFENSE LLC\u2002[US]', 'AST&Defense, LLC']
+[15:29:19]   Filtered out family 77428603: ['AST ENVIRONMENTAL SCIENCE & TECH SUZHOU CO LTD', '苏州艾斯特环境科技有限公司']
+[15:29:22]   Filtered out family 46022216: ['AST OLIVER\u2002[CH]', ' BRUENKER PETER\u2002[CH]']
+[15:29:26]   Filtered out family 65482641: ['YANCHENG AST SPORTING GOODS CO LTD', '盐城市艾斯特体育器材有限公司']
+[15:29:29]   Filtered out family 64449744: ['SICHUAN AST MEDICAL EQUIPMENT CO LTD', '四川阿斯特医疗器械有限公司']
+[15:29:32]   Filtered out family 63140804: ['YANCHENG AST SPORTING GOODS CO LTD', '盐城市艾斯特体育器材有限公司']
+[15:29:35]   Filtered out family 60705458: ['YANCHENG AST SPORTING GOODS CO LTD', '盐城市艾斯特体育器材有限公司']
+[15:29:38]   Filtered out family 60705385: ['YANCHENG AST SPORTING GOODS CO LTD', '盐城市艾斯特体育器材有限公司']
+[15:29:41]   Filtered out family 59433338: ['YANCHENG AST SPORTING GOODS CO LTD', '盐城市艾斯特体育器材有限公司']
+[15:29:45]   Filtered out family 57024915: ['GUANGZHOU AST BUILDING ENG MACHINERY CO LTD', '广州安速通建筑工程机械有限公司']
+[15:29:48]   Filtered out family 43055234: ['AST TECHNOLOGY SUZHOU CO LTD', 'AST TECHNOLOGY (SUZHOU) CO., LTD']
+[15:29:51]   Filtered out family 42592707: ['AST WIRELESS SUZHOU CO LTD', 'AST WIRELESS (SUZHOU) CO., LTD']
+[15:29:54]   Filtered out family 11385807: ['AST SYSTEM AUTOMATION STRADI\u2002[IT]', 'A.S.T SYSTEM AUTOMATION DI STRADI A. & C. S.N.C']
+[15:29:57]   Filtered out family 37933709: ['AST J KK', 'AST J:KK']
+[15:30:01]   Filtered out family 9305145: ['FLORIMOND CHABARDES OUTILL AST\u2002[FR]', 'FLORIMOND CHABARDES OUTILL ASTRA']
+[15:30:04]   Filtered out family 8259567: ['INS DE ENERG RENOVABLES DEL C\u2002[ES]', 'INS. DE ENERG. RENOVABLES DEL C. DE INVES. ENERGETICAS MEDIOAMBIENTALES Y TECNO. Y AST. Y TAL. FE.SA']
+[15:30:07]   Filtered out family 39739724: ['MOTTO S A\u2002[LU]', ' CHRISTENSEN LARS BALLIEU\u2002[DK]']
+[15:30:10]   Filtered out family 37547713: ['AST FLEMMING\u2002[DK]', ' CHRISTENSEN LARS BALLIEU\u2002[DK]']
+[15:30:13]   Filtered out family 97488274: ['AST CORP', 'アスト株式会社']
+[15:30:23]   Filtered out family 91912825: ['AST CO LTD\u2002[KR]', '에이에스티 주식회사']
+[15:30:29]   Filtered out family 89108302: ['YANCHENG AST SPORTING GOODS CO LTD', '盐城市艾斯特体育器材有限公司']
+[15:30:33]   Filtered out family 89020605: ['AST ELEVATOR TECH SUZHOU CO LTD', '阿斯特电梯科技（苏州）有限公司']
+[15:30:36]   Filtered out family 81580550: ['AST ADVANCED SPACE TECH GMBH\u2002[DE]', 'AST Advanced Space Technologies GmbH']
+[15:30:39]   Filtered out family 78838626: ['YANCHENG AST SPORTING GOODS CO LTD', '盐城市艾斯特体育器材有限公司']
+[15:30:42]   Filtered out family 77995120: ['CHONGQING AST SEMICONDUCTOR CO LTD', ' SHANGHAI SUPER SILICON SEMICONDUCTOR CO LTD']
+[15:30:45] Got EPO access token (expires in 1199s)
+[15:30:49]   Filtered out family 77791848: ['AST PREC TOOLS SHANGHAI CO LTD', '阿斯图精密工具（上海）有限公司']
+[15:30:52]   Filtered out family 77725951: ['AST PREC TOOLS SHANGHAI CO LTD', '阿斯图精密工具（上海）有限公司']
+[15:30:55]   Filtered out family 76999971: ['AST ENVIRONMENTAL SCIENCE & TECH SUZHOU CO LTD', '苏州艾斯特环境科技有限公司']
+[15:30:58]   Filtered out family 75655859: ['AST ENVIRONMENTAL SCIENCE & TECH SUZHOU CO LTD', '苏州艾斯特环境科技有限公司']
+[15:31:05]   Filtered out family 67963225: ['XIAN AST VIDEO TECH CO LTD', '西安奥赛特视频科技有限责任公司']
+[15:31:08]   Filtered out family 67442925: ['SICHUAN AST MEDICAL EQUIPMENT CO LTD', '四川阿斯特医疗器械有限公司']
+[15:31:11]   Filtered out family 66020976: ['SICHUAN AST MEDICAL EQUIPMENT CO LTD', '四川阿斯特医疗器械有限公司']
+[15:31:14]   Filtered out family 65680414: ['JIANGSU AST TESTING TECH SERVICES CO LTD', '江苏亚标检测技术服务有限公司']
+[15:31:17]   Filtered out family 65016861: ['AST ENG INC\u2002[KR]', '에이에스티엔지니어링(주)']
+[15:31:21]   Filtered out family 62856078: ['YANCHENG AST SPORTING GOODS CO LTD', '盐城市艾斯特体育器材有限公司']
+[15:31:24]   Filtered out family 62650900: ['SICHUAN AST MEDICAL EQUIPMENT CO LTD', '四川阿斯特医疗器械有限公司']
+[15:31:27]   Filtered out family 62603515: ['SICHUAN AST MEDICAL EQUIPMENT CO LTD', '四川阿斯特医疗器械有限公司']
+[15:31:30]   Filtered out family 61753886: ['YANCHENG AST SPORTING GOODS CO LTD', '盐城市艾斯特体育器材有限公司']
+[15:31:33]   Filtered out family 61513233: ['SICHUAN AST MEDICAL EQUIPMENT CO LTD', '四川阿斯特医疗器械有限公司']
+[15:31:37]   Filtered out family 60705396: ['YANCHENG AST SPORTING GOODS CO LTD', '盐城市艾斯特体育器材有限公司']
+[15:31:40]   Filtered out family 59873577: ['YANCHENG AST SPORTING GOODS CO LTD', '盐城市艾斯特体育器材有限公司']
+[15:31:43]   Filtered out family 58515848: ['YANCHENG AST SPORTING GOODS CO LTD', '盐城市艾斯特体育器材有限公司']
+[15:31:46]   Filtered out family 52057217: ['YANCHENG AST SPORTING GOODS CO LTD', 'YANCHENG AST SPORTING GOODS CO., LTD']
+[15:31:50]   Filtered out family 50841808: ['AST MODULAR S L\u2002[ES]', 'AST MODULAR, S.L']
+[15:31:53]   Filtered out family 50884904: ['AST MODULAR S L\u2002[ES]', 'AST MODULAR, S.L']
+[15:31:56]   Filtered out family 43217308: ['АСТ МОДУЛАР, С.Л.']
+[15:31:59]   Filtered out family 43366906: ['UNIV LANZHOU TECH', ' LANZHOU AST ELECTROMECHANICAL TECHNOLOGY CO LTD']
+[15:32:02]   Filtered out family 25030476: ['AST RESEARCH INC\u2002[US]', 'AST RESEARCH, INC']
+[15:32:06]   Filtered out family 24581407: ['AST RESEARCH INC\u2002[US]', 'AST RESEARCH, INC']
+[15:32:09]   Filtered out family 24577150: ['AST RESEARCH INC\u2002[US]', 'AST RESEARCH, INC']
+[15:32:12]   Filtered out family 25166107: ['AST RESEARCH INC\u2002[US]', 'AST RESEARCH, INC']
+[15:32:15]   Filtered out family 26666293: ['TSNT TVORCHESTVA MOLODEZHI AST\u2002[SU]', 'TSENTR NAUCHNO-TEKHNICHESKOGO TVORCHESTVA MOLODEZHI "ASTRON"']
+[15:32:18]   Filtered out family 22874244: ['AST RESEARCH INC\u2002[US]', 'AST RESEARCH, INC']
+[15:32:22]   Filtered out family 20244794: ['OOO AST', ' RAKHAN GAZPROM']
+[15:32:25]   Filtered out family 20241240: ['OOO AST', ' RAKHAN GAZPROM']
+[15:32:28]   Filtered out family 20238740: ['RAKHAN GAZPROM', ' OOO AST']
+[15:32:31]   Filtered out family 38498727: ['AST CORP\u2002[KR]', 'AST CORPORATION']
+[15:32:34]   Filtered out family 39781399: ['AST J KK', 'AST J:KK']
+[15:32:38]   Filtered out family 26705329: ['AST RES INC\u2002[US]', 'AST RESEARCH INC']
+[15:32:41]   Filtered out family 8023705: ['AST KUNSTSTOFFVERARBEITUNG GMB\u2002[DE]', 'AST KUNSTSTOFFVERARBEITUNG GMBH']
+[15:32:44]   Filtered out family 7840632: ['STEAG AST ELEKTRONIK GMBH\u2002[DE]', 'STEAG AST ELEKTRONIK GMBH, 85551 KIRCHHEIM, DE']
+[15:33:03]   Filtered out family 3772080: ['A S T PTY LTD\n', 'A.S.T. PTY. LTD']
+[15:33:10]   Filtered out family 89193555: ['WUHAN AST MEASUREMENT AND CONTROL TECH CO LTD', '武汉埃斯特测控技术有限公司']
+[15:33:13]   Filtered out family 89187369: ['WUHAN AST MEASUREMENT AND CONTROL TECH CO LTD', '武汉埃斯特测控技术有限公司']
+[15:33:16]   Filtered out family 89017742: ['WUHAN AST MEASUREMENT AND CONTROL TECH CO LTD', '武汉埃斯特测控技术有限公司']
+[15:33:19]   Filtered out family 89015363: ['WUHAN AST MEASUREMENT AND CONTROL TECH CO LTD', '武汉埃斯特测控技术有限公司']
+[15:33:23]   Filtered out family 89009167: ['WUHAN AST MEASUREMENT AND CONTROL TECH CO LTD', '武汉埃斯特测控技术有限公司']
+[15:33:26]   Filtered out family 54959859: ['YANCHENG AST SPORTING GOODS CO LTD', 'YANCHENG AST SPORTING GOODS CO., LTD']
+[15:33:29]   Filtered out family 24439651: ['AST RES INC\u2002[US]', 'AST RESEARCH INC']
+[15:33:32]   Filtered out family 46049272: ['FREUND SEBASTIAN W\u2002[DE]', ' AST GABOR\u2002[AT]']
+[15:33:35]   Filtered out family 45999696: ['FREUND SEBASTIAN W\u2002[DE]', ' AST GABOR\u2002[AT]']
+[15:33:38]   Filtered out family 44504243: ['AST GABOR\u2002[DE]', ' FREUND SEBASTIAN WALTER\u2002[DE]']
+[15:33:42]   Filtered out family 42592706: ['AST WIRELESS SUZHOU CO LTD', 'AST WIRELESS (SUZHOU) CO., LTD']
+[15:33:45]   Filtered out family 36992010: ['AST MAN INC\u2002[WS]', ' WEBSTER JAMES RUSSELL']
+[15:33:48]   Filtered out family 35756347: ['AST MAN INC\u2002[WS]', ' WEBSTER JAMES RUSSELL']
+[15:33:51]   Filtered out family 23888147: ['AST RESEARCH INC\u2002[US]', 'AST RESEARCH, INC']
+[15:33:54]   Filtered out family 24276284: ['AST RESEARCH INC\u2002[US]', 'AST RESEARCH, INC']
+[15:33:58]   Filtered out family 23722345: ['AST RESEARCH INC\u2002[US]', 'AST RESEARCH, INC']
+[15:34:01]   Filtered out family 23293346: ['AST RESEARCH INC\u2002[US]', 'AST RESEARCH, INC']
+[15:34:04]   Filtered out family 22783689: ['AST TECHNOLOGY LABS INC\u2002[US]', 'AST TECHNOLOGY LABS INC']
+[15:34:07]   Filtered out family 21724623: ['AST RESEARCH INC\u2002[US]', 'AST RESEARCH, INC']
+[15:34:10]   Filtered out family 38010713: ['AST CO LTD\u2002[KR]', ' KIM JAE CHEOL\u2002[KR]']
+[15:34:14]   Filtered out family 37600235: ['WANXIN TECH CO LTD BEIJING AST\u2002[CN]', 'WANXIN TECH CO., LTD., BEIJING ASTRONAUTICS']
+[15:34:17]   Filtered out family 29422749: ['AST RESEARCH INC\u2002[US]\n', 'AST RESEARCH INC']
+[15:34:20]   Filtered out family 45495799: ['GLOBAL EAGLE ENTERTAINMENT INC\u2002[US]', 'Global Eagle Entertainment Inc']
+[15:34:23]   Filtered out family 57714481: ['EMC SATCOM TECH LLC\u2002[US]\n', 'EMC SatCom Technologies, LLC, ']
+[15:34:27]   Filtered out family 58701373: ['GLOBAL EAGLE ENTERTAINMENT INC\u2002[US]', 'Global Eagle Entertainment Inc']
+[15:34:30]   Filtered out family 48914132: ['EMC SATCOM TECH LLC\u2002[US]', 'EMC SatCom Technologies, LLC']
+[15:34:33]   Filtered out family 46466089: ['AVELLAN ABEL\u2002[US]\n', 'AVELLAN ABEL, ']
+[15:34:36]   Filtered out family 46583287: ['AVELLAN ABEL\u2002[US]', ' GODOY SERGIO\u2002[US]']
+[15:34:40]   Filtered out family 42670700: ['EMC SATCOM TECHNOLOGIES INC\u2002[US]\n', 'EMC SATCOM TECHNOLOGIES INC, ']
+[15:34:43]   Filtered out family 43530155: ['AVELLAN ABEL, ', 'JAYASIMHA SRIRAM, ']
+[15:34:46]   Filtered out family 43527477: ['EMC SATCOM TECHNOLOGIES INC\u2002[US]', 'EMC SATCOM TECHNOLOGIES INC, ']
+[15:34:49]   Filtered out family 42200245: []
+[15:34:52]   Filtered out family 40550453: ['EMC SATCOM TECHNOLOGIES INC\u2002[US]', 'EMC SATCOM TECHNOLOGIES, INC']
+[15:34:52] 
+Filtered out 96 non-AST families
+[15:34:52] AST SpaceMobile families: 29
+[15:34:52] 
+======================================================================
+[15:34:52] SUMMARY
+[15:34:52] ======================================================================
+[15:34:52] Patent families:        29 (expected: 36)
+[15:34:52] Total patents:         387
+[15:34:52] Granted patents:       131
+[15:34:52] Total claims:            0 (expected: ~3,800)
+[15:34:52] 
+Country breakdown:
+[15:34:52]   US: 153
+[15:34:52]   KR: 53
+[15:34:52]   EP: 49
+[15:34:52]   JP: 46
+[15:34:52]   AU: 35
+[15:34:52]   WO: 26
+[15:34:52]   CA: 19
+[15:34:52]   DK: 3
+[15:34:52]   ES: 3
+[15:34:52] 
+======================================================================
+[15:34:52] STEP 5: SAVE TO DATABASE
+[15:34:52] ======================================================================
+[15:35:35] 
+Patents saved: 0
+[15:35:35] Claims saved: 0
