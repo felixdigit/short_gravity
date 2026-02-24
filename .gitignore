@@ -13,3 +13,6 @@ __pycache__/
 *.log
 *.swp
 *.swo
+settings.local.json
+_ARCHIVE_V1/
+.claude/settings.local.json
