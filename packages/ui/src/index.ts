@@ -36,6 +36,6 @@ export { LogoMark } from './components/brand/LogoMark'
 // Signals
 export { SignalCard } from './components/signals/SignalCard'
 
-// Globe
-export { Globe } from './components/Globe'
-export type { GlobeSignal } from './components/Globe'
+// Globe3D — NOT re-exported from barrel to avoid SSR crash.
+// Import via subpath: '@shortgravity/ui/components/earth/Globe3D'
+export type { SatelliteData } from './components/earth/Globe3D'

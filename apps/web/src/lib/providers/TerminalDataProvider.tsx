@@ -1,6 +1,13 @@
 'use client'
 
-import { createContext, useContext, type ReactNode } from 'react'
+import { createContext, useContext, useMemo, type ReactNode } from 'react'
+import { useMultipleSatellitePositions } from '@/lib/hooks/useSatellitePosition'
+import { useDragHistory } from '@/lib/hooks/useDragHistory'
+import { useTLEFreshness, type TLEFreshness, type PerSatelliteFreshness } from '@/lib/hooks/useTLEFreshness'
+import { useDivergence, type DivergenceData } from '@/lib/hooks/useDivergence'
+import { useSpaceWeather, type SpaceWeatherDay } from '@/lib/hooks/useSpaceWeather'
+import { useConjunctions, type ConjunctionEvent } from '@/lib/hooks/useConjunctions'
+import { SATELLITES_ORDERED, NORAD_IDS, FM1_NORAD_ID } from '@/lib/data/satellites'
 
 // Shared satellite shape used by widgets
 export interface TerminalSatellite {
@@ -13,39 +20,26 @@ export interface TerminalSatellite {
   velocity: number
   inclination: number
   bstar: number
-  periodMinutes?: number
-  eccentricity?: number
-  apoapsis?: number
-  periapsis?: number
+  eccentricity: number
+  periodMinutes: number | null
+  apoapsis: number | null
+  periapsis: number | null
+  tle?: { line1: string; line2: string }
 }
 
-export interface PerSatelliteFreshness {
-  source: string
-  hoursOld: number
-}
-
-export interface DivergenceEntry {
+export interface MapSatellite {
   noradId: string
-  bstarDelta: number
-  diverged: boolean
+  name: string
+  currentPosition: { latitude: number; longitude: number }
+  inclination: number
+  altitude: number
+  tle?: { line1: string; line2: string }
 }
 
-export interface SpaceWeatherEntry {
-  date: string
-  kp_sum: number | null
-  ap_avg: number | null
-  f107_obs: number | null
-  f107_adj: number | null
-  sunspot_number: number | null
-}
-
-export interface ConjunctionEntry {
-  tca: string
-  minRange: number
-  probability: number
-  sat1: string
-  sat2: string
-}
+export { type PerSatelliteFreshness } from '@/lib/hooks/useTLEFreshness'
+export { type DivergenceData as DivergenceEntry } from '@/lib/hooks/useDivergence'
+export { type SpaceWeatherDay as SpaceWeatherEntry } from '@/lib/hooks/useSpaceWeather'
+export { type ConjunctionEvent as ConjunctionEntry } from '@/lib/hooks/useConjunctions'
 
 export interface DragHistoryData {
   dataPoints?: Array<{
@@ -63,52 +57,127 @@ export interface DragHistoryData {
 
 export interface TerminalDataContextType {
   satellites: TerminalSatellite[]
+  fm1: TerminalSatellite | null
+  mapTracks: MapSatellite[]
+  terminalContext: string
   tleFreshness: { maxHoursOld: number | null; minHoursOld: number | null } | null
   perSatelliteFreshness: Record<string, PerSatelliteFreshness>
-  divergenceData: DivergenceEntry[]
-  spaceWeather: SpaceWeatherEntry[]
-  conjunctions: ConjunctionEntry[]
-  fm1: TerminalSatellite | null
+  divergenceData: DivergenceData[]
   dragHistory: DragHistoryData | null
   dragLoading: boolean
-  terminalContext: string
+  spaceWeather: SpaceWeatherDay[]
+  conjunctions: ConjunctionEvent[]
 }
 
 const TerminalDataContext = createContext<TerminalDataContextType>({
   satellites: [],
+  fm1: null,
+  mapTracks: [],
+  terminalContext: '',
   tleFreshness: null,
   perSatelliteFreshness: {},
   divergenceData: [],
-  spaceWeather: [],
-  conjunctions: [],
-  fm1: null,
   dragHistory: null,
   dragLoading: false,
-  terminalContext: '',
+  spaceWeather: [],
+  conjunctions: [],
 })
 
 export function useTerminalData() {
   return useContext(TerminalDataContext)
 }
 
-/**
- * TODO: Wire this provider to real data fetching.
- * Currently provides the context shape so widgets compile.
- * The real implementation should fetch from API routes and propagate via SGP4.
- */
 export function TerminalDataProvider({ children }: { children: ReactNode }) {
-  const value: TerminalDataContextType = {
-    satellites: [],
-    tleFreshness: null,
-    perSatelliteFreshness: {},
-    divergenceData: [],
-    spaceWeather: [],
-    conjunctions: [],
-    fm1: null,
-    dragHistory: null,
-    dragLoading: false,
-    terminalContext: '',
-  }
+  const positions = useMultipleSatellitePositions(NORAD_IDS, 500)
+  const { data: dragData, isLoading: dragLoading } = useDragHistory(FM1_NORAD_ID, 45)
+  const { freshness: tleFreshnessData, perSatellite: perSatelliteFreshness } = useTLEFreshness(NORAD_IDS)
+  const { data: divergenceData } = useDivergence()
+  const { data: spaceWeatherData } = useSpaceWeather(7)
+  const { data: conjunctionsData } = useConjunctions()
+
+  const satellites = useMemo(
+    () =>
+      SATELLITES_ORDERED.map(({ id, name, type }) => {
+        const s = positions[id]
+        return {
+          noradId: id,
+          name,
+          type,
+          latitude: s?.position?.latitude ?? 0,
+          longitude: s?.position?.longitude ?? 0,
+          altitude: s?.position?.altitude ?? 0,
+          velocity: s?.position?.velocity ?? 0,
+          inclination: s?.orbital?.inclination ?? 0,
+          bstar: s?.orbital?.bstar ?? 0,
+          eccentricity: s?.orbital?.eccentricity ?? 0,
+          periodMinutes: s?.orbital?.periodMinutes ?? null,
+          apoapsis: s?.orbital?.apoapsis ?? null,
+          periapsis: s?.orbital?.periapsis ?? null,
+          tle: s?.tle ?? undefined,
+        }
+      }).filter((s) => s.altitude > 0),
+    [positions]
+  )
+
+  const fm1 = satellites.find((s) => s.noradId === FM1_NORAD_ID) ?? null
+
+  const mapTracks = useMemo(
+    () =>
+      satellites.map((s) => ({
+        noradId: s.noradId,
+        name: s.name,
+        currentPosition: { latitude: s.latitude, longitude: s.longitude },
+        inclination: s.inclination,
+        altitude: s.altitude,
+        tle: s.tle,
+      })),
+    [satellites]
+  )
+
+  const terminalContext = useMemo(() => {
+    if (satellites.length === 0) return ''
+    const lines = satellites.map(s =>
+      `${s.name} (NORAD ${s.noradId}): ${s.latitude.toFixed(2)}°N ${s.longitude.toFixed(2)}°E, alt ${s.altitude.toFixed(1)}km, vel ${s.velocity.toFixed(2)}km/s, inc ${s.inclination.toFixed(1)}°, B* ${s.bstar.toExponential(2)}`
+    )
+    return `Live satellite positions (${new Date().toISOString()}):\n${lines.join('\n')}`
+  }, [satellites])
+
+  const dragHistory: DragHistoryData | null = useMemo(() => {
+    if (!dragData) return null
+    return {
+      dataPoints: dragData.dataPoints?.map(dp => ({
+        epoch: dp.epoch,
+        bstar: dp.bstar,
+        avgAltitude: dp.avgAltitude,
+        source: dp.source,
+      })),
+      summary: dragData.summary ? {
+        initialBstar: dragData.summary.initialBstar,
+        latestBstar: dragData.summary.latestBstar,
+        bstarChangePercent: dragData.summary.bstarChangePercent,
+      } : undefined,
+    }
+  }, [dragData])
+
+  const value = useMemo<TerminalDataContextType>(
+    () => ({
+      satellites,
+      fm1,
+      mapTracks,
+      terminalContext,
+      tleFreshness: tleFreshnessData ? {
+        maxHoursOld: tleFreshnessData.maxHoursOld,
+        minHoursOld: tleFreshnessData.minHoursOld,
+      } : null,
+      perSatelliteFreshness: perSatelliteFreshness ?? {},
+      divergenceData: divergenceData ?? [],
+      dragHistory,
+      dragLoading,
+      spaceWeather: spaceWeatherData?.data ?? [],
+      conjunctions: conjunctionsData?.data ?? [],
+    }),
+    [satellites, fm1, mapTracks, terminalContext, tleFreshnessData, perSatelliteFreshness, divergenceData, dragHistory, dragLoading, spaceWeatherData, conjunctionsData]
+  )
 
   return (
     <TerminalDataContext.Provider value={value}>

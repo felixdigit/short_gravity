@@ -2,15 +2,20 @@
   "name": "@shortgravity/ui",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./components/*": "./src/components/*.tsx",
     "./lib/utils": "./src/lib/utils.ts"
   },
   "dependencies": {
-    "@react-three/fiber": "^9.5.0",
+    "@react-three/drei": "9.88.0",
+    "@react-three/fiber": "^8.17.10",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "hexasphere.js": "^0.2.2",
     "lucide-react": "^0.344.0",
     "tailwind-merge": "^2.2.1",
     "three": "^0.183.1"

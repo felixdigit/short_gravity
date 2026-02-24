@@ -1,0 +1,43 @@
+name: Cash Position Worker
+
+on:
+  schedule:
+    # Daily 09:00 UTC (runs after filing worker to pick up new 10-Q/10-K)
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync-cash-position:
+    # DISABLED: Functionality covered by widget_data_worker.py sync_cash_position()
+    if: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Extract cash position from filings
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          cd scripts/data-fetchers
+          python cash_position_worker.py
+
+      - name: Log run to database
+        if: always()
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          curl -sf -X POST "$SUPABASE_URL/rest/v1/worker_runs" \
+            -H "apikey: $SUPABASE_SERVICE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"worker_name\":\"cash_position\",\"status\":\"${{ job.status }}\",\"run_url\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" || true

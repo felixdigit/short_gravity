@@ -2,3 +2,7 @@ _VAULT/
 node_modules/
 .env
 .next/
+.turbo/
+.vercel/
+.DS_Store
+*.tsbuildinfo

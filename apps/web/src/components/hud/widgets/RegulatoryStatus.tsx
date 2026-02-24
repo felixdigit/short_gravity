@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { useRegulatoryStatus } from '@/lib/hooks/useRegulatoryStatus'
 import type { WidgetManifest } from './types'
@@ -51,9 +50,9 @@ export function RegulatoryStatus() {
 
   return (
     <div className="font-mono">
-      <Link href="/regulatory" className="text-[11px] text-white/50 hover:text-white/70 tracking-wider transition-colors block mb-3">
+      <span className="text-[11px] text-white/50 tracking-wider block mb-3">
         REGULATORY
-      </Link>
+      </span>
 
       <div className="space-y-2.5">
         {items.map((item, i) => (
@@ -72,12 +71,9 @@ export function RegulatoryStatus() {
         )}
       </div>
 
-      <Link
-        href="/regulatory"
-        className="block mt-3 text-[11px] text-white/50 hover:text-white/70 tracking-wider transition-colors"
-      >
-        VIEW DETAILS &rarr;
-      </Link>
+      <span className="block mt-3 text-[11px] text-white/30 tracking-wider cursor-default">
+        VIEW DETAILS &middot; SOON
+      </span>
     </div>
   )
 }

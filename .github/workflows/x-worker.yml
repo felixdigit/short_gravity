@@ -1,12 +1,69 @@
-# DEPRECATED — Moved to short-gravity-web repo
-# This workflow is disabled. The active version runs from the web app repo.
-name: "[DISABLED] X Worker"
+name: X Worker — ASTS Intelligence
 
 on:
+  schedule:
+    # Market hours weekdays — every 15 min (9am-5pm ET = 13-21 UTC)
+    - cron: '*/15 13-21 * * 1-5'
+    # Off-hours weekdays — every 30 min
+    - cron: '*/30 0-12,22-23 * * 1-5'
+    # Weekends — every hour
+    - cron: '0 * * * 0,6'
   workflow_dispatch:
 
+concurrency:
+  group: x-worker
+  cancel-in-progress: true
+
 jobs:
-  disabled:
+  fetch-x-posts:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
     steps:
-      - run: echo "This workflow has moved to the short-gravity-web repo."
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Fetch & classify X posts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+        run: |
+          cd scripts/data-fetchers
+          python3 x_worker.py
+
+      - name: Embed new tweets
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          cd scripts/data-fetchers
+          python3 embedding_worker.py --table x_posts
+
+      - name: Log run to database
+        if: always()
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          curl -sf -X POST "$SUPABASE_URL/rest/v1/worker_runs" \
+            -H "apikey: $SUPABASE_SERVICE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"worker_name\":\"x-posts\",\"status\":\"${{ job.status }}\",\"run_url\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" || true
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: x-worker-logs
+          path: scripts/data-fetchers/*.log
+          retention-days: 7

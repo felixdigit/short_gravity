@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { LogoMark } from '@shortgravity/ui'
 import { EmailSignupForm } from '@/components/landing/EmailSignupForm'
 
+const LIVE_ROUTES = new Set(['/signals', '/orbital', '/thesis'])
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[var(--void-black)] flex flex-col font-mono px-6">
@@ -84,20 +86,15 @@ export default function LandingPage() {
           {/* Quick nav */}
           <div className="mb-8">
             <div className="text-[7px] text-white/20 tracking-[0.2em] mb-3">EXPLORE</div>
-            <Link
-              href="/briefing"
-              className="border border-white/10 px-4 py-3 mb-2 hover:border-white/20 transition-colors group flex items-center justify-between"
-            >
+            <div className="border border-white/[0.06] px-4 py-3 mb-2 flex items-center justify-between opacity-50 cursor-default">
               <div>
-                <div className="text-[10px] text-white/60 tracking-wider group-hover:text-white/90 transition-colors">
+                <div className="text-[10px] text-white/40 tracking-wider">
                   THE BRIEFING
                 </div>
-                <div className="text-[7px] text-white/25">Cross-thread situation report</div>
+                <div className="text-[7px] text-white/20">Cross-thread situation report</div>
               </div>
-              <div className="text-[8px] text-white/20 tracking-wider group-hover:text-white/50 transition-colors shrink-0 ml-4">
-                OPEN &rarr;
-              </div>
-            </Link>
+              <span className="text-[7px] text-white/20 tracking-[0.15em] shrink-0 ml-4">SOON</span>
+            </div>
             <div className="grid grid-cols-3 gap-2">
               {[
                 { href: '/signals', label: 'SIGNALS', sublabel: 'Intelligence feed' },
@@ -109,18 +106,30 @@ export default function LandingPage() {
                 { href: '/regulatory', label: 'REGULATORY', sublabel: 'FCC battlemap' },
                 { href: '/competitive', label: 'WAR ROOM', sublabel: 'D2C landscape' },
                 { href: '/earnings', label: 'EARNINGS', sublabel: 'Call transcripts' },
-              ].map((nav) => (
-                <Link
-                  key={nav.href}
-                  href={nav.href}
-                  className="border border-white/[0.06] px-3 py-2.5 hover:border-white/15 transition-colors group"
-                >
-                  <div className="text-[9px] text-white/50 tracking-wider group-hover:text-white/80 transition-colors">
-                    {nav.label}
+              ].map((nav) =>
+                LIVE_ROUTES.has(nav.href) ? (
+                  <Link
+                    key={nav.href}
+                    href={nav.href}
+                    className="border border-white/[0.06] px-3 py-2.5 hover:border-white/15 transition-colors group"
+                  >
+                    <div className="text-[9px] text-white/50 tracking-wider group-hover:text-white/80 transition-colors">
+                      {nav.label}
+                    </div>
+                    <div className="text-[7px] text-white/18">{nav.sublabel}</div>
+                  </Link>
+                ) : (
+                  <div
+                    key={nav.href}
+                    className="border border-white/[0.04] px-3 py-2.5 cursor-default opacity-50"
+                  >
+                    <div className="text-[9px] text-white/30 tracking-wider flex items-center gap-1">
+                      {nav.label} <span className="text-[6px] text-white/20">SOON</span>
+                    </div>
+                    <div className="text-[7px] text-white/15">{nav.sublabel}</div>
                   </div>
-                  <div className="text-[7px] text-white/18">{nav.sublabel}</div>
-                </Link>
-              ))}
+                )
+              )}
             </div>
           </div>
 
@@ -131,12 +140,9 @@ export default function LandingPage() {
 
           {/* Login link */}
           <div className="text-center mt-4">
-            <Link
-              href="/login"
-              className="text-[8px] text-white/20 tracking-wider hover:text-white/50 transition-colors"
-            >
-              EXISTING USER? LOG IN
-            </Link>
+            <span className="text-[8px] text-white/15 tracking-wider cursor-default">
+              EXISTING USER? LOG IN <span className="text-[6px]">SOON</span>
+            </span>
           </div>
         </div>
       </div>

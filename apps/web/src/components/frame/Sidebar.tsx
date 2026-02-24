@@ -8,10 +8,10 @@ import { useFrameStore } from '@/lib/stores/frame-store'
 import { useTerminalStore } from '@/lib/stores/terminal-store'
 
 const NAV_ITEMS = [
-  { icon: Monitor, label: 'TERMINAL', route: '/asts', match: '/asts' },
-  { icon: Newspaper, label: 'BRIEFING', route: '/briefing', match: '/briefing' },
-  { icon: DollarSign, label: 'EARNINGS', route: '/earnings', match: '/earnings' },
-  { icon: Search, label: 'BRAIN', route: '/research', match: '/research' },
+  { icon: Monitor, label: 'TERMINAL', route: '/asts', match: '/asts', live: true },
+  { icon: Newspaper, label: 'BRIEFING', route: '/briefing', match: '/briefing', live: false },
+  { icon: DollarSign, label: 'EARNINGS', route: '/earnings', match: '/earnings', live: false },
+  { icon: Search, label: 'BRAIN', route: '/research', match: '/research', live: false },
 ]
 
 export function Sidebar({ mode }: { mode: 'standard' | 'immersive' }) {
@@ -37,6 +37,18 @@ export function Sidebar({ mode }: { mode: 'standard' | 'immersive' }) {
           <div className="flex-1 pt-14 px-2 space-y-0.5">
             {NAV_ITEMS.map((item) => {
               const isActive = pathname?.startsWith(item.match)
+              if (!item.live) {
+                return (
+                  <div
+                    key={item.route}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded text-white/20 cursor-default"
+                  >
+                    <item.icon className="w-4 h-4 flex-shrink-0" />
+                    <span className="text-[11px] tracking-[0.15em] font-mono">{item.label}</span>
+                    <span className="text-[7px] text-white/15 ml-auto">SOON</span>
+                  </div>
+                )
+              }
               return (
                 <Link
                   key={item.route}
@@ -60,13 +72,11 @@ export function Sidebar({ mode }: { mode: 'standard' | 'immersive' }) {
               <LayoutGrid className="w-4 h-4 flex-shrink-0" />
               <span className="text-[11px] tracking-[0.15em] font-mono">VAULT</span>
             </button>
-            <Link
-              href="/account"
-              className="flex items-center gap-3 px-3 py-2.5 rounded text-white/50 hover:text-white/70 transition-colors"
-            >
+            <div className="flex items-center gap-3 px-3 py-2.5 rounded text-white/20 cursor-default">
               <Settings className="w-4 h-4 flex-shrink-0" />
               <span className="text-[11px] tracking-[0.15em] font-mono">SETTINGS</span>
-            </Link>
+              <span className="text-[7px] text-white/15 ml-auto">SOON</span>
+            </div>
           </div>
         </nav>
       </div>
@@ -86,6 +96,20 @@ export function Sidebar({ mode }: { mode: 'standard' | 'immersive' }) {
       <div className="flex-1 pt-14 px-2 space-y-0.5">
         {NAV_ITEMS.map((item) => {
           const isActive = pathname?.startsWith(item.match)
+          if (!item.live) {
+            return (
+              <div
+                key={item.route}
+                title={!isExpanded ? item.label : undefined}
+                className="flex items-center gap-3 px-2 py-2.5 rounded text-white/20 cursor-default"
+              >
+                <item.icon className="w-4 h-4 flex-shrink-0" />
+                {isExpanded && (
+                  <span className="text-[11px] tracking-[0.15em] font-mono whitespace-nowrap">{item.label}</span>
+                )}
+              </div>
+            )
+          }
           return (
             <Link
               key={item.route}
@@ -115,16 +139,15 @@ export function Sidebar({ mode }: { mode: 'standard' | 'immersive' }) {
             <span className="text-[11px] tracking-[0.15em] font-mono">VAULT</span>
           )}
         </button>
-        <Link
-          href="/account"
+        <div
           title={!isExpanded ? 'SETTINGS' : undefined}
-          className="flex items-center gap-3 px-2 py-2.5 rounded text-white/50 hover:text-white/70 transition-colors"
+          className="flex items-center gap-3 px-2 py-2.5 rounded text-white/20 cursor-default"
         >
           <Settings className="w-4 h-4 flex-shrink-0" />
           {isExpanded && (
             <span className="text-[11px] tracking-[0.15em] font-mono">SETTINGS</span>
           )}
-        </Link>
+        </div>
       </div>
     </nav>
   )

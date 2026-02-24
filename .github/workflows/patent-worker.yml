@@ -1,0 +1,68 @@
+name: Patent Worker
+
+on:
+  schedule:
+    # Run daily at 6 AM UTC (1 AM EST / 10 PM PST)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  sync-patents:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install playwright
+          playwright install chromium
+
+      - name: Run patent worker
+        env:
+          PATENTSVIEW_API_KEY: ${{ secrets.PATENTSVIEW_API_KEY }}
+          EPO_CONSUMER_KEY: ${{ secrets.EPO_CONSUMER_KEY }}
+          EPO_CONSUMER_SECRET: ${{ secrets.EPO_CONSUMER_SECRET }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          cd scripts/data-fetchers
+          python patent_worker_v2.py
+
+      - name: Embed new patents
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          cd scripts/data-fetchers
+          python embedding_worker.py --table patents
+          python embedding_worker.py --table patent_claims
+
+      - name: Log run to database
+        if: always()
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          curl -sf -X POST "$SUPABASE_URL/rest/v1/worker_runs" \
+            -H "apikey: $SUPABASE_SERVICE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"worker_name\":\"patent\",\"status\":\"${{ job.status }}\",\"run_url\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" || true
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: patent-worker-logs
+          path: scripts/data-fetchers/*.log
+          retention-days: 7

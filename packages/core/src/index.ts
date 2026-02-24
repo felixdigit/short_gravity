@@ -79,6 +79,25 @@ export type {
   BriefingType,
 } from "./briefing/generator";
 
+// ─── Satellite Coverage ──────────────────────────────────────────────────────
+
+export {
+  getCoverageRadiusKm,
+  calculateCoverageGeometry,
+  formatSurfaceArea,
+  getASTSCoverageGeometry,
+  calculateCoverageRings,
+} from "./satellite-coverage";
+
+export type {
+  CoverageParams as SatelliteCoverageParams,
+  CoverageGeometry,
+} from "./satellite-coverage";
+
+// ─── Orbital ─────────────────────────────────────────────────────────────────
+
+export { propagateOrbitPath } from "./orbital";
+
 // ─── Schemas ────────────────────────────────────────────────────────────────
 
 export {

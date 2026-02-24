@@ -1,12 +1,42 @@
-# DEPRECATED — Moved to short-gravity-web repo
-# This workflow is disabled. The active version runs from the web app repo.
-name: "[DISABLED] Signal Scanner"
+name: Signal Scanner — Cross-Source Anomaly Detection
 
 on:
+  schedule:
+    # Every 4h — catch anomalies faster as data lands
+    - cron: '0 1,5,9,13,17,21 * * *'
   workflow_dispatch:
 
 jobs:
-  disabled:
+  scan-signals:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
-      - run: echo "This workflow has moved to the short-gravity-web repo."
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run signal scanner
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          cd scripts/data-fetchers
+          python3 signal_scanner.py
+
+      - name: Log run to database
+        if: always()
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          curl -sf -X POST "$SUPABASE_URL/rest/v1/worker_runs" \
+            -H "apikey: $SUPABASE_SERVICE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"worker_name\":\"signal-scanner\",\"status\":\"${{ job.status }}\",\"run_url\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" || true

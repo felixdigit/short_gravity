@@ -1,0 +1,9 @@
+{
+  "crons": [
+    { "path": "/api/cron/tle-refresh", "schedule": "0 */4 * * *" },
+    { "path": "/api/cron/check-feeds", "schedule": "*/15 * * * *" },
+    { "path": "/api/cron/filings-sync", "schedule": "*/15 * * * *" },
+    { "path": "/api/cron/daily-brief", "schedule": "0 12 * * *" },
+    { "path": "/api/cron/signal-alerts", "schedule": "*/15 * * * *" }
+  ]
+}

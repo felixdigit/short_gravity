@@ -1,7 +1,5 @@
 'use client'
 
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
 import { useQuery } from '@tanstack/react-query'
 import type { WidgetManifest } from './types'
 
@@ -89,9 +87,9 @@ export function EarningsLedger() {
   return (
     <div className="font-mono">
       <div className="flex items-center justify-between mb-2">
-        <Link href="/earnings" className="text-[11px] text-white/50 hover:text-white/70 tracking-wider transition-colors">
+        <span className="text-[11px] text-white/50 tracking-wider">
           EARNINGS
-        </Link>
+        </span>
         <span className="text-[11px] text-white/50 tracking-wider">{data.quarter}</span>
       </div>
 
@@ -137,12 +135,9 @@ export function EarningsLedger() {
         </div>
       )}
 
-      <Link
-        href="/earnings"
-        className="block mt-3 text-[11px] text-white/50 hover:text-white/70 tracking-wider transition-colors"
-      >
-        FULL REPORT &rarr;
-      </Link>
+      <span className="block mt-3 text-[11px] text-white/30 tracking-wider cursor-default">
+        FULL REPORT &middot; SOON
+      </span>
     </div>
   )
 }

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { useNextLaunch } from '@/lib/hooks/useNextLaunch'
 import { useQuery } from '@tanstack/react-query'
@@ -76,7 +75,6 @@ export function NextEvent() {
         subtitle: [launch.provider, launch.site].filter(Boolean).join(' \u00b7 ') || null,
         date: launch.targetDate!,
         status: launch.status || 'SCHEDULED',
-        link: '/horizon?type=launch',
       }
     }
 
@@ -87,7 +85,6 @@ export function NextEvent() {
         subtitle: horizonEvent.subtitle,
         date: horizonEvent.date,
         status: horizonEvent.severity?.toUpperCase() || '',
-        link: '/horizon',
       }
     }
 
@@ -141,9 +138,9 @@ export function NextEvent() {
   return (
     <div className="font-mono">
       <div className="flex items-center justify-between mb-2">
-        <Link href={activeEvent.link} className="text-[11px] text-white/50 hover:text-white/70 tracking-wider transition-colors">
+        <span className="text-[11px] text-white/50 tracking-wider">
           NEXT EVENT
-        </Link>
+        </span>
         <span className={cn('text-[11px] tracking-wider', typeColor)}>
           {typeLabel}
         </span>

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { useNextLaunch } from '@/lib/hooks/useNextLaunch'
 import type { WidgetManifest } from './types'
@@ -76,7 +75,7 @@ export function LaunchCountdown() {
   return (
     <div className="font-mono">
       <div className="flex items-center justify-between mb-2">
-        <Link href="/horizon?type=launch" className="text-[11px] text-white/50 hover:text-white/70 tracking-wider transition-colors">NEXT LAUNCH</Link>
+        <span className="text-[11px] text-white/50 tracking-wider">NEXT LAUNCH</span>
         <span className={cn('text-[11px] tracking-wider', statusColor(status))}>
           {status}
         </span>

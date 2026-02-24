@@ -6,8 +6,14 @@
     ".": "./src/index.ts",
     "./schema": "./src/schema.ts"
   },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",
     "drizzle-orm": "^0.45.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
   }
 }

@@ -1,0 +1,165 @@
+name: Data Staleness Alert
+
+on:
+  schedule:
+    # Daily at 16:00 UTC (11 AM EST) — after most workers have run
+    - cron: '0 16 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-staleness:
+    # TEMPORARILY DISABLED: Re-enable once all data workers are active and populating tables.
+    # The staleness alerts were firing because workers weren't migrated from the V1 archive.
+    # To re-enable: remove the 'if: false' line below.
+    if: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check data freshness
+        id: check
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          STALE=""
+          HEALTHY=""
+
+          check_table() {
+            local label="$1"
+            local table="$2"
+            local date_col="$3"
+            local max_hours="$4"
+            local filter="$5"
+
+            URL="$SUPABASE_URL/rest/v1/$table?select=$date_col&order=$date_col.desc&limit=1"
+            if [ -n "$filter" ]; then
+              URL="$URL&$filter"
+            fi
+
+            LATEST=$(curl -sf "$URL" \
+              -H "apikey: $SUPABASE_SERVICE_KEY" \
+              -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" | python3 -c "
+          import json,sys,datetime
+          data=json.load(sys.stdin)
+          if data:
+              ts=data[0].get('$date_col','')
+              if ts:
+                  dt=datetime.datetime.fromisoformat(ts.replace('Z','+00:00'))
+                  age=datetime.datetime.now(datetime.timezone.utc)-dt
+                  hours=age.total_seconds()/3600
+                  print(f'{hours:.1f}')
+              else:
+                  print('9999')
+          else:
+              print('9999')
+          " 2>/dev/null)
+
+            if [ -z "$LATEST" ]; then
+              STALE="$STALE\n- **$label**: unable to query"
+              return
+            fi
+
+            HOURS=$(echo "$LATEST" | head -1)
+            if [ "$(echo "$HOURS > $max_hours" | bc -l 2>/dev/null || python3 -c "print(1 if float('$HOURS') > float('$max_hours') else 0)")" = "1" ]; then
+              DAYS=$(python3 -c "print(f'{float(\"$HOURS\")/24:.1f}')")
+              STALE="$STALE\n- **$label**: ${DAYS}d stale (threshold: ${max_hours}h)"
+            else
+              HEALTHY="$HEALTHY\n- $label: ${HOURS}h ago"
+            fi
+          }
+
+          # Check each data source
+          check_table "SEC Filings" "filings" "created_at" "48"
+          check_table "FCC ICFS" "fcc_filings" "created_at" "48" "filing_system=eq.ICFS"
+          check_table "FCC ECFS" "fcc_filings" "created_at" "48" "filing_system=eq.ECFS"
+          check_table "ISED Canada" "fcc_filings" "created_at" "192" "file_number=like.ISED-*"
+          check_table "Ofcom UK" "fcc_filings" "created_at" "192" "file_number=like.OFCOM-*"
+          check_table "ITU Filings" "fcc_filings" "created_at" "192" "file_number=like.ITU-*"
+          check_table "X Posts" "x_posts" "created_at" "6"
+          check_table "Press Releases" "press_releases" "created_at" "48"
+          check_table "Daily Prices" "daily_prices" "date" "48"
+          check_table "Satellites" "satellites" "updated_at" "24"
+          check_table "Patents" "patents" "updated_at" "168"
+          check_table "Earnings Transcripts" "earnings_transcripts" "updated_at" "2160"
+          check_table "Signals" "signals" "created_at" "48"
+          check_table "Embeddings" "brain_chunks" "created_at" "48"
+
+          # Also check worker_runs for recent failures
+          FAILURES=$(curl -sf "$SUPABASE_URL/rest/v1/worker_runs?status=eq.failure&order=created_at.desc&limit=5&select=worker_name,created_at" \
+            -H "apikey: $SUPABASE_SERVICE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" | python3 -c "
+          import json,sys,datetime
+          data=json.load(sys.stdin)
+          now=datetime.datetime.now(datetime.timezone.utc)
+          recent=[]
+          for r in data:
+              ts=datetime.datetime.fromisoformat(r['created_at'].replace('Z','+00:00'))
+              if (now-ts).total_seconds()<86400:
+                  recent.append(r['worker_name'])
+          print(','.join(recent) if recent else '')
+          " 2>/dev/null)
+
+          if [ -n "$FAILURES" ]; then
+            STALE="$STALE\n- **Recent failures**: $FAILURES"
+          fi
+
+          # Output
+          if [ -n "$STALE" ]; then
+            echo "has_issues=true" >> $GITHUB_OUTPUT
+            {
+              echo "body<<EOF"
+              echo "## Data Staleness Alert"
+              echo ""
+              echo "The following data sources are stale or have issues:"
+              echo ""
+              echo -e "$STALE"
+              echo ""
+              if [ -n "$HEALTHY" ]; then
+                echo "<details><summary>Healthy sources</summary>"
+                echo ""
+                echo -e "$HEALTHY"
+                echo "</details>"
+              fi
+              echo ""
+              echo "Dashboard: https://shortgravity.com/dev/system-health"
+              echo "EOF"
+            } >> $GITHUB_OUTPUT
+          else
+            echo "has_issues=false" >> $GITHUB_OUTPUT
+            echo "All data sources are fresh."
+          fi
+
+      - name: Create GitHub issue if stale
+        if: steps.check.outputs.has_issues == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Check if there's already an open staleness issue
+          EXISTING=$(gh issue list --repo "${{ github.repository }}" --label "staleness-alert" --state open --json number --jq '.[0].number' 2>/dev/null || echo "")
+
+          if [ -n "$EXISTING" ]; then
+            # Update existing issue with new comment
+            gh issue comment "$EXISTING" --repo "${{ github.repository }}" --body "${{ steps.check.outputs.body }}"
+            echo "Updated existing issue #$EXISTING"
+          else
+            # Create new issue
+            gh issue create \
+              --repo "${{ github.repository }}" \
+              --title "Data Staleness Alert — $(date -u +'%Y-%m-%d')" \
+              --body "${{ steps.check.outputs.body }}" \
+              --label "staleness-alert"
+            echo "Created new staleness alert issue"
+          fi
+
+      - name: Log run
+        if: always()
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          curl -sf -X POST "$SUPABASE_URL/rest/v1/worker_runs" \
+            -H "apikey: $SUPABASE_SERVICE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"worker_name\":\"staleness-check\",\"status\":\"${{ job.status }}\",\"run_url\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" || true
