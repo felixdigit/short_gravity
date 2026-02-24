@@ -1,9 +1,15 @@
 _VAULT/
 node_modules/
 .env
+.env.local
+.env*.local
 .next/
 .turbo/
 .vercel/
 .DS_Store
 *.tsbuildinfo
 __pycache__/
+*.pyc
+*.log
+*.swp
+*.swo
